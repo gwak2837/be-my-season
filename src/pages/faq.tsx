@@ -2,6 +2,15 @@
 import Link from 'next/link'
 import { useState } from 'react'
 import PageHead from 'src/components/PageHead'
+import styled from 'styled-components'
+
+const A = styled.div`
+  color: #d70000;
+`
+
+const B = styled.h5`
+  color: #0000cf;
+`
 
 const description = ''
 
