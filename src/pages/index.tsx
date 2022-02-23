@@ -73,11 +73,9 @@ const posts = [
   },
 ]
 
-const description = ''
-
 export default function HomePage() {
   return (
-    <PageHead title=" - " description={description}>
+    <PageHead>
       <FlexBetweenNav>
         <Image src="/images/logo.png" alt="logo" width="300" height="300" />
         <FlexCenter>
