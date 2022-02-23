@@ -1,0 +1,12 @@
+{
+  "recommendations": [
+    "visualstudioexptteam.vscodeintellicode",
+    "christian-kohler.npm-intellisense",
+    "christian-kohler.path-intellisense",
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "styled-components.vscode-styled-components",
+    "arcanis.vscode-zipfs",
+    "amatiasq.sort-imports"
+  ]
+}
