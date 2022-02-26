@@ -164,7 +164,9 @@ export default function HomePage() {
         </FlexCenter>
         <FlexCenter>
           <h5>검색</h5>
-          <h5>로그아웃</h5>
+          <Link href="/login" passHref>
+            <a>로그인</a>
+          </Link>
         </FlexCenter>
       </FlexBetweenNav>
       <Frame>

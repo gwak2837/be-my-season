@@ -1,4 +1,4 @@
-import mysql, { Connection } from 'mysql2'
+import mysql, { Connection } from 'mysql2/promise'
 import type { NextApiRequest, NextApiResponse } from 'next'
 import tunnel from 'tunnel-ssh'
 
@@ -31,8 +31,6 @@ export const connection = new Promise<Connection>((resolve, reject) => {
 })
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  ;(await connection).query('SELECT NOW()', (error, results, fields) => {
-    if (error) throw error
-    res.status(200).json({ results })
-  })
+  const [rows] = await (await connection).query('SELECT NOW()')
+  res.status(200).json({ rows })
 }

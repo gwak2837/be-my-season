@@ -1,5 +1,6 @@
 /** @type {import('next').NextConfig} */
 /* eslint-disable @typescript-eslint/no-var-requires */
+const { resolve } = require('path')
 
 module.exports = {
   compiler: {
@@ -15,9 +16,15 @@ module.exports = {
   poweredByHeader: process.env.NODE_ENV === 'development',
   reactStrictMode: process.env.NODE_ENV === 'development',
   webpack: (config) => {
-    config.module.rules.push({
+    const rules = config.module.rules
+    rules.push({
       test: /\.svg$/,
       use: ['@svgr/webpack'],
+    })
+    rules.push({
+      include: resolve(__dirname, 'src'),
+      test: /\.(graphql|sql)$/,
+      type: 'asset/source',
     })
     return config
   },
