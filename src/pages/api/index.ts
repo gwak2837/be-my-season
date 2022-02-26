@@ -30,13 +30,9 @@ export const connection = new Promise<Connection>((resolve, reject) => {
   )
 })
 
-type Data = {
-  name: any
-}
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   ;(await connection).query('SELECT NOW()', (error, results, fields) => {
     if (error) throw error
-    res.status(200).json({ name: results })
+    res.status(200).json({ results })
   })
 }
