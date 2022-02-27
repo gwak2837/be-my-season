@@ -1,3 +1,4 @@
+import { atom } from 'recoil'
 import PageHead from 'src/components/PageHead'
 import KakaoIcon from 'src/svgs/kakao.svg'
 import styled from 'styled-components'
@@ -38,7 +39,7 @@ const description = ''
 
 export default function LoginPage() {
   return (
-    <PageHead title="로그인 - Be MySeason" description={description}>
+    <PageHead title="로그인 - Be:MySeason" description={description}>
       <KakaoButton onClick={goToKakaoLoginPage}>
         <KakaoIcon />
         카카오톡으로 3초 만에 시작하기

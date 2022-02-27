@@ -3,7 +3,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 import Card from 'src/components/Card'
+import Drawer from 'src/components/Drawer'
 import PageHead from 'src/components/PageHead'
+import useUser from 'src/hooks/useUser'
+import { DESKTOP_MIN_WIDTH } from 'src/models/config'
 import DownArrow from 'src/svgs/down-arrow.svg'
 import Instagram from 'src/svgs/instagram.svg'
 import Tistory from 'src/svgs/tistory.svg'
@@ -62,19 +65,15 @@ const FlexCenter = styled.div`
   *:hover {
     color: #ce4624;
   }
+
+  @media (max-width: ${DESKTOP_MIN_WIDTH}) {
+    display: none;
+  }
 `
 
 const Frame = styled.h5`
   aspect-ratio: 16 / 9;
   position: relative;
-`
-
-const Button = styled.button`
-  display: block;
-  padding: 1rem;
-  border: 1px solid ${(p) => p.color};
-  color: ${(p) => p.color};
-  background: #fff;
 `
 
 const Footer = styled.footer`
@@ -138,6 +137,11 @@ const posts = [
 ]
 
 export default function HomePage() {
+  const { user, isLoading, hasError } = useUser()
+  const userId = user?.userId
+
+  const [open, setOpen] = useState(false)
+
   return (
     <PageHead>
       <FlexBetweenNav>
@@ -164,14 +168,36 @@ export default function HomePage() {
         </FlexCenter>
         <FlexCenter>
           <h5>검색</h5>
-          <Link href="/login" passHref>
-            <a>로그인</a>
-          </Link>
+          {isLoading ? (
+            <div>loading</div>
+          ) : userId ? (
+            <Link href={`/@${userId}`} passHref>
+              <a>마이페이지</a>
+            </Link>
+          ) : (
+            <Link href="/login" passHref>
+              <a>로그인</a>
+            </Link>
+          )}
         </FlexCenter>
       </FlexBetweenNav>
+
+      <button onClick={() => setOpen(true)}>open</button>
+      <Drawer open={open} setOpen={setOpen}>
+        <div>sdf</div>
+        <div>sdf</div>
+        <div>sdf</div>
+        <div>sdf</div>
+        <div>sdf</div>
+        <div>sdf</div>
+        <div>sdf</div>
+        <div>sdf</div>
+      </Drawer>
+
       <Frame>
         <Image src="/images/sample.png" alt="main" layout="fill" objectFit="cover" />
       </Frame>
+
       <GridGapMaxWidth>
         <div>
           <FlexBetweenPadding>

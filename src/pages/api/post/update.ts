@@ -1,18 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
+import updatePost from './sql/updatePost.sql'
 import { connection } from '..'
 
-type Data = {
-  results: any
-}
-
-const sql = ''
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
-  const body = req.body
-
-  ;(await connection).query(sql, [body.title, body.contents], (error, results) => {
-    if (error) throw error
-    res.status(200).json({ results })
-  })
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  const [rows] = await (await connection).query(updatePost, [req.query.id])
+  res.status(200).json({ rows })
 }

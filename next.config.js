@@ -6,6 +6,9 @@ module.exports = {
   compiler: {
     styledComponents: true,
   },
+  experimental: {
+    outputStandalone: true,
+  },
   i18n: {
     locales: ['ko', 'en'],
     defaultLocale: 'ko',

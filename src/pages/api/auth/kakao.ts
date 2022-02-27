@@ -1,11 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { generateJWT } from 'src/utils/jwt'
 
-import findKakaoUser from './sql/findKakaoUser.sql'
+import getKakaoUser from './sql/getKakaoUser.sql'
 import registerKakaoUser from './sql/registerKakaoUser.sql'
 import { connection } from '..'
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function handleKakaoAuth(req: NextApiRequest, res: NextApiResponse) {
   if (!req.query.code) {
     return res.status(400).send('400 Bad Request')
   }
@@ -16,9 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   }
 
   const kakaoUserInfo = await fetchKakaoUserInfo(kakaoUserToken.access_token as string)
-  console.log('👀 - kakaoUserInfo', kakaoUserInfo)
   const kakaoAccount = kakaoUserInfo.kakao_account as any
-  console.log('👀 - kakaoAccount', kakaoAccount)
 
   // 선택항목 미동의 시 다른 페이지로 리다이렉트 하기
   // if (!kakaoAccount.birthyear || !kakaoAccount.birthday || !kakaoAccount.gender) {
@@ -31,17 +29,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   //   return res.redirect(`/sorry?id=${kakaoUserInfo.id}`)
   // }
 
-  const [kakaoUserRows] = await (await connection).query(findKakaoUser, [kakaoUserInfo.id])
+  const [kakaoUserRows] = await (await connection).query(getKakaoUser, [kakaoUserInfo.id])
   const kakaoUser = (kakaoUserRows as any)[0]
 
   // 이미 kakao 소셜 로그인 정보가 존재하는 경우
   if (kakaoUser) {
-    const jwt = await generateJWT({ userId: kakaoUser.id })
-
     // 필수 정보가 없는 경우
     // if (!hasRequiredInfo(kakaoUser)) {
     //   return res.redirect(
-    //     `/oauth/register?${new URLSearchParams({
+    //     `/auth/register?${new URLSearchParams({
     //       jwt,
     //       nickname: kakaoUser.nickname,
     //       phoneNumber: kakaoUser.phone_number,
@@ -49,28 +45,35 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     //   )
     // }
 
-    return res.redirect(`/oauth?${new URLSearchParams({ jwt, nickname: kakaoUser.nickname })}`)
+    return res.redirect(
+      `/auth?${new URLSearchParams({
+        jwt: await generateJWT({ userId: kakaoUser.id }),
+        userId: kakaoUser.id,
+      })}`
+    )
   }
 
   // kakao 소셜 로그인 정보가 없는 경우
-  const [newUserRows] = await (
+  const [newUserHeader] = await (
     await connection
   ).query(registerKakaoUser, [
+    kakaoAccount.profile.nickname,
+    kakaoAccount.profile.profile_image_url,
     kakaoAccount.email,
-    kakaoAccount.phone_number,
+    kakaoAccount.gender,
     kakaoAccount.birthyear,
     kakaoAccount.birthday,
-    kakaoAccount.profile.profile_image_url,
+    kakaoAccount.phone_number,
     kakaoUserInfo.id,
   ])
-  const newKakaoUser = (newUserRows as any)[0]
+  const insertId = (newUserHeader as any).insertId
 
-  const queryString = new URLSearchParams({
-    jwt: await generateJWT({ userId: newKakaoUser.id }),
-    phoneNumber: newKakaoUser.phone_number,
-  })
-
-  return res.redirect(`/oauth/register?${queryString}`)
+  return res.redirect(
+    `/auth?${new URLSearchParams({
+      jwt: await generateJWT({ userId: insertId }),
+      userId: insertId,
+    })}`
+  )
 }
 
 async function fetchKakaoUserToken(code: string) {
