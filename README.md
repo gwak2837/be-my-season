@@ -3,7 +3,7 @@
 ## 개발 환경
 
 - Ubuntu Focal 20.04 (LTS)
-- Node.js 16.10
+- Node.js 16.14
 - Yarn 3.2
 - Docker 20.10
 

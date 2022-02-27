@@ -1,7 +1,6 @@
 import { JwtPayload, sign, verify } from 'jsonwebtoken'
 
 export const secretKey = process.env.JWT_SECRET_KEY as string
-
 if (!secretKey) throw new Error('`JWT_SECRET_KEY` 환경 변수를 설정해주세요.')
 
 export function generateJWT<T extends Record<string, unknown>>(payload: T, expiresIn = '3d') {
