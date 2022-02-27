@@ -6,10 +6,13 @@ RUN apk add --no-cache libc6-compat
 
 WORKDIR /app
 
-COPY .yarnrc.yml package.json yarn.lock ./
-COPY . .
+COPY .yarn .yarn
+COPY src src
+COPY public public
+COPY .eslintrc.json .yarnrc.yml next.config.js package.json tsconfig.json yarn.lock ./
 
-RUN yarn && yarn build
+RUN yarn
+RUN yarn build
 
 # Production image, copy all the files and run next
 FROM node:16-alpine AS runner

@@ -9,10 +9,6 @@ module.exports = {
   experimental: {
     outputStandalone: true,
   },
-  i18n: {
-    locales: ['ko', 'en'],
-    defaultLocale: 'ko',
-  },
   images: {
     domains: ['storage.googleapis.com', 'k.kakaocdn.net'],
   },
