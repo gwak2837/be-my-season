@@ -94,6 +94,14 @@ function NavigationLayout({ children }: Props) {
 
   const [open, setOpen] = useState(false)
 
+  function openDrawer() {
+    setOpen(true)
+  }
+
+  function closeDrawer() {
+    setOpen(false)
+  }
+
   return (
     <>
       <FlexBetweenNav>
@@ -137,7 +145,7 @@ function NavigationLayout({ children }: Props) {
             </Link>
           )}
         </FlexCenter>
-        <HamburgerWrapper onClick={() => setOpen(true)}>
+        <HamburgerWrapper onClick={openDrawer}>
           <HamburgerIcon />
         </HamburgerWrapper>
         <Drawer open={open} setOpen={setOpen}>
@@ -146,36 +154,46 @@ function NavigationLayout({ children }: Props) {
               <div>loading</div>
             ) : userId ? (
               <Link href={`/@${userId}`} passHref>
-                <a>마이페이지</a>
+                <a onClick={closeDrawer} role="button" tabIndex={0}>
+                  마이페이지
+                </a>
               </Link>
             ) : (
               <Link href="/login" passHref>
-                <a>로그인</a>
+                <a onClick={closeDrawer} role="button" tabIndex={0}>
+                  로그인
+                </a>
               </Link>
             )}
             <Link href="/introduce" passHref>
-              <a>Introduce</a>
+              <a onClick={closeDrawer} role="button" tabIndex={0}>
+                Introduce <DownArrow />
+              </a>
             </Link>
             <Link href="/content" passHref>
-              <a>
-                Contents <DownArrow />
+              <a onClick={closeDrawer} role="button" tabIndex={0}>
+                Contents
               </a>
             </Link>
             <Link href="/program" passHref>
-              <a>
-                Program <DownArrow />
+              <a onClick={closeDrawer} role="button" tabIndex={0}>
+                Program
               </a>
             </Link>
             <Link href="/community" passHref>
-              <a>
-                Community <DownArrow />
+              <a onClick={closeDrawer} role="button" tabIndex={0}>
+                Community
               </a>
             </Link>
             <Link href="/project" passHref>
-              <a>Project</a>
+              <a onClick={closeDrawer} role="button" tabIndex={0}>
+                Project <DownArrow />
+              </a>
             </Link>
             <Link href="/contact" passHref>
-              <a>Contact</a>
+              <a onClick={closeDrawer} role="button" tabIndex={0}>
+                Contact
+              </a>
             </Link>
           </MinWidth>
         </Drawer>

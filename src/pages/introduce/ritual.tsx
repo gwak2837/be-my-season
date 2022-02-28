@@ -9,7 +9,7 @@ const description = ''
 export default function RitualMakerPage() {
   return (
     <PageHead title="리추얼 매이커 - Be:MySeason" description={description}>
-      kkk
+      리추얼
     </PageHead>
   )
 }

@@ -9,7 +9,7 @@ const description = ''
 export default function AboutUsPage() {
   return (
     <PageHead title="팀 소개 - Be:MySeason" description={description}>
-      kl
+      팀
     </PageHead>
   )
 }
