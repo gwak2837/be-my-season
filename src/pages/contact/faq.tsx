@@ -4,14 +4,14 @@ import NavigationLayout from 'src/layouts/NavigationLayout'
 
 const description = ''
 
-export default function ContentPage() {
+export default function FAQPage() {
   return (
-    <PageHead title="컨텐츠 - Be:MySeason" description={description}>
-      컨텐츠 id
+    <PageHead title="자주 묻는 질문 - Be:MySeason" description={description}>
+      faq
     </PageHead>
   )
 }
 
-ContentPage.getLayout = function getLayout(page: ReactElement) {
+FAQPage.getLayout = function getLayout(page: ReactElement) {
   return <NavigationLayout>{page}</NavigationLayout>
 }

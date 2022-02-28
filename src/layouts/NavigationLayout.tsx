@@ -6,7 +6,7 @@ import useUser from 'src/hooks/useUser'
 import { DESKTOP_MIN_WIDTH } from 'src/models/config'
 import DownArrow from 'src/svgs/down-arrow.svg'
 import HamburgerIcon from 'src/svgs/hamburger.svg'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 const FlexBetweenNav = styled.nav`
   display: flex;
@@ -18,7 +18,8 @@ const FlexBetweenNav = styled.nav`
   top: 0;
   z-index: 1;
 
-  background: #eee;
+  background: #fff;
+  border-bottom: 1px solid #e6c5ad;
   padding: 1rem;
 `
 
@@ -41,6 +42,15 @@ const FlexCenter = styled.div`
   }
 `
 
+const Ul = styled.ul<{ isOpen: boolean }>`
+  display: ${(p) => (p.isOpen ? 'grid' : 'none')};
+  margin: 0.5rem 1rem 0;
+  font-size: 0.8rem;
+  gap: 0.4rem;
+
+  /* transition: all 1s ease-out; */
+`
+
 const HamburgerWrapper = styled.div`
   cursor: pointer;
   display: grid;
@@ -54,7 +64,7 @@ const HamburgerWrapper = styled.div`
   }
 `
 
-const MinWidth = styled.div`
+const MinWidth = styled.ul`
   min-width: 10rem;
   height: 100vh;
 
@@ -62,24 +72,26 @@ const MinWidth = styled.div`
   display: flex;
   flex-flow: column;
 
-  > a {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  * {
+    color: #7a583a;
+    font-weight: 500;
+  }
 
+  > li {
     border: 1px solid #e6c5ad;
     border-left: 2px solid #e6c5ad;
     border-right: 2px solid #e6c5ad;
-    color: #7a583a;
     padding: 1rem;
   }
-  > a:first-child {
+  > li:first-child {
     background: #de684a;
-    border: 1px solid #de684a;
-    color: #fff;
+    border: 2px solid #de684a;
     text-decoration: underline;
+    > a {
+      color: #fff;
+    }
   }
-  > a:last-child {
+  > li:last-child {
     border-bottom: 2px solid #e6c5ad;
   }
 `
@@ -93,6 +105,12 @@ function NavigationLayout({ children }: Props) {
   const userId = user?.userId
 
   const [open, setOpen] = useState(false)
+  const [isIntroduceOpen, setIsIntroduceOpen] = useState(false)
+  const [isContentsOpen, setIsContentsOpen] = useState(false)
+  const [isProgramOpen, setIsProgramOpen] = useState(false)
+  const [isCommunityOpen, setIsCommunityOpen] = useState(false)
+  const [isProjectOpen, setIsProjectOpen] = useState(false)
+  const [isContactOpen, setIsContactOpen] = useState(false)
 
   function openDrawer() {
     setOpen(true)
@@ -105,13 +123,18 @@ function NavigationLayout({ children }: Props) {
   return (
     <>
       <FlexBetweenNav>
-        <Image
-          src="/images/logo-transparent.png"
-          alt="logo"
-          width="106"
-          height="51"
-          objectFit="cover"
-        />
+        <Link href="/" passHref>
+          <a>
+            <Image
+              src="/images/logo-transparent.png"
+              alt="logo"
+              width="106"
+              height="51"
+              objectFit="cover"
+            />
+          </a>
+        </Link>
+
         <FlexCenter>
           <Link href="/introduce" passHref>
             <a>Introduce</a>
@@ -128,7 +151,7 @@ function NavigationLayout({ children }: Props) {
           <Link href="/project" passHref>
             <a>Project</a>
           </Link>
-          <Link href="/contact" passHref>
+          <Link href="/contact/faq" passHref>
             <a>Contact</a>
           </Link>
         </FlexCenter>
@@ -139,6 +162,8 @@ function NavigationLayout({ children }: Props) {
             <Link href={`/@${userId}`} passHref>
               <a>마이페이지</a>
             </Link>
+          ) : hasError ? (
+            <div>error</div>
           ) : (
             <Link href="/login" passHref>
               <a>로그인</a>
@@ -150,51 +175,124 @@ function NavigationLayout({ children }: Props) {
         </HamburgerWrapper>
         <Drawer open={open} setOpen={setOpen}>
           <MinWidth>
-            {isLoading ? (
-              <div>loading</div>
-            ) : userId ? (
-              <Link href={`/@${userId}`} passHref>
-                <a onClick={closeDrawer} role="button" tabIndex={0}>
-                  마이페이지
-                </a>
-              </Link>
-            ) : (
-              <Link href="/login" passHref>
-                <a onClick={closeDrawer} role="button" tabIndex={0}>
-                  로그인
-                </a>
-              </Link>
-            )}
-            <Link href="/introduce" passHref>
-              <a onClick={closeDrawer} role="button" tabIndex={0}>
+            <li>
+              {isLoading ? (
+                <div>loading</div>
+              ) : userId ? (
+                <Link href={`/@${userId}`} passHref>
+                  <a onClick={closeDrawer} role="button" tabIndex={0}>
+                    마이페이지
+                  </a>
+                </Link>
+              ) : hasError ? (
+                <div>error</div>
+              ) : (
+                <Link href="/login" passHref>
+                  <a onClick={closeDrawer} role="button" tabIndex={0}>
+                    로그인
+                  </a>
+                </Link>
+              )}
+            </li>
+
+            <li>
+              <h4 onClick={() => setIsIntroduceOpen((prev) => !prev)}>
                 Introduce <DownArrow />
-              </a>
-            </Link>
-            <Link href="/content" passHref>
-              <a onClick={closeDrawer} role="button" tabIndex={0}>
+              </h4>
+              <Ul onClick={closeDrawer} isOpen={isIntroduceOpen}>
+                <Link href="/introduce" passHref>
+                  <a>Brand Story</a>
+                </Link>
+                <Link href="/introduce/about" passHref>
+                  <a>About us</a>
+                </Link>
+                <Link href="/introduce/ritual" passHref>
+                  <a>Ritual</a>
+                </Link>
+              </Ul>
+            </li>
+
+            <li>
+              <h4 onClick={() => setIsContentsOpen((prev) => !prev)}>
                 Contents <DownArrow />
-              </a>
-            </Link>
-            <Link href="/program" passHref>
-              <a onClick={closeDrawer} role="button" tabIndex={0}>
-                Program
-              </a>
-            </Link>
-            <Link href="/community" passHref>
-              <a onClick={closeDrawer} role="button" tabIndex={0}>
-                Community
-              </a>
-            </Link>
-            <Link href="/project" passHref>
-              <a onClick={closeDrawer} role="button" tabIndex={0}>
+              </h4>
+              <Ul onClick={closeDrawer} isOpen={isContentsOpen}>
+                <Link href="/content" passHref>
+                  <a>All</a>
+                </Link>
+                <Link href="/content/column" passHref>
+                  <a>Column</a>
+                </Link>
+                <Link href="/content/interview" passHref>
+                  <a>Interview</a>
+                </Link>
+              </Ul>
+            </li>
+
+            <li>
+              <h4 onClick={() => setIsProgramOpen((prev) => !prev)}>
+                Program <DownArrow />
+              </h4>
+              <Ul onClick={closeDrawer} isOpen={isProgramOpen}>
+                <Link href="/program" passHref>
+                  <a>All</a>
+                </Link>
+                <Link href="/program/pre-w" passHref>
+                  <a>Pre-W</a>
+                </Link>
+                <Link href="/program/re-w" passHref>
+                  <a>Re-W</a>
+                </Link>
+                <Link href="/program/re-turnship" passHref>
+                  <a>Re-turnship</a>
+                </Link>
+              </Ul>
+            </li>
+
+            <li>
+              <h4 onClick={() => setIsCommunityOpen((prev) => !prev)}>
+                Community <DownArrow />
+              </h4>
+              <Ul onClick={closeDrawer} isOpen={isCommunityOpen}>
+                <Link href="/community" passHref>
+                  <a>All</a>
+                </Link>
+                <Link href="/community/before" passHref>
+                  <a>모임 예정</a>
+                </Link>
+                <Link href="/community/ing" passHref>
+                  <a>진행 중</a>
+                </Link>
+                <Link href="/community/after" passHref>
+                  <a>모임 완료</a>
+                </Link>
+              </Ul>
+            </li>
+
+            <li>
+              <h4 onClick={() => setIsProjectOpen((prev) => !prev)}>
                 Project <DownArrow />
-              </a>
-            </Link>
-            <Link href="/contact" passHref>
-              <a onClick={closeDrawer} role="button" tabIndex={0}>
-                Contact
-              </a>
-            </Link>
+              </h4>
+              <Ul onClick={closeDrawer} isOpen={isProjectOpen}>
+                <Link href="/project" passHref>
+                  <a>Now</a>
+                </Link>
+                <Link href="/project/before" passHref>
+                  <a>Before</a>
+                </Link>
+              </Ul>
+            </li>
+
+            <li>
+              <h4 onClick={() => setIsContactOpen((prev) => !prev)}>
+                Contact <DownArrow />
+              </h4>
+              <Ul onClick={closeDrawer} isOpen={isContactOpen}>
+                <Link href="/contact/faq" passHref>
+                  <a>자주 묻는 질문</a>
+                </Link>
+              </Ul>
+            </li>
           </MinWidth>
         </Drawer>
       </FlexBetweenNav>

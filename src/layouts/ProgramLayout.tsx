@@ -3,31 +3,22 @@ import Link from 'next/link'
 import { ReactNode } from 'react'
 import styled from 'styled-components'
 
-export const Frame21to9 = styled.div`
-  aspect-ratio: 21 / 9;
-  position: relative;
-`
+import { Frame21to9, MarginAuto } from './IntroduceLayout'
 
 const FlexCenterCenter = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 5rem;
+  gap: 2rem;
 
   padding: 2rem;
-`
-
-export const MarginAuto = styled.div`
-  margin: 0 auto;
-  padding: 2rem 1rem;
-  max-width: 1024px;
 `
 
 type Props = {
   children: ReactNode
 }
 
-function IntroduceLayout({ children }: Props) {
+function ProgramLayout({ children }: Props) {
   return (
     <>
       <Frame21to9>
@@ -35,14 +26,17 @@ function IntroduceLayout({ children }: Props) {
       </Frame21to9>
 
       <FlexCenterCenter>
-        <Link href="/introduce" passHref>
-          <a>Brand story</a>
+        <Link href="/program" passHref>
+          <a>All</a>
         </Link>
-        <Link href="/introduce/about" passHref>
-          <a>About us</a>
+        <Link href="/program/pre-w" passHref>
+          <a>Pre-W</a>
         </Link>
-        <Link href="/introduce/ritual" passHref>
-          <a>Ritual makers</a>
+        <Link href="/program/re-w" passHref>
+          <a>Re-W</a>
+        </Link>
+        <Link href="/program/re-turnship" passHref>
+          <a>Re-turnship</a>
         </Link>
       </FlexCenterCenter>
 
@@ -51,4 +45,4 @@ function IntroduceLayout({ children }: Props) {
   )
 }
 
-export default IntroduceLayout
+export default ProgramLayout

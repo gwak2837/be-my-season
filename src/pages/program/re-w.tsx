@@ -7,15 +7,15 @@ import styled from 'styled-components'
 
 const description = ''
 
-export default function ProgramsPage() {
+export default function ReWProgramsPage() {
   return (
-    <PageHead title="모든 프로그램 - Be:MySeason" description={description}>
+    <PageHead title="Re-W - Be:MySeason" description={description}>
       프로그램
     </PageHead>
   )
 }
 
-ProgramsPage.getLayout = function getLayout(page: ReactElement) {
+ReWProgramsPage.getLayout = function getLayout(page: ReactElement) {
   return (
     <NavigationLayout>
       <ProgramLayout>{page}</ProgramLayout>

@@ -9,7 +9,7 @@ const FlexCenterCenter = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 5rem;
+  gap: 2rem;
 
   padding: 2rem;
 `
@@ -18,7 +18,7 @@ type Props = {
   children: ReactNode
 }
 
-function ProjectLayout({ children }: Props) {
+function ContentLayout({ children }: Props) {
   return (
     <>
       <Frame21to9>
@@ -26,12 +26,24 @@ function ProjectLayout({ children }: Props) {
       </Frame21to9>
 
       <FlexCenterCenter>
-        <Link href="/project" passHref>
-          <a>Now</a>
+        <Link href="/content" passHref>
+          <a>All</a>
         </Link>
-        <Link href="/project/before" passHref>
-          <a>Before</a>
+        <Link href="/content/column" passHref>
+          <a>Column</a>
         </Link>
+        <Link href="/content/interview" passHref>
+          <a>Interview</a>
+        </Link>
+        <a href="https://www.instagram.com" target="_blank" rel="noreferrer">
+          Instagram
+        </a>
+        <a href="https://www.youtube.com" target="_blank" rel="noreferrer">
+          Youtube
+        </a>
+        <a href="https://www.tistory.com" target="_blank" rel="noreferrer">
+          Tistory
+        </a>
       </FlexCenterCenter>
 
       <MarginAuto>{children}</MarginAuto>
@@ -39,4 +51,4 @@ function ProjectLayout({ children }: Props) {
   )
 }
 
-export default ProjectLayout
+export default ContentLayout

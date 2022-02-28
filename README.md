@@ -5,16 +5,17 @@
 - Ubuntu Focal 20.04 (LTS)
 - Node.js 16.14
 - Yarn 3.2
+- PM2 5.2
 
 ## 설정
 
-### dd
+### Start server
 
 ```bash
 git clone https://github.com/rmfpdlxmtidl/be-my-season.git
 cd be-my-season
 vi .env.local
-yarn && yarn build && yarn start -p 80
+./restart-server
 ```
 
 ### 환경 변수

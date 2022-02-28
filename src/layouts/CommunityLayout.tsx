@@ -3,31 +3,22 @@ import Link from 'next/link'
 import { ReactNode } from 'react'
 import styled from 'styled-components'
 
-export const Frame21to9 = styled.div`
-  aspect-ratio: 21 / 9;
-  position: relative;
-`
+import { Frame21to9, MarginAuto } from './IntroduceLayout'
 
 const FlexCenterCenter = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 5rem;
+  gap: 2rem;
 
   padding: 2rem;
-`
-
-export const MarginAuto = styled.div`
-  margin: 0 auto;
-  padding: 2rem 1rem;
-  max-width: 1024px;
 `
 
 type Props = {
   children: ReactNode
 }
 
-function IntroduceLayout({ children }: Props) {
+function CommunityLayout({ children }: Props) {
   return (
     <>
       <Frame21to9>
@@ -35,14 +26,17 @@ function IntroduceLayout({ children }: Props) {
       </Frame21to9>
 
       <FlexCenterCenter>
-        <Link href="/introduce" passHref>
-          <a>Brand story</a>
+        <Link href="/community" passHref>
+          <a>All</a>
         </Link>
-        <Link href="/introduce/about" passHref>
-          <a>About us</a>
+        <Link href="/community/before" passHref>
+          <a>모임 예정</a>
         </Link>
-        <Link href="/introduce/ritual" passHref>
-          <a>Ritual makers</a>
+        <Link href="/community/ing" passHref>
+          <a>진행 중</a>
+        </Link>
+        <Link href="/community/after" passHref>
+          <a>모임 완료</a>
         </Link>
       </FlexCenterCenter>
 
@@ -51,4 +45,4 @@ function IntroduceLayout({ children }: Props) {
   )
 }
 
-export default IntroduceLayout
+export default CommunityLayout
