@@ -3,55 +3,38 @@ import { createPortal } from 'react-dom'
 import { TABLET_MIN_WIDTH } from 'src/models/config'
 import styled from 'styled-components'
 
-const Transition = styled.div`
-  > div {
-    transition: background 0.3s ease-out;
-  }
-
-  > section {
-    transition: 0.3s ease-in-out;
-  }
-`
-
 const DrawerInput = styled.input`
   display: none;
 
   :checked ~ div {
-    position: fixed;
-    inset: 0 0 0 50%;
-    width: 100%;
-    transform: translateX(-50%);
+    z-index: 8;
     background: #00000080;
   }
 
   :checked ~ section {
-    bottom: 0;
+    right: 0;
   }
 `
 
 const DrawerBackground = styled.div`
-  background: #00000000;
   position: fixed;
-  inset: 0;
-  z-index: 8;
+  inset: 0 0 0 0;
+  z-index: -1;
+
+  background: #00000000;
+  transition: all 0.3s ease-out;
 `
 
 const DrawerSection = styled.section`
   position: fixed;
-  bottom: -33vh;
-  left: 50%;
+  top: 0;
+  right: -50vw;
   z-index: 9;
-  transform: translateX(-50%);
+  max-width: 50vw;
+  height: 100vh;
 
-  width: 100%;
-  max-width: ${TABLET_MIN_WIDTH};
-  height: fit-content;
-  max-height: 33vh;
-
-  background: #fff;
-  border-radius: 20px 20px 0px 0px;
-  overflow: auto;
-  padding: 20px 0 0;
+  overflow: hidden auto;
+  transition: all 0.3s ease-in-out;
 `
 
 type Props = {
@@ -89,11 +72,11 @@ function Drawer({ children, open, setOpen }: Props) {
 
   return globalThis.document
     ? createPortal(
-        <Transition>
+        <div>
           <DrawerInput checked={open} readOnly type="checkbox" />
           <DrawerBackground onClick={closeDrawer} />
           <DrawerSection>{children}</DrawerSection>
-        </Transition>,
+        </div>,
         document.body
       )
     : null

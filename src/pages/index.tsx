@@ -1,26 +1,14 @@
 import Image from 'next/image'
-/* eslint-disable jsx-a11y/label-has-associated-control */
 import Link from 'next/link'
-import { useState } from 'react'
+import { ReactElement } from 'react'
 import Card from 'src/components/Card'
-import Drawer from 'src/components/Drawer'
 import PageHead from 'src/components/PageHead'
-import useUser from 'src/hooks/useUser'
-import { DESKTOP_MIN_WIDTH } from 'src/models/config'
+import NavigationLayout from 'src/layouts/NavigationLayout'
 import DownArrow from 'src/svgs/down-arrow.svg'
 import Instagram from 'src/svgs/instagram.svg'
 import Tistory from 'src/svgs/tistory.svg'
 import Youtube from 'src/svgs/youtube.svg'
 import styled from 'styled-components'
-
-const FlexBetweenNav = styled.nav`
-  display: flex;
-  justify-content: space-between;
-  gap: 3rem;
-
-  background: #eee;
-  padding: 1rem;
-`
 
 const FlexBetween = styled.div`
   display: flex;
@@ -51,33 +39,13 @@ const GridGapMaxWidth = styled(GridGap)`
   max-width: 1024px;
 `
 
-const FlexCenter = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-
-  * {
-    color: #9b6f50;
-    cursor: pointer;
-    transition: all 0.3s ease-out;
-  }
-
-  *:hover {
-    color: #ce4624;
-  }
-
-  @media (max-width: ${DESKTOP_MIN_WIDTH}) {
-    display: none;
-  }
-`
-
-const Frame = styled.h5`
+const Frame = styled.div`
   aspect-ratio: 16 / 9;
   position: relative;
 `
 
 const Footer = styled.footer`
-  background: #e6c5ad;
+  background: #de684a;
   padding: 1rem;
 `
 
@@ -93,8 +61,15 @@ const P = styled.p`
 `
 
 const A = styled.a`
-  color: #ce4624;
+  color: #ffffff;
   font-weight: 400;
+  text-decoration: underline;
+`
+
+const SmallA = styled.a`
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: #fff;
 `
 
 const WhiteA = styled.a`
@@ -102,6 +77,11 @@ const WhiteA = styled.a`
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 0.5rem;
+`
+
+const FlexGap = styled.div`
+  display: flex;
+  gap: 1rem;
 `
 
 const Margin = styled.div`
@@ -137,63 +117,8 @@ const posts = [
 ]
 
 export default function HomePage() {
-  const { user, isLoading, hasError } = useUser()
-  const userId = user?.userId
-
-  const [open, setOpen] = useState(false)
-
   return (
     <PageHead>
-      <FlexBetweenNav>
-        <Image src="/images/logo.png" alt="logo" width="111" height="60" objectFit="cover" />
-        <FlexCenter>
-          <Link href="/introduce" passHref>
-            <a>introduce</a>
-          </Link>
-          <Link href="/contents" passHref>
-            <a>contents</a>
-          </Link>
-          <Link href="/learn" passHref>
-            <a>learn</a>
-          </Link>
-          <Link href="/community" passHref>
-            <a>community</a>
-          </Link>
-          <Link href="/project" passHref>
-            <a>project</a>
-          </Link>
-          <Link href="/notice" passHref>
-            <a>notice</a>
-          </Link>
-        </FlexCenter>
-        <FlexCenter>
-          <h5>검색</h5>
-          {isLoading ? (
-            <div>loading</div>
-          ) : userId ? (
-            <Link href={`/@${userId}`} passHref>
-              <a>마이페이지</a>
-            </Link>
-          ) : (
-            <Link href="/login" passHref>
-              <a>로그인</a>
-            </Link>
-          )}
-        </FlexCenter>
-      </FlexBetweenNav>
-
-      <button onClick={() => setOpen(true)}>open</button>
-      <Drawer open={open} setOpen={setOpen}>
-        <div>sdf</div>
-        <div>sdf</div>
-        <div>sdf</div>
-        <div>sdf</div>
-        <div>sdf</div>
-        <div>sdf</div>
-        <div>sdf</div>
-        <div>sdf</div>
-      </Drawer>
-
       <Frame>
         <Image src="/images/sample.png" alt="main" layout="fill" objectFit="cover" />
       </Frame>
@@ -300,6 +225,15 @@ export default function HomePage() {
                 </A>
                 <h6>copyright 2022.비:마이시즌 All right Reserved</h6>
               </P>
+
+              <FlexGap>
+                <Link href="/terms-of-service" passHref>
+                  <SmallA>이용약관</SmallA>
+                </Link>
+                <Link href="/privacy-policy" passHref>
+                  <SmallA>개인정보처리방침</SmallA>
+                </Link>
+              </FlexGap>
             </GridGap>
 
             <GridGapHeightFit>
@@ -321,4 +255,8 @@ export default function HomePage() {
       </Footer>
     </PageHead>
   )
+}
+
+HomePage.getLayout = function getLayout(page: ReactElement) {
+  return <NavigationLayout>{page}</NavigationLayout>
 }
