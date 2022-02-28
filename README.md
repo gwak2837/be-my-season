@@ -28,3 +28,17 @@ $ sudo dpkg -i 파일위치
 ```bash
 $ ssh -N -L 3306:localhost:3306 root@103.55.191.69
 ```
+
+###
+
+```bash
+$ docker run \
+  -d \
+  -e MYSQL_CONNECTION_STRING=mysql://heart:theheart12@localhost:3306/myseason \
+  -e JWT_SECRET_KEY=1234 \
+  -e NEXT_PUBLIC_KAKAO_REST_API_KEY=a5c51ab95682d2515fa7fcfd434077d6 \
+  --name be-my-season \
+  -p 80:3000 \
+  --restart=unless-stopped \
+  be-my-season:latest
+```

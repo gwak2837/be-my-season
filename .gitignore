@@ -123,7 +123,7 @@ public/*.js
 .env.development
 .env.local
 
-# Yarn v2
+# Yarn berry
 .yarn/*
 !.yarn/patches
 !.yarn/releases
@@ -131,3 +131,6 @@ public/*.js
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
+
+# Docker
+*.tar

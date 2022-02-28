@@ -1,5 +1,0 @@
-#!/bin/sh
-
-docker login
-docker build --tag gwak2837/be-my-season .
-docker push gwak2837/be-my-season
