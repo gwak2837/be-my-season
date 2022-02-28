@@ -5,9 +5,23 @@
 - Ubuntu Focal 20.04 (LTS)
 - Node.js 16.14
 - Yarn 3.2
-- Docker 20.10
 
 ## 설정
+
+### dd
+
+```bash
+git clone https://github.com/rmfpdlxmtidl/be-my-season.git
+cd be-my-season
+vi .env.local
+yarn && yarn build && yarn start -p 80
+```
+
+### 환경 변수
+
+```
+
+```
 
 ### Docker 설치
 

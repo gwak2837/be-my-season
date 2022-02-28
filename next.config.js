@@ -6,9 +6,6 @@ module.exports = {
   compiler: {
     styledComponents: true,
   },
-  experimental: {
-    outputStandalone: true,
-  },
   images: {
     domains: ['storage.googleapis.com', 'k.kakaocdn.net'],
   },
