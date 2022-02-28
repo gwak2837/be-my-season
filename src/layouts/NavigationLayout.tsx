@@ -172,7 +172,7 @@ function NavigationLayout({ children }: Props) {
             </Link>
             <Link href="/content" passHref>
               <a onClick={closeDrawer} role="button" tabIndex={0}>
-                Contents
+                Contents <DownArrow />
               </a>
             </Link>
             <Link href="/program" passHref>
