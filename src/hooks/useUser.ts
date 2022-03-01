@@ -11,7 +11,12 @@ async function fetchUser(url: string) {
 }
 
 export default function useUser() {
-  const { data, error } = useSWR('/api/auth', fetchUser)
+  const { data, error } = useSWR('/api/auth', fetchUser, {
+    onError: () => {
+      sessionStorage.removeItem('jwt')
+      localStorage.removeItem('jwt')
+    },
+  })
 
   return {
     user: data,

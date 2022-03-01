@@ -9,9 +9,13 @@ const FlexCenterCenter = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 5rem;
+  gap: min(max(2rem, 8vw), 5rem);
 
   padding: 2rem;
+
+  a {
+    text-align: center;
+  }
 `
 
 type Props = {

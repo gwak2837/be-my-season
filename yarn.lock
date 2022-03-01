@@ -1854,6 +1854,42 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@toast-ui/editor-plugin-color-syntax@npm:^3.0.2":
+  version: 3.0.2
+  resolution: "@toast-ui/editor-plugin-color-syntax@npm:3.0.2"
+  dependencies:
+    tui-color-picker: ^2.2.6
+  checksum: 5be545b4ecdad6d1c5fff4ae5f8c306ebf18293270b9f52a2cf677c851fbe60b77410c12be95814f38e928d420ddf5084b635c10ec4b2eb87d3832543112a474
+  languageName: node
+  linkType: hard
+
+"@toast-ui/editor@npm:^3.1.3":
+  version: 3.1.3
+  resolution: "@toast-ui/editor@npm:3.1.3"
+  dependencies:
+    dompurify: ^2.3.3
+    prosemirror-commands: ^1.1.9
+    prosemirror-history: ^1.1.3
+    prosemirror-inputrules: ^1.1.3
+    prosemirror-keymap: ^1.1.4
+    prosemirror-model: ^1.14.1
+    prosemirror-state: ^1.3.4
+    prosemirror-view: ^1.18.7
+  checksum: 7cae864e96408941b172b40982db7ec0fd9bf2ea355cb727f1e699dfac6880c8297e57d14b57eec2c664f7facbb36e74ed0b57fcd6a4e5eeeb0d070172927620
+  languageName: node
+  linkType: hard
+
+"@toast-ui/react-editor@npm:^3.1.3":
+  version: 3.1.3
+  resolution: "@toast-ui/react-editor@npm:3.1.3"
+  dependencies:
+    "@toast-ui/editor": ^3.1.3
+  peerDependencies:
+    react: ^17.0.1
+  checksum: c239769e57240a3aedd5ccce2b20b4aff2d2130cece6953ff1c67976843e4c1350fe380126f72c2867974eaf036aec5b020c5d2196c0e1ffd37cf1f326e03873
+  languageName: node
+  linkType: hard
+
 "@tootallnate/once@npm:1":
   version: 1.1.2
   resolution: "@tootallnate/once@npm:1.1.2"
@@ -2516,6 +2552,9 @@ __metadata:
   resolution: "be-my-season@workspace:."
   dependencies:
     "@svgr/webpack": ^6.2.1
+    "@toast-ui/editor": ^3.1.3
+    "@toast-ui/editor-plugin-color-syntax": ^3.0.2
+    "@toast-ui/react-editor": ^3.1.3
     "@types/jsonwebtoken": ^8.5.8
     "@types/node": ^17.0.21
     "@types/react": ^17.0.39
@@ -2549,6 +2588,7 @@ __metadata:
     sharp: ^0.30.1
     styled-components: ^5.3.3
     swr: ^1.2.2
+    tui-color-picker: ^2.2.7
     tunnel-ssh: ^4.1.6
     typescript: ^4.5.5
   languageName: unknown
@@ -3186,6 +3226,13 @@ __metadata:
   dependencies:
     domelementtype: ^2.2.0
   checksum: d2a2dbf40dd99abf936b65ad83c6b530afdb3605a87cad37a11b5d9220e68423ebef1b86c89e0f6d93ffaf315cc327cf1a988652e7a9a95cce539e3984f4c64d
+  languageName: node
+  linkType: hard
+
+"dompurify@npm:^2.3.3":
+  version: 2.3.6
+  resolution: "dompurify@npm:2.3.6"
+  checksum: 4b2bbf6bc68ebd776aec4a533cef74a5ae30391eed528f3df748af71da318afdc298b6f40449bef093b7454ffd2ae82656636560474de5a3b34316b762c85b12
   languageName: node
   linkType: hard
 
@@ -5519,6 +5566,13 @@ fsevents@~2.3.2:
   languageName: node
   linkType: hard
 
+"orderedmap@npm:^1.1.0":
+  version: 1.1.5
+  resolution: "orderedmap@npm:1.1.5"
+  checksum: cd6478cede7bd9d4d781024ae0014a2a668a7687c0dad1a9e1a1bde109ed48e56991b7dd27ddbb1a9a5cf3f50f51918e0ce978e643ad74a8af8079799d80a1e1
+  languageName: node
+  linkType: hard
+
 "p-limit@npm:^1.1.0":
   version: 1.3.0
   resolution: "p-limit@npm:1.3.0"
@@ -5804,6 +5858,87 @@ fsevents@~2.3.2:
     object-assign: ^4.1.1
     react-is: ^16.13.1
   checksum: c056d3f1c057cb7ff8344c645450e14f088a915d078dcda795041765047fa080d38e5d626560ccaac94a4e16e3aa15f3557c1a9a8d1174530955e992c675e459
+  languageName: node
+  linkType: hard
+
+"prosemirror-commands@npm:^1.1.9":
+  version: 1.2.1
+  resolution: "prosemirror-commands@npm:1.2.1"
+  dependencies:
+    prosemirror-model: ^1.0.0
+    prosemirror-state: ^1.0.0
+    prosemirror-transform: ^1.0.0
+  checksum: b5e9520bbfea42fab0590a18815f4e0a8d233ab051f82e8e88e36e3ff462d25b3e7dc8c8c37bc04a0d6d83e15bd571e2ab9fcd45d46799c7330be43514efccf2
+  languageName: node
+  linkType: hard
+
+"prosemirror-history@npm:^1.1.3":
+  version: 1.2.0
+  resolution: "prosemirror-history@npm:1.2.0"
+  dependencies:
+    prosemirror-state: ^1.2.2
+    prosemirror-transform: ^1.0.0
+    rope-sequence: ^1.3.0
+  checksum: 9d1bedfd6a39aa007e96abbb57fd14d1397f78f8266ff2863ed3e3e2d3861305765cf1a41b587aebb5c532eec4b17d2fbe1c0c8a27c9c71185226cc13cf942b9
+  languageName: node
+  linkType: hard
+
+"prosemirror-inputrules@npm:^1.1.3":
+  version: 1.1.3
+  resolution: "prosemirror-inputrules@npm:1.1.3"
+  dependencies:
+    prosemirror-state: ^1.0.0
+    prosemirror-transform: ^1.0.0
+  checksum: 25b51840e738bdd677b3c44d802b891f724e9bbe21168a3ecf721ab0a83b1ee338e11df93ff49aa43035e3006e83a2d6352cdf5a9898a3adbabb8e0f4cda78f8
+  languageName: node
+  linkType: hard
+
+"prosemirror-keymap@npm:^1.1.4":
+  version: 1.1.5
+  resolution: "prosemirror-keymap@npm:1.1.5"
+  dependencies:
+    prosemirror-state: ^1.0.0
+    w3c-keyname: ^2.2.0
+  checksum: b558a1c2c3107a49a388206c3cec7fe89126fc55f3a51beffc1e2c8b07d06938cc369d865415e6a5e6ba55651157c7c650e5e08568f29882d7f973e8c099bcbf
+  languageName: node
+  linkType: hard
+
+"prosemirror-model@npm:^1.0.0, prosemirror-model@npm:^1.14.1, prosemirror-model@npm:^1.16.0":
+  version: 1.16.1
+  resolution: "prosemirror-model@npm:1.16.1"
+  dependencies:
+    orderedmap: ^1.1.0
+  checksum: 76718aafbfad0639393e127b3b1b95f9d99b0fb9ec72c2f207e445d175f06a2711ea10b6035075c4ed9cd5e00f4a72aec01e1439c954ecfee19897fa3584fa11
+  languageName: node
+  linkType: hard
+
+"prosemirror-state@npm:^1.0.0, prosemirror-state@npm:^1.2.2, prosemirror-state@npm:^1.3.4":
+  version: 1.3.4
+  resolution: "prosemirror-state@npm:1.3.4"
+  dependencies:
+    prosemirror-model: ^1.0.0
+    prosemirror-transform: ^1.0.0
+  checksum: 088748bca02620ac7c6510dc49c9890593fd5077fc347c9f08f25e6932454bd149df6cc2740d760dedf56059311aa0f6ea1c3e2e56043ad7682ae159b797c90e
+  languageName: node
+  linkType: hard
+
+"prosemirror-transform@npm:*, prosemirror-transform@npm:^1.0.0, prosemirror-transform@npm:^1.1.0":
+  version: 1.3.4
+  resolution: "prosemirror-transform@npm:1.3.4"
+  dependencies:
+    prosemirror-model: ^1.0.0
+  checksum: feb53e5704e6bc0389d69c1b5333d19169e7307fc499a824a84bd96baca4e27b2856776d9993dda16b8d656f23de80bedb28f4fbdcfa92370e7922361531a9e2
+  languageName: node
+  linkType: hard
+
+"prosemirror-view@npm:^1.18.7":
+  version: 1.23.7
+  resolution: "prosemirror-view@npm:1.23.7"
+  dependencies:
+    prosemirror-model: ^1.16.0
+    prosemirror-state: ^1.0.0
+    prosemirror-transform: ^1.1.0
+  checksum: 6d0c16002dd379cf33d71d37542df0705f37966c15c4afcc87e3361d015ffce088d52ce6a776cbfb9ebc3cb2b9260354370f8d156358ebe2130e3bef878bf670
   languageName: node
   linkType: hard
 
@@ -6163,6 +6298,13 @@ resolve@^2.0.0-next.3:
   bin:
     rollup: dist/bin/rollup
   checksum: c883f6fb2e10e1c79a32527da0c50ef47a7beb8ddacfdae4197ff2d1911fb8d10bb2704496cf878d3048fbf3524d613bc87f25c5be0afc667fe30b7d04fa8092
+  languageName: node
+  linkType: hard
+
+"rope-sequence@npm:^1.3.0":
+  version: 1.3.2
+  resolution: "rope-sequence@npm:1.3.2"
+  checksum: 4169421051f0a96246792fb7211ad2f6ce106ca9348e9210b32142d532372f424dfc330e9bfc5c9610fbe7d7aecc295e923dbcae7a751477b7010b6d95775b31
   languageName: node
   linkType: hard
 
@@ -6918,6 +7060,13 @@ resolve@^2.0.0-next.3:
   languageName: node
   linkType: hard
 
+"tui-color-picker@npm:^2.2.6, tui-color-picker@npm:^2.2.7":
+  version: 2.2.7
+  resolution: "tui-color-picker@npm:2.2.7"
+  checksum: ad793762e2945ae2c055d87e6806e0e1d6b1046dd930516993f710ed79a6831f445f45f46d109a6895ee2509c5fac851c875f199db1e5b564df34478fd9e5bd7
+  languageName: node
+  linkType: hard
+
 "tunnel-agent@npm:^0.6.0":
   version: 0.6.0
   resolution: "tunnel-agent@npm:0.6.0"
@@ -7103,6 +7252,13 @@ typescript@^4.5.5:
   version: 2.3.0
   resolution: "v8-compile-cache@npm:2.3.0"
   checksum: adb0a271eaa2297f2f4c536acbfee872d0dd26ec2d76f66921aa7fc437319132773483344207bdbeee169225f4739016d8d2dbf0553913a52bb34da6d0334f8e
+  languageName: node
+  linkType: hard
+
+"w3c-keyname@npm:^2.2.0":
+  version: 2.2.4
+  resolution: "w3c-keyname@npm:2.2.4"
+  checksum: 890180452bdd7d25f05deb97b3c0839911264432a7c5dd8dc4c9d9b6384237a66d66b7c2a145440b607826d5aa61cd90098cfffcf50b50c0e4c2259b0d208038
   languageName: node
   linkType: hard
 

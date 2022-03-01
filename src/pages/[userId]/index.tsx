@@ -1,11 +1,15 @@
 import { useRouter } from 'next/router'
+import { ReactElement } from 'react'
 import { toast } from 'react-toastify'
 import PageHead from 'src/components/PageHead'
+import useUser from 'src/hooks/useUser'
+import NavigationLayout from 'src/layouts/NavigationLayout'
 import { useSWRConfig } from 'swr'
 
 const description = ''
 
 export default function MyPage() {
+  const { user } = useUser()
   const router = useRouter()
   const { mutate } = useSWRConfig()
 
@@ -20,8 +24,13 @@ export default function MyPage() {
 
   return (
     <PageHead title="마이페이지 - Be:MySeason" description={description}>
-      <div>user id: {router.query.userId?.slice(1)}</div>
+      <div>user id: {user?.userId}</div>
+      <div>is admin: {user?.isAdmin}</div>
       <button onClick={removeJwtFromStorage}>로그아웃</button>
     </PageHead>
   )
+}
+
+MyPage.getLayout = function getLayout(page: ReactElement) {
+  return <NavigationLayout>{page}</NavigationLayout>
 }

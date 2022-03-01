@@ -103,6 +103,7 @@ type Props = {
 function NavigationLayout({ children }: Props) {
   const { user, isLoading, hasError } = useUser()
   const userId = user?.userId
+  const isAdmin = user?.isAdmin
 
   const [open, setOpen] = useState(false)
   const [isIntroduceOpen, setIsIntroduceOpen] = useState(false)
@@ -160,7 +161,7 @@ function NavigationLayout({ children }: Props) {
             <div>loading</div>
           ) : userId ? (
             <Link href={`/@${userId}`} passHref>
-              <a>마이페이지</a>
+              <a>{isAdmin ? '페이지 관리' : 'My season'}</a>
             </Link>
           ) : hasError ? (
             <div>error</div>
@@ -181,7 +182,7 @@ function NavigationLayout({ children }: Props) {
               ) : userId ? (
                 <Link href={`/@${userId}`} passHref>
                   <a onClick={closeDrawer} role="button" tabIndex={0}>
-                    마이페이지
+                    {isAdmin ? '페이지 관리' : 'My season'}
                   </a>
                 </Link>
               ) : hasError ? (
@@ -195,8 +196,8 @@ function NavigationLayout({ children }: Props) {
               )}
             </li>
 
-            <li>
-              <h4 onClick={() => setIsIntroduceOpen((prev) => !prev)}>
+            <li onClick={() => setIsIntroduceOpen((prev) => !prev)}>
+              <h4>
                 Introduce <DownArrow />
               </h4>
               <Ul onClick={closeDrawer} isOpen={isIntroduceOpen}>
@@ -212,8 +213,8 @@ function NavigationLayout({ children }: Props) {
               </Ul>
             </li>
 
-            <li>
-              <h4 onClick={() => setIsContentsOpen((prev) => !prev)}>
+            <li onClick={() => setIsContentsOpen((prev) => !prev)}>
+              <h4>
                 Contents <DownArrow />
               </h4>
               <Ul onClick={closeDrawer} isOpen={isContentsOpen}>
@@ -229,8 +230,8 @@ function NavigationLayout({ children }: Props) {
               </Ul>
             </li>
 
-            <li>
-              <h4 onClick={() => setIsProgramOpen((prev) => !prev)}>
+            <li onClick={() => setIsProgramOpen((prev) => !prev)}>
+              <h4>
                 Program <DownArrow />
               </h4>
               <Ul onClick={closeDrawer} isOpen={isProgramOpen}>
@@ -249,8 +250,8 @@ function NavigationLayout({ children }: Props) {
               </Ul>
             </li>
 
-            <li>
-              <h4 onClick={() => setIsCommunityOpen((prev) => !prev)}>
+            <li onClick={() => setIsCommunityOpen((prev) => !prev)}>
+              <h4>
                 Community <DownArrow />
               </h4>
               <Ul onClick={closeDrawer} isOpen={isCommunityOpen}>
@@ -269,8 +270,8 @@ function NavigationLayout({ children }: Props) {
               </Ul>
             </li>
 
-            <li>
-              <h4 onClick={() => setIsProjectOpen((prev) => !prev)}>
+            <li onClick={() => setIsProjectOpen((prev) => !prev)}>
+              <h4>
                 Project <DownArrow />
               </h4>
               <Ul onClick={closeDrawer} isOpen={isProjectOpen}>
@@ -283,8 +284,8 @@ function NavigationLayout({ children }: Props) {
               </Ul>
             </li>
 
-            <li>
-              <h4 onClick={() => setIsContactOpen((prev) => !prev)}>
+            <li onClick={() => setIsContactOpen((prev) => !prev)}>
+              <h4>
                 Contact <DownArrow />
               </h4>
               <Ul onClick={closeDrawer} isOpen={isContactOpen}>

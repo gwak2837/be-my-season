@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-no-undef */
 import Image from 'next/image'
+import { SquareFrame } from 'src/styles/common'
 import styled from 'styled-components'
 
 const Li = styled.li`
@@ -9,11 +10,6 @@ const Li = styled.li`
   background: #efefef;
 `
 
-const SqureFrame = styled.div`
-  aspect-ratio: 1 / 1;
-  position: relative;
-`
-
 type Props = {
   data: any
 }
@@ -21,9 +17,9 @@ type Props = {
 function Card({ data }: Props) {
   return (
     <Li>
-      <SqureFrame>
+      <SquareFrame>
         <Image src="/images/sample.png" alt="sample" layout="fill" objectFit="cover" />
-      </SqureFrame>
+      </SquareFrame>
       <h3>{data.title}</h3>
       <p>{data.contents}</p>
     </Li>

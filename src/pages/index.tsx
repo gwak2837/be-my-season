@@ -210,12 +210,12 @@ export default function HomePage() {
                 <A href="mailto:lunez@theheartcompany.kr">lunez@theheartcompany.kr</A>
                 <br />
                 <b>카카오채널: </b>
-                <A href="http://pf.kakao.com/bemyseason" target="_blank" rel="noreferrer">
+                <A href="https://pf.kakao.com/_mxjcxaT" target="_blank" rel="noreferrer">
                   bemyseason
                 </A>
               </P>
 
-              <P>
+              <div>
                 <A
                   href="https://map.naver.com/v5/search/%EC%9D%B8%EC%B2%9C%20%EC%84%9C%EA%B5%AC%20%EC%97%BC%EA%B3%A1%EB%A1%9C%20464%EB%B2%88%EA%B8%B8%2015,%20%EC%93%B0%EB%A6%AC%EC%97%A0%ED%83%80%EC%9B%8C%208%EC%B8%B5/address/14100963.18511999,4512735.357471723,%EC%9D%B8%EC%B2%9C%EA%B4%91%EC%97%AD%EC%8B%9C%20%EC%84%9C%EA%B5%AC%20%EC%97%BC%EA%B3%A1%EB%A1%9C464%EB%B2%88%EA%B8%B8%2015,new?c=14100913.3362520,4512737.6734908,19,0,0,0,dh"
                   target="_blank"
@@ -224,7 +224,7 @@ export default function HomePage() {
                   인천 서구 염곡로 464번길 15, 쓰리엠타워 8층
                 </A>
                 <h6>copyright 2022.비:마이시즌 All right Reserved</h6>
-              </P>
+              </div>
 
               <FlexGap>
                 <Link href="/terms-of-service" passHref>

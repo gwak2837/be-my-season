@@ -1,5 +1,6 @@
 import 'react-toastify/dist/ReactToastify.min.css'
 import 'normalize.css'
+import 'src/styles/toast.css'
 
 import type { NextPage } from 'next'
 import type { AppProps } from 'next/app'
