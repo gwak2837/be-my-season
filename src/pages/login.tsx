@@ -1,5 +1,6 @@
-import { atom } from 'recoil'
+import { ReactElement } from 'react'
 import PageHead from 'src/components/PageHead'
+import NavigationLayout from 'src/layouts/NavigationLayout'
 import KakaoIcon from 'src/svgs/kakao.svg'
 import styled from 'styled-components'
 
@@ -12,7 +13,7 @@ const KakaoButton = styled.button`
 
   width: 100%;
   background: #fee500;
-  padding: 1rem;
+  padding: 1rem 1rem 1rem calc(1.5rem + 24px);
   margin: 0 0 2rem;
   transition: background 0.3s ease-in;
   border-radius: 10px;
@@ -46,4 +47,8 @@ export default function LoginPage() {
       </KakaoButton>
     </PageHead>
   )
+}
+
+LoginPage.getLayout = function getLayout(page: ReactElement) {
+  return <NavigationLayout>{page}</NavigationLayout>
 }

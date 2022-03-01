@@ -192,7 +192,7 @@ export default function HomePage() {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  000-00-00000
+                  505-81-86104
                 </A>
                 <br />
                 <b>통신판매신고번호: </b>

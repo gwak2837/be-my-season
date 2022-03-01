@@ -12,6 +12,7 @@ CREATE TABLE user (
   birthday char(4),
   phone_number varchar(20) UNIQUE,
   kakao_id int UNIQUE,
+  naver_id int UNIQUE,
   is_admin boolean NOT NULL DEFAULT false
 );
 
@@ -57,6 +58,7 @@ CREATE TABLE program (
   modification_time timestamp NOT NULL DEFAULT NOW(),
   title varchar(255) NOT NULL,
   description text NOT NULL,
+  detail text NOT NULL,
   price int NOT NULL,
   `type` int NOT NULL,
   author_id int REFERENCES user ON DELETE CASCADE
@@ -80,6 +82,7 @@ CREATE TABLE community (
   modification_time timestamp NOT NULL DEFAULT NOW(),
   title varchar(255) NOT NULL,
   description text NOT NULL,
+  detail text NOT NULL,
   `type` int NOT NULL,
   author_id int REFERENCES user ON DELETE CASCADE
 );
