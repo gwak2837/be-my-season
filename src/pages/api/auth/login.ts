@@ -27,5 +27,5 @@ export default async function handleLogin(req: NextApiRequest, res: NextApiRespo
       .status(401)
       .send({ message: '로그인에 실패했어요. 아이디 또는 비밀번호를 확인해주세요.' })
 
-  return { jwt: await generateJWT({ userId: (rows as any)[0].id }) }
+  return res.status(200).json({ jwt: await generateJWT({ userId: (rows as any)[0].id }) })
 }

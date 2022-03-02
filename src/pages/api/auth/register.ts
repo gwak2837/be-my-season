@@ -43,5 +43,7 @@ export default async function handleRegister(req: NextApiRequest, res: NextApiRe
     passwordHashWithSalt,
   ])
 
-  return { jwt: await generateJWT({ userId: (newUserHeader as any).insertId }) }
+  return res
+    .status(200)
+    .json({ jwt: await generateJWT({ userId: (newUserHeader as any).insertId }) })
 }

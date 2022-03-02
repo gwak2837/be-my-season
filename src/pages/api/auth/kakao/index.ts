@@ -1,9 +1,9 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { generateJWT } from 'src/utils/jwt'
 
+import { connection } from '../..'
 import getKakaoUser from './sql/getKakaoUser.sql'
 import registerKakaoUser from './sql/registerKakaoUser.sql'
-import { connection } from '..'
 
 export default async function handleKakaoAuth(req: NextApiRequest, res: NextApiResponse) {
   if (!req.query.code) {

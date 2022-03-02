@@ -6,26 +6,111 @@
 - Node.js 16.14
 - Yarn 3.2
 - PM2 5.2
+- nginx 1.18
 
 ## 설정
 
-### Start server
+### Download source code
 
 ```bash
 git clone https://github.com/rmfpdlxmtidl/be-my-season.git
 cd be-my-season
+yarn
 vi .env.local
+```
+
+```
+MYSQL_CONNECTION_STRING=
+JWT_SECRET_KEY=
+KAKAO_ADMIN_KEY=
+NEXT_PUBLIC_KAKAO_REST_API_KEY=
+```
+
+`.env.local` 파일에 환경 변수를 설정합니다.
+
+#### 1. Start server
+
+```bash
+yarn build && pm2 delete 0 && pm2 --name be-my-season start yarn -- start
+```
+
+성능에 최적화된 서버를 실행합니다.
+
+#### 2. Restart server
+
+```bash
 ./restart-server
 ```
 
-### 환경 변수
+성능에 최적화된 서버를 재실행합니다.
+
+#### 3. Start server on local development environment
 
 ```
-
+yarn dev
 ```
+
+개발 환경에 최적화된 서버를 실행합니다. 코드 저장 시 자동으로 재실행됩니다.
 
 ### MySQL SSH 연결
 
 ```bash
 $ ssh -N -L 3306:localhost:3306 root@103.55.191.69
+```
+
+### Setting HTTPS
+
+```bash
+# Install nginx
+sudo apt update
+sudo apt install nginx
+sudo ufw app list
+sudo ufw allow 'Nginx HTTP'
+systemctl start nginx
+
+# Configure nginx
+cd /etc/nginx/sites-available
+vi 도메인
+```
+
+```conf
+# *q is our domain, replace port 3000 with your port number
+server {
+  listen 80;
+  listen [::]:80;
+
+  root /var/www/html;
+  index index.html index.htm index.nginx-debian.html;
+
+  server_name 도메인 www.도메인;
+
+location / {
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+}
+
+  # for letsencrypt
+  location ~ /.well-known {
+    allow all;
+  }
+}
+```
+
+```bash
+# Configure nginx
+sudo ln -s /etc/nginx/sites-available/도메인 /etc/nginx/sites-enabled/도메인
+nginx -t
+service nginx restart
+
+# Install certbot
+sudo apt update && sudo apt install certbot python3-certbot-nginx
+
+# Configure certbot
+certbot --nginx -d 도메인 -d www.도메인
+certbot certonly --standalone --preferred-challenges http -d 도메인
+certbot renew --dry-run
 ```

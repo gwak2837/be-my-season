@@ -31,5 +31,5 @@ export default async function handleUnregister(req: NextApiRequest, res: NextApi
     unregisterKakaoUser((rows as any)[0].kakao_id),
   ])
 
-  return true
+  return res.status(200).send({ message: '비마이시즌 서비스 탈퇴에 성공했습니다.' })
 }

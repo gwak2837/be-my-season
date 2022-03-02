@@ -24,8 +24,7 @@ CREATE TABLE wysiwyg (
   id int PRIMARY KEY AUTO_INCREMENT,
   creation_time timestamp NOT NULL DEFAULT NOW(),
   modification_time timestamp NOT NULL DEFAULT NOW(),
-  contents text NOT NULL,
-  `type` int NOT NULL
+  contents text NOT NULL
 );
 
 DROP TABLE IF EXISTS ritual_maker;
@@ -42,6 +41,7 @@ CREATE TABLE ritual_maker (
 
 DROP TABLE IF EXISTS content;
 
+-- type: 0 = column, 1 = interview
 CREATE TABLE content (
   id int PRIMARY KEY AUTO_INCREMENT,
   creation_time timestamp NOT NULL DEFAULT NOW(),
@@ -54,6 +54,7 @@ CREATE TABLE content (
 
 DROP TABLE IF EXISTS program;
 
+-- type: 0 = pre-w, 1 = re-w, 2 = re-turnship
 CREATE TABLE program (
   id int PRIMARY KEY AUTO_INCREMENT,
   creation_time timestamp NOT NULL DEFAULT NOW(),
@@ -78,6 +79,7 @@ CREATE TABLE user_x_program (
 
 DROP TABLE IF EXISTS community;
 
+-- type: 0 = before, 1 = ing, 2 = after
 CREATE TABLE community (
   id int PRIMARY KEY AUTO_INCREMENT,
   creation_time timestamp NOT NULL DEFAULT NOW(),

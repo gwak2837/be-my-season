@@ -1,8 +1,23 @@
-import { ReactElement } from 'react'
+import Link from 'next/link'
+import { ReactElement, useState } from 'react'
 import PageHead from 'src/components/PageHead'
 import NavigationLayout from 'src/layouts/NavigationLayout'
+import Checkbox from 'src/svgs/Checkbox'
 import KakaoIcon from 'src/svgs/kakao.svg'
 import styled from 'styled-components'
+
+const Label = styled.label`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 15px 0;
+  gap: 5px;
+  cursor: pointer;
+`
+
+const AutoLoginInput = styled.input`
+  display: none;
+`
 
 const KakaoButton = styled.button`
   display: flex;
@@ -39,8 +54,54 @@ function goToKakaoLoginPage() {
 const description = ''
 
 export default function LoginPage() {
+  const [isChecked, setIsChecked] = useState(
+    Boolean(globalThis.sessionStorage?.getItem('autoLogin'))
+  )
+
+  function login({ loginId, password }: any) {
+    fetch('/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ loginId, password: password }),
+    })
+  }
+
   return (
     <PageHead title="로그인 - Be:MySeason" description={description}>
+      <form onSubmit={login}>
+        <input />
+        <input />
+        <button type="submit">로그인</button>
+      </form>
+
+      <Label htmlFor="auto-login">
+        <AutoLoginInput
+          id="auto-login"
+          type="checkbox"
+          onChange={(e) => {
+            if (e.target.checked) {
+              sessionStorage.setItem('autoLogin', 'true')
+              setIsChecked(true)
+            } else {
+              sessionStorage.removeItem('autoLogin')
+              setIsChecked(false)
+            }
+          }}
+        />
+        <Checkbox isChecked={isChecked} />
+        로그인 상태를 유지할게요
+      </Label>
+
+      <Link href="/register" passHref>
+        <a>아이디/비밀번호 찾기</a>
+      </Link>
+
+      <Link href="/register" passHref>
+        <a>회원가입</a>
+      </Link>
+
       <KakaoButton onClick={goToKakaoLoginPage}>
         <KakaoIcon />
         카카오톡으로 3초 만에 시작하기

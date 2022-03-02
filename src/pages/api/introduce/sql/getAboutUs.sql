@@ -1,3 +1,3 @@
 SELECT contents
 FROM wysiwyg
-WHERE id = 1
+WHERE id = 2
