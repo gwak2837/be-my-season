@@ -84,9 +84,7 @@ function goToKakaoLoginPage() {
 const description = ''
 
 export default function LoginPage() {
-  const [isChecked, setIsChecked] = useState(
-    Boolean(globalThis.sessionStorage?.getItem('autoLogin'))
-  )
+  const [isChecked, setIsChecked] = useState(false)
 
   const {
     formState: { errors },

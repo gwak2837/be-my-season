@@ -6,7 +6,7 @@ const description = ''
 
 export default function TermsOfServicePage() {
   return (
-    <PageHead title="이용약관 - " description={description}>
+    <PageHead title="이용약관 - Be:MySeason" description={description}>
       이용약관
     </PageHead>
   )
