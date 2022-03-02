@@ -2,31 +2,48 @@ import { useRouter } from 'next/router'
 import { ReactElement } from 'react'
 import { toast } from 'react-toastify'
 import PageHead from 'src/components/PageHead'
-import useUser from 'src/hooks/useUser'
+import useAuth from 'src/hooks/useAuth'
 import NavigationLayout from 'src/layouts/NavigationLayout'
 import { useSWRConfig } from 'swr'
 
 const description = ''
 
 export default function MyPage() {
-  const { user } = useUser()
+  const { data } = useAuth()
   const router = useRouter()
   const { mutate } = useSWRConfig()
 
-  function removeJwtFromStorage() {
+  function logout() {
     sessionStorage.removeItem('jwt')
     localStorage.removeItem('jwt')
     mutate('/api/auth')
-
     toast.success('로그아웃에 성공했어요')
+
+    router.replace('/')
+  }
+
+  async function unregister() {
+    await fetch('/api/user', {
+      method: 'DELETE',
+      headers: {
+        authorization: sessionStorage.getItem('jwt') ?? localStorage.getItem('jwt') ?? '',
+      },
+    })
+
+    sessionStorage.removeItem('jwt')
+    localStorage.removeItem('jwt')
+    mutate('/api/auth')
+    toast.success('탈퇴에 성공했어요')
+
     router.replace('/')
   }
 
   return (
     <PageHead title="마이페이지 - Be:MySeason" description={description}>
-      <div>user id: {user?.userId}</div>
-      <div>is admin: {user?.isAdmin}</div>
-      <button onClick={removeJwtFromStorage}>로그아웃</button>
+      <div>user id: {data?.userId}</div>
+      <div>is admin: {data?.isAdmin}</div>
+      <button onClick={logout}>로그아웃</button>
+      <button onClick={unregister}>회원탈퇴</button>
     </PageHead>
   )
 }

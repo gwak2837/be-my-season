@@ -1,17 +1,16 @@
 import useSWR from 'swr'
 
-async function fetchUser(url: string) {
+async function fetchAuthInfo(url: string) {
   const response = await fetch(url, {
     headers: {
-      authorization:
-        globalThis.sessionStorage?.getItem('jwt') ?? globalThis.localStorage?.getItem('jwt') ?? '',
+      authorization: sessionStorage.getItem('jwt') ?? localStorage.getItem('jwt') ?? '',
     },
   })
   return response.json()
 }
 
-export default function useUser() {
-  const { data, error } = useSWR('/api/auth', fetchUser, {
+export default function useAuth() {
+  const { data, error } = useSWR('/api/auth', fetchAuthInfo, {
     onError: () => {
       sessionStorage.removeItem('jwt')
       localStorage.removeItem('jwt')
@@ -19,7 +18,7 @@ export default function useUser() {
   })
 
   return {
-    user: data,
+    data,
     isLoading: !error && !data,
     hasError: error,
   }

@@ -4,14 +4,14 @@ import NavigationLayout from 'src/layouts/NavigationLayout'
 
 const description = ''
 
-export default function TermsOfServicePage() {
+export default function FindPage() {
   return (
-    <PageHead title="이용약관 - " description={description}>
-      이용약관
+    <PageHead title="아이디/비밀번호 찾기 - Be:MySeason" description={description}>
+      <div>123</div>
     </PageHead>
   )
 }
 
-TermsOfServicePage.getLayout = function getLayout(page: ReactElement) {
+FindPage.getLayout = function getLayout(page: ReactElement) {
   return <NavigationLayout>{page}</NavigationLayout>
 }

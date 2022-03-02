@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ReactNode, useState } from 'react'
 import Drawer from 'src/components/Drawer'
-import useUser from 'src/hooks/useUser'
+import useAuth from 'src/hooks/useAuth'
 import { DESKTOP_MIN_WIDTH } from 'src/models/config'
 import DownArrow from 'src/svgs/down-arrow.svg'
 import HamburgerIcon from 'src/svgs/hamburger.svg'
@@ -101,9 +101,9 @@ type Props = {
 }
 
 function NavigationLayout({ children }: Props) {
-  const { user, isLoading, hasError } = useUser()
-  const userId = user?.userId
-  const isAdmin = user?.isAdmin
+  const { data, isLoading, hasError } = useAuth()
+  const userId = data?.userId
+  const isAdmin = data?.isAdmin
 
   const [open, setOpen] = useState(false)
   const [isIntroduceOpen, setIsIntroduceOpen] = useState(false)

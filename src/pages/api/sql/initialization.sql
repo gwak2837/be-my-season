@@ -12,7 +12,7 @@ CREATE TABLE user (
   birthday char(4),
   phone_number varchar(20) NOT NULL UNIQUE,
   is_admin boolean NOT NULL DEFAULT false,
-  login_id varchar(100) UNIQUE,
+  login_id varchar(20) UNIQUE,
   kakao_id int UNIQUE,
   naver_id int UNIQUE,
   password_hash varchar(1000)

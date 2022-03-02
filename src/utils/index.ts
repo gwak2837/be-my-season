@@ -14,3 +14,19 @@ export async function sha256(message: string) {
   const hashHex = hashArray.map((b) => b.toString(16).padStart(2, '0')).join('')
   return hashHex
 }
+
+export function formatPhoneNumber(phoneNumber: string) {
+  const value = phoneNumber.replace(/\D/g, '')
+
+  if (value.length >= 9) {
+    return `${value.slice(0, 3)}-${value.slice(3, 7)}-${value.slice(7, 11)}`
+  } else if (value.length >= 4) {
+    return `${value.slice(0, 3)}-${value.slice(3)}`
+  } else {
+    return value
+  }
+}
+
+export function isEmptyObject(obj: Record<string, unknown>) {
+  return obj && Object.keys(obj).length === 0 && Object.getPrototypeOf(obj) === Object.prototype
+}

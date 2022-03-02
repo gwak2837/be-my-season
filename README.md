@@ -55,8 +55,10 @@ yarn dev
 ### MySQL SSH 연결
 
 ```bash
-$ ssh -N -L 3306:localhost:3306 root@103.55.191.69
+$ ssh -N -L 3306:localhost:3306 cloud-mysql-server-user-name@cloud-mysql-server-ip
 ```
+
+로컬 개발 환경에서 클라우드 MySQL 서버에 SSH 접속하고 싶을 때 실행합니다.
 
 ### Setting HTTPS
 
