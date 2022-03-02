@@ -6,7 +6,7 @@ const description = ''
 
 export default function PrivacyPolicyPage() {
   return (
-    <PageHead title="개인정보처리방침 - " description={description}>
+    <PageHead title="개인정보처리방침 - Be:MySeason" description={description}>
       개인정보처리방침
     </PageHead>
   )
