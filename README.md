@@ -31,7 +31,7 @@ NEXT_PUBLIC_KAKAO_REST_API_KEY=
 #### 1. Start server
 
 ```bash
-yarn build && pm2 delete 0 && pm2 --name be-my-season start yarn -- start
+yarn build && pm2 --name be-my-season start yarn -- start
 ```
 
 성능에 최적화된 서버를 실행합니다.
@@ -84,14 +84,14 @@ server {
 
   server_name 도메인 www.도메인;
 
-location / {
-        proxy_pass http://localhost:3000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_cache_bypass $http_upgrade;
-}
+  location / {
+    proxy_pass http://localhost:3000;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+    proxy_set_header Host $host;
+    proxy_cache_bypass $http_upgrade;
+  }
 
   # for letsencrypt
   location ~ /.well-known {
@@ -99,6 +99,8 @@ location / {
   }
 }
 ```
+
+`/etc/nginx/sites-available` 경로에 `도메인` 파일을 만들어서 위 내용을 적절히 바꿔 입력해줍니다.
 
 ```bash
 # Configure nginx
@@ -113,4 +115,13 @@ sudo apt update && sudo apt install certbot python3-certbot-nginx
 certbot --nginx -d 도메인 -d www.도메인
 certbot certonly --standalone --preferred-challenges http -d 도메인
 certbot renew --dry-run
+
+# Auto renew certificate
+crontab -e
 ```
+
+```
+0 12 * * * /usr/bin/certbot renew --quiet
+```
+
+매일 정오에 서버의 인증서가 다음 30일 이내에 만료되는지 확인하고 만료되면 갱신하는 명령을 실행합니다. `--quiet` 은 certbot이 출력을 생성하지 않게 하는 옵션입니다.

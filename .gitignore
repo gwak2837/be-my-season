@@ -132,5 +132,4 @@ public/*.js
 !.yarn/versions
 .pnp.*
 
-# Docker
-*.tar
+public/cert
