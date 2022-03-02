@@ -5,15 +5,17 @@ CREATE TABLE user (
   creation_time timestamp NOT NULL DEFAULT NOW(),
   modification_time timestamp NOT NULL DEFAULT NOW(),
   nickname varchar(20) NOT NULL,
-  profile_image_url text NOT NULL,
-  email varchar(255) UNIQUE,
+  profile_image_url text,
+  email varchar(255) NOT NULL UNIQUE,
   gender int,
   birthyear char(4),
   birthday char(4),
-  phone_number varchar(20) UNIQUE,
+  phone_number varchar(20) NOT NULL UNIQUE,
+  is_admin boolean NOT NULL DEFAULT false,
+  login_id varchar(100) UNIQUE,
   kakao_id int UNIQUE,
   naver_id int UNIQUE,
-  is_admin boolean NOT NULL DEFAULT false
+  password_hash varchar(1000)
 );
 
 DROP TABLE IF EXISTS wysiwyg;

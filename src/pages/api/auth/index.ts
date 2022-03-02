@@ -1,14 +1,11 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { verifyJWT } from 'src/utils/jwt'
 
-import getUser from './sql/getUser.sql'
+import getUser from './sql/getUserById.sql'
 import { connection } from '..'
 
 export default async function handleAuth(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'GET') {
-    res.status(405).send({ message: 'Only GET requests allowed' })
-    return
-  }
+  if (req.method !== 'GET') return res.status(405).send({ message: 'Only GET requests allowed' })
 
   const jwt = req.headers.authorization
   if (!jwt) return res.status(200).send({})

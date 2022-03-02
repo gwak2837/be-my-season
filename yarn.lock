@@ -1904,6 +1904,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/bcryptjs@npm:^2.4.2":
+  version: 2.4.2
+  resolution: "@types/bcryptjs@npm:2.4.2"
+  checksum: 220dade7b0312b41e23ccfb15f2ddde7804eb3c7ef41db41a6c49054be1e19a15eb3dd8c8ef196494f0866307cce22ad6f3f272941387124707d81dc66155bbc
+  languageName: node
+  linkType: hard
+
 "@types/estree@npm:0.0.39":
   version: 0.0.39
   resolution: "@types/estree@npm:0.0.39"
@@ -2547,6 +2554,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"bcryptjs@npm:^2.4.3":
+  version: 2.4.3
+  resolution: "bcryptjs@npm:2.4.3"
+  checksum: 0e80ed852a41f5dfb1853f53ee14a7390b0ef263ce05dba6e2ef3cd919dfad025a7c21ebcfe5bc7fa04b100990edf90c7a877ff7fe623d3e479753253131b629
+  languageName: node
+  linkType: hard
+
 "be-my-season@workspace:.":
   version: 0.0.0-use.local
   resolution: "be-my-season@workspace:."
@@ -2555,6 +2569,7 @@ __metadata:
     "@toast-ui/editor": ^3.1.3
     "@toast-ui/editor-plugin-color-syntax": ^3.0.2
     "@toast-ui/react-editor": ^3.1.3
+    "@types/bcryptjs": ^2.4.2
     "@types/jsonwebtoken": ^8.5.8
     "@types/node": ^17.0.21
     "@types/react": ^17.0.39
@@ -2563,6 +2578,7 @@ __metadata:
     "@types/tunnel-ssh": ^4.1.1
     "@typescript-eslint/eslint-plugin": ^5.12.1
     "@typescript-eslint/parser": ^5.12.1
+    bcryptjs: ^2.4.3
     eslint: ^8.10.0
     eslint-config-next: ^12.1.0
     eslint-config-prettier: ^8.4.0

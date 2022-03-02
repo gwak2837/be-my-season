@@ -97,17 +97,6 @@ async function fetchKakaoUserInfo(accessToken: string) {
   return (await response.json()) as Record<string, unknown>
 }
 
-// export async function unregisterKakaoUser(kakaoUserId: string) {
-//   return fetch('https://kapi.kakao.com/v1/user/unlink', {
-//     method: 'POST',
-//     headers: {
-//       'Content-Type': 'application/x-www-form-urlencoded',
-//       Authorization: `KakaoAK ${process.env.KAKAO_ADMIN_KEY}`,
-//     },
-//     body: `target_id_type=user_id&target_id=${kakaoUserId}`,
-//   })
-// }
-
 // function verifyTargetCustomer(user: any) {
 //   return (
 //     user.kakao_account.gender === 'female' &&
