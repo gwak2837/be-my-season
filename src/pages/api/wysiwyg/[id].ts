@@ -17,7 +17,7 @@ export default async function handleWysiwyg(req: NextApiRequest, res: NextApiRes
   if (req.method === 'PUT') {
     if (isEmptyObject(req.body)) return res.status(400).send({ message: '값을 입력해주세요.' })
 
-    const [rows] = await (await connection).query(updateWysiwyg, [req.query.id, req.body.contents])
+    const [rows] = await (await connection).query(updateWysiwyg, [req.body.contents, req.query.id])
     return res.status(200).json({ rows })
   }
 
