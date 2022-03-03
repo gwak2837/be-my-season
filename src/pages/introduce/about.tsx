@@ -1,11 +1,14 @@
+import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import { ReactElement } from 'react'
 import PageHead from 'src/components/PageHead'
-import ToastViewer from 'src/components/ToastViewer'
 import IntroduceLayout from 'src/layouts/IntroduceLayout'
 import NavigationLayout from 'src/layouts/NavigationLayout'
 import { defaultFetcher } from 'src/utils'
 import useSWR from 'swr'
+
+const ToastViewer = dynamic(() => import('src/components/ToastViewer'), { ssr: false })
+const ToastEditor = dynamic(() => import('src/components/ToastEditor'), { ssr: false })
 
 const description = ''
 
