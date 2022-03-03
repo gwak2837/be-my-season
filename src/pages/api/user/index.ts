@@ -58,28 +58,31 @@ export default async function handleUser(req: NextApiRequest, res: NextApiRespon
     )
       return res.status(400).send({ message: '필수 입력값을 입력해주세요.' })
 
-    if (emailRegEx.test(email))
+    if (!emailRegEx.test(email))
       return res.status(400).send({ message: '이메일 형식을 확인해주세요.' })
 
     const passwordHashWithSalt = await hash(password, await genSalt())
 
-    const [newUserHeader] = await (
-      await connection
-    ).query(register, [
-      nickname,
-      profileImageUrl,
-      email,
-      sex,
-      birthyear,
-      birthday,
-      phoneNumber,
-      loginId,
-      passwordHashWithSalt,
-    ])
-
-    return res
-      .status(200)
-      .json({ jwt: await generateJWT({ userId: (newUserHeader as any).insertId }) })
+    try {
+      const [newUserHeader] = await (
+        await connection
+      ).query(register, [
+        nickname,
+        profileImageUrl,
+        email,
+        sex,
+        birthyear,
+        birthday,
+        phoneNumber,
+        loginId,
+        passwordHashWithSalt,
+      ])
+      return res
+        .status(200)
+        .json({ jwt: await generateJWT({ userId: (newUserHeader as any).insertId }) })
+    } catch (error) {
+      return res.status(500).send({ message: '500: 데이터베이스 쿼리 오류' })
+    }
   }
 
   // Update me

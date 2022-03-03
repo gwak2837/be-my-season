@@ -1,12 +1,15 @@
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { ReactElement, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 import PageHead from 'src/components/PageHead'
 import NavigationLayout from 'src/layouts/NavigationLayout'
 import Checkbox from 'src/svgs/Checkbox'
 import KakaoIcon from 'src/svgs/kakao.svg'
 import { sha256 } from 'src/utils'
 import styled from 'styled-components'
+import { useSWRConfig } from 'swr'
 
 import { FlexAround, GridForm, PrimaryButton, RedH5 } from './register'
 
@@ -84,6 +87,9 @@ function goToKakaoLoginPage() {
 const description = ''
 
 export default function LoginPage() {
+  const router = useRouter()
+  const { mutate } = useSWRConfig()
+
   const [isChecked, setIsChecked] = useState(false)
 
   const {
@@ -97,14 +103,30 @@ export default function LoginPage() {
     },
   })
 
-  function login({ loginId, password }: any) {
-    fetch('/api/auth', {
+  // Login request
+  const [loadingRegister, setLoadingRegister] = useState(false)
+
+  async function login({ loginId, password }: any) {
+    setLoadingRegister(true)
+    const response = await fetch('/api/auth', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ loginId, password: sha256(password) }),
+      body: JSON.stringify({ loginId, password: await sha256(password) }),
     })
+    const result = await response.json()
+    setLoadingRegister(false)
+
+    if (!response.ok) {
+      toast.warn(result.message)
+      return
+    }
+
+    toast.success('로그인에 성공했어요')
+    sessionStorage.setItem('jwt', result.jwt)
+    mutate('/api/auth')
+    router.replace('/')
   }
 
   return (

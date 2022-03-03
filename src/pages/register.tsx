@@ -1,12 +1,15 @@
 import Link from 'next/link'
-import { ReactElement, useState } from 'react'
+import { useRouter } from 'next/router'
+import { ReactElement, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { toast } from 'react-toastify'
 import PageHead from 'src/components/PageHead'
 import SingleSelectionCheckbox from 'src/components/SingleSelectionCheckbox'
 import NavigationLayout from 'src/layouts/NavigationLayout'
 import Checkbox from 'src/svgs/Checkbox'
-import { emailRegEx, formatPhoneNumber } from 'src/utils'
+import { emailRegEx, formatPhoneNumber, isEmptyObject, sha256 } from 'src/utils'
 import styled from 'styled-components'
+import { useSWRConfig } from 'swr'
 
 import { DisplayNoneInput } from './login'
 
@@ -75,9 +78,12 @@ export const RedH5 = styled.h5`
 `
 
 export const PrimaryButton = styled.button`
-  background: #de684a;
+  background: ${(p) => (p.disabled ? '#ccc' : '#de684a')};
   color: #fff;
+  cursor: ${(p) => (p.disabled ? 'not-allowed' : 'pointer')};
   padding: 1rem;
+
+  transition: all 0.3s ease-out;
 `
 
 export const FlexAround = styled.div`
@@ -101,6 +107,9 @@ const A = styled.a`
 const description = ''
 
 export default function RegisterPage() {
+  const router = useRouter()
+  const { mutate } = useSWRConfig()
+
   const {
     formState: { errors },
     getValues,
@@ -123,7 +132,32 @@ export default function RegisterPage() {
     },
   })
 
-  function registerUser({
+  // Check uniqueness of input
+  const timeoutRef = useRef<any>()
+  const [loadingCheckLoginId, setLoadingCheckLoginId] = useState(false)
+
+  function checkUniquenessDebouncly(input: 'loginId' | 'email' | 'phoneNumber') {
+    return new Promise<boolean | string>((resolve) => {
+      clearTimeout(timeoutRef.current)
+
+      timeoutRef.current = setTimeout(async () => {
+        setLoadingCheckLoginId(true)
+        const response = await fetch(`/api/user/unique?${input}=${getValues(input)}`)
+        setLoadingCheckLoginId(false)
+
+        if (response.ok) {
+          return resolve(true)
+        } else {
+          return resolve(`${getValues(input)} 는 이미 사용 중입니다.`)
+        }
+      }, 1000)
+    })
+  }
+
+  // Register request
+  const [loadingRegister, setLoadingRegister] = useState(false)
+
+  async function registerUser({
     nickname,
     email,
     sex,
@@ -133,7 +167,8 @@ export default function RegisterPage() {
     password,
     profileImageUrl,
   }: RegisterForm) {
-    fetch('/api/register', {
+    setLoadingRegister(true)
+    const response = await fetch('/api/user', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -147,9 +182,21 @@ export default function RegisterPage() {
         birthday: birth.slice(5, 7) + birth.slice(8, 10),
         phoneNumber,
         loginId,
-        password,
+        password: await sha256(password),
       }),
     })
+    const result = await response.json()
+    setLoadingRegister(false)
+
+    if (!response.ok) {
+      toast.warn(result.message)
+      return
+    }
+
+    toast.success('회원가입에 성공했어요')
+    sessionStorage.setItem('jwt', result.jwt)
+    mutate('/api/auth')
+    router.replace('/')
   }
 
   return (
@@ -172,7 +219,11 @@ export default function RegisterPage() {
                 value: 20,
                 message: '20자 이내로 입력해주세요',
               },
-              // validate: checkNicknameUniquenessDebouncly,
+              pattern: {
+                value: /^[A-Za-z]{1}[A-Za-z0-9]*$/,
+                message: '첫글자는 영문자, 나머지는 영문자 또는 숫자로만 입력해주세요',
+              },
+              validate: () => checkUniquenessDebouncly('loginId'),
             })}
           />
           <RedH5>{errors.loginId?.message}</RedH5>
@@ -213,7 +264,7 @@ export default function RegisterPage() {
             id="passwordConfirm"
             type="password"
             {...register('passwordConfirm', {
-              required: '비밀번호을 입력해주세요',
+              required: '비밀번호을 확인해주세요',
               minLength: {
                 value: 8,
                 message: '8자 이상 입력해주세요',
@@ -287,7 +338,7 @@ export default function RegisterPage() {
                 value: emailRegEx,
                 message: '이메일 형식에 맞게 입력해주세요',
               },
-              // validate: checkNicknameUniquenessDebouncly,
+              validate: () => checkUniquenessDebouncly('email'),
             })}
           />
           <RedH5>{errors.email?.message}</RedH5>
@@ -355,7 +406,7 @@ export default function RegisterPage() {
                 value: /^0[0-9]{2}-[0-9]{4}-[0-9]{4}$/,
                 message: '휴대폰 번호를 형식에 맞게 입력해주세요',
               },
-              // validate: checkNicknameUniquenessDebouncly,
+              validate: () => checkUniquenessDebouncly('phoneNumber'),
             })}
           />
           <RedH5>{errors.phoneNumber?.message}</RedH5>
@@ -399,10 +450,11 @@ export default function RegisterPage() {
 
         <GridLi>
           <DisplayNoneInput type="checkbox" />
-          {/* <Checkbox isChecked={checkedValue === value} /> */}
         </GridLi>
 
-        <PrimaryButton type="submit">회원가입</PrimaryButton>
+        <PrimaryButton disabled={!isEmptyObject(errors)} type="submit">
+          회원가입
+        </PrimaryButton>
 
         <FlexAround>
           <Link href="/find" passHref>
