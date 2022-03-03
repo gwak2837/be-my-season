@@ -1,4 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { encodeSex } from 'src/utils'
 import { generateJWT } from 'src/utils/jwt'
 
 import { connection } from '../..'
@@ -60,7 +61,7 @@ export default async function handleKakaoAuth(req: NextApiRequest, res: NextApiR
     kakaoAccount.profile.nickname,
     kakaoAccount.profile.profile_image_url,
     kakaoAccount.email,
-    kakaoAccount.gender,
+    encodeSex(kakaoAccount.gender),
     kakaoAccount.birthyear,
     kakaoAccount.birthday,
     kakaoAccount.phone_number,

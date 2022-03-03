@@ -7,31 +7,11 @@ import PageHead from 'src/components/PageHead'
 import SingleSelectionCheckbox from 'src/components/SingleSelectionCheckbox'
 import NavigationLayout from 'src/layouts/NavigationLayout'
 import Checkbox from 'src/svgs/Checkbox'
-import { emailRegEx, formatPhoneNumber, isEmptyObject, sha256 } from 'src/utils'
+import { Sex, emailRegEx, encodeSex, formatPhoneNumber, isEmptyObject, sha256 } from 'src/utils'
 import styled from 'styled-components'
 import { useSWRConfig } from 'swr'
 
 import { DisplayNoneInput } from './login'
-
-enum Sex {
-  unknown,
-  male,
-  female,
-  transMale,
-  transFemale,
-  intersex,
-}
-
-function encodeSex(sex: string) {
-  switch (sex) {
-    case '남성':
-      return Sex.male
-    case '여성':
-      return Sex.female
-    default:
-      return Sex.unknown
-  }
-}
 
 type RegisterForm = {
   loginId: string

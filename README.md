@@ -50,7 +50,7 @@ yarn build && pm2 --name be-my-season start yarn -- start
 yarn dev
 ```
 
-개발 환경에 최적화된 서버를 실행합니다. 코드 저장 시 자동으로 재실행됩니다.
+개발 환경에 최적화된 서버를 실행합니다. 코드 변경 사항을 저장하면 서버가 자동으로 재실행됩니다.
 
 ### MySQL SSH 연결
 

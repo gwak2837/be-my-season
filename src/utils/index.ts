@@ -35,3 +35,25 @@ export async function defaultFetcher(url: string) {
   const response = await fetch(url)
   return response.json()
 }
+
+export enum Sex {
+  unknown,
+  male,
+  female,
+  transMale,
+  transFemale,
+  intersex,
+}
+
+export function encodeSex(sex: string) {
+  switch (sex) {
+    case '남성':
+    case 'male':
+      return Sex.male
+    case '여성':
+    case 'female':
+      return Sex.female
+    default:
+      return Sex.unknown
+  }
+}

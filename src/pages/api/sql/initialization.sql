@@ -7,7 +7,7 @@ CREATE TABLE user (
   nickname varchar(20) NOT NULL,
   profile_image_url text,
   email varchar(255) NOT NULL UNIQUE,
-  gender int NOT NULL,
+  sex int NOT NULL,
   birthyear char(4) NOT NULL,
   birthday char(4) NOT NULL,
   phone_number varchar(20) NOT NULL UNIQUE,

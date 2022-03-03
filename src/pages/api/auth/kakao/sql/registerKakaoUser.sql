@@ -2,7 +2,7 @@ INSERT INTO user (
     nickname,
     profile_image_url,
     email,
-    gender,
+    sex,
     birthyear,
     birthday,
     phone_number,
