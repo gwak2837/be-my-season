@@ -30,3 +30,8 @@ export function formatPhoneNumber(phoneNumber: string) {
 export function isEmptyObject(obj: Record<string, unknown>) {
   return obj && Object.keys(obj).length === 0 && Object.getPrototypeOf(obj) === Object.prototype
 }
+
+export async function defaultFetcher(url: string) {
+  const response = await fetch(url)
+  return response.json()
+}

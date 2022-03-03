@@ -34,7 +34,6 @@ export default function MyPage() {
     localStorage.removeItem('jwt')
     mutate('/api/auth')
     toast.success('탈퇴에 성공했어요')
-
     router.replace('/')
   }
 

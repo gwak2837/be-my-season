@@ -7,9 +7,9 @@ CREATE TABLE user (
   nickname varchar(20) NOT NULL,
   profile_image_url text,
   email varchar(255) NOT NULL UNIQUE,
-  gender int,
-  birthyear char(4),
-  birthday char(4),
+  gender int NOT NULL,
+  birthyear char(4) NOT NULL,
+  birthday char(4) NOT NULL,
   phone_number varchar(20) NOT NULL UNIQUE,
   is_admin boolean NOT NULL DEFAULT false,
   is_verified boolean NOT NULL DEFAULT false,
@@ -150,3 +150,12 @@ CREATE TABLE faq (
   title varchar(255) NOT NULL,
   description varchar(255) NOT NULL
 );
+
+INSERT INTO wysiwyg (contents)
+VALUES ('hello world brand story');
+
+INSERT INTO wysiwyg (contents)
+VALUES ('hello world about us');
+
+INSERT INTO wysiwyg (contents)
+VALUES ('hello world ritual mate');

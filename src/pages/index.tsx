@@ -182,9 +182,9 @@ export default function HomePage() {
           <FlexBetween>
             <GridGap>
               <P>
-                <b>회사명:</b> 주식회사 더하트컴퍼니
+                <b>회사명:</b> (주)더하트컴퍼니
                 <br />
-                <b>대표자:</b> 김민하 박대은
+                <b>대표자:</b> 박대은
                 <br />
                 <b>사업자등록번호: </b>
                 <A
@@ -201,7 +201,7 @@ export default function HomePage() {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  000-00-00000
+                  2021-인천서구-2286
                 </A>
               </P>
 
@@ -221,9 +221,9 @@ export default function HomePage() {
                   target="_blank"
                   rel="noreferrer"
                 >
-                  인천 서구 염곡로 464번길 15, 쓰리엠타워 8층
+                  인천 서구 염곡로 464번길 15, 쓰리엠타워 8층 809호
                 </A>
-                <h6>copyright 2022.비:마이시즌 All right Reserved</h6>
+                <h6>copyright {new Date().getFullYear()}. Be:MySeason All right Reserved</h6>
               </div>
 
               <FlexGap>

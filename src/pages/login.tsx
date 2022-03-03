@@ -124,7 +124,11 @@ export default function LoginPage() {
     }
 
     toast.success('로그인에 성공했어요')
-    sessionStorage.setItem('jwt', result.jwt)
+    if (sessionStorage.getItem('autoLogin')) {
+      localStorage.setItem('jwt', result.jwt)
+    } else {
+      sessionStorage.setItem('jwt', result.jwt)
+    }
     mutate('/api/auth')
     router.replace('/')
   }
