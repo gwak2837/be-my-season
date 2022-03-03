@@ -151,6 +151,32 @@ CREATE TABLE faq (
   description varchar(255) NOT NULL
 );
 
+-- password_hash: Qwe123!@#
+INSERT INTO user (
+    nickname,
+    email,
+    sex,
+    birthyear,
+    birthday,
+    phone_number,
+    is_admin,
+    is_verified,
+    login_id,
+    password_hash
+  )
+VALUES (
+    'nickname',
+    'gwak2837@kakao.com',
+    1,
+    '1998',
+    '0412',
+    '010-9203-2837',
+    1,
+    1,
+    'gwak2837',
+    '$2a$10$b9iZm0kbNyq4Q2px97Lh9uPkHcZv3JCBYbJBKw5YtcewpdZFIN2PO'
+  );
+
 INSERT INTO wysiwyg (contents)
 VALUES ('hello world brand story');
 
@@ -159,3 +185,339 @@ VALUES ('hello world about us');
 
 INSERT INTO wysiwyg (contents)
 VALUES ('hello world ritual mate');
+
+INSERT INTO content (title, description, `type`, author_id)
+VALUES (
+    'This is title1',
+    'Welcome to Be:MySeason1',
+    0,
+    1
+  );
+
+INSERT INTO content (title, description, `type`, author_id)
+VALUES (
+    'This is title2',
+    'Welcome to Be:MySeason2',
+    0,
+    1
+  );
+
+INSERT INTO content (title, description, `type`, author_id)
+VALUES (
+    'This is title3',
+    'Welcome to Be:MySeason3',
+    0,
+    1
+  );
+
+INSERT INTO content (title, description, `type`, author_id)
+VALUES (
+    'This is title1',
+    'Welcome to Be:MySeason1',
+    1,
+    1
+  );
+
+INSERT INTO content (title, description, `type`, author_id)
+VALUES (
+    'This is title2',
+    'Welcome to Be:MySeason2',
+    1,
+    1
+  );
+
+INSERT INTO content (title, description, `type`, author_id)
+VALUES (
+    'This is title3',
+    'Welcome to Be:MySeason3',
+    1,
+    1
+  );
+
+INSERT INTO program (
+    title,
+    description,
+    detail,
+    price,
+    `type`,
+    author_id
+  )
+VALUES (
+    'This is title1',
+    'Welcome to Be:MySeason1',
+    'Detail',
+    10000,
+    0,
+    1
+  );
+
+INSERT INTO program (
+    title,
+    description,
+    detail,
+    price,
+    `type`,
+    author_id
+  )
+VALUES (
+    'This is title2',
+    'Welcome to Be:MySeason2',
+    'Detail',
+    20000,
+    0,
+    1
+  );
+
+INSERT INTO program (
+    title,
+    description,
+    detail,
+    price,
+    `type`,
+    author_id
+  )
+VALUES (
+    'This is title3',
+    'Welcome to Be:MySeason3',
+    'Detail',
+    30000,
+    0,
+    1
+  );
+
+INSERT INTO program (
+    title,
+    description,
+    detail,
+    price,
+    `type`,
+    author_id
+  )
+VALUES (
+    'This is title1',
+    'Welcome to Be:MySeason1',
+    'Detail',
+    30000,
+    1,
+    1
+  );
+
+INSERT INTO program (
+    title,
+    description,
+    detail,
+    price,
+    `type`,
+    author_id
+  )
+VALUES (
+    'This is title2',
+    'Welcome to Be:MySeason2',
+    'Detail',
+    20000,
+    1,
+    1
+  );
+
+INSERT INTO program (
+    title,
+    description,
+    detail,
+    price,
+    `type`,
+    author_id
+  )
+VALUES (
+    'This is title3',
+    'Welcome to Be:MySeason3',
+    'Detail',
+    30000,
+    1,
+    1
+  );
+
+INSERT INTO program (
+    title,
+    description,
+    detail,
+    price,
+    `type`,
+    author_id
+  )
+VALUES (
+    'This is title1',
+    'Welcome to Be:MySeason1',
+    'Detail',
+    30000,
+    2,
+    1
+  );
+
+INSERT INTO program (
+    title,
+    description,
+    detail,
+    price,
+    `type`,
+    author_id
+  )
+VALUES (
+    'This is title2',
+    'Welcome to Be:MySeason2',
+    'Detail',
+    20000,
+    2,
+    1
+  );
+
+INSERT INTO program (
+    title,
+    description,
+    detail,
+    price,
+    `type`,
+    author_id
+  )
+VALUES (
+    'This is title3',
+    'Welcome to Be:MySeason3',
+    'Detail',
+    30000,
+    2,
+    1
+  );
+
+INSERT INTO community (
+    title,
+    description,
+    detail,
+    `type`,
+    author_id
+  )
+VALUES (
+    'This is title1',
+    'Welcome to Be:MySeason1',
+    'Detail',
+    0,
+    1
+  );
+
+INSERT INTO community (
+    title,
+    description,
+    detail,
+    `type`,
+    author_id
+  )
+VALUES (
+    'This is title2',
+    'Welcome to Be:MySeason2',
+    'Detail',
+    0,
+    1
+  );
+
+INSERT INTO community (
+    title,
+    description,
+    detail,
+    `type`,
+    author_id
+  )
+VALUES (
+    'This is title3',
+    'Welcome to Be:MySeason3',
+    'Detail',
+    0,
+    1
+  );
+
+INSERT INTO community (
+    title,
+    description,
+    detail,
+    `type`,
+    author_id
+  )
+VALUES (
+    'This is title1',
+    'Welcome to Be:MySeason1',
+    'Detail',
+    1,
+    1
+  );
+
+INSERT INTO community (
+    title,
+    description,
+    detail,
+    `type`,
+    author_id
+  )
+VALUES (
+    'This is title2',
+    'Welcome to Be:MySeason2',
+    'Detail',
+    1,
+    1
+  );
+
+INSERT INTO community (
+    title,
+    description,
+    detail,
+    `type`,
+    author_id
+  )
+VALUES (
+    'This is title3',
+    'Welcome to Be:MySeason3',
+    'Detail',
+    1,
+    1
+  );
+
+INSERT INTO community (
+    title,
+    description,
+    detail,
+    `type`,
+    author_id
+  )
+VALUES (
+    'This is title1',
+    'Welcome to Be:MySeason1',
+    'Detail',
+    2,
+    1
+  );
+
+INSERT INTO community (
+    title,
+    description,
+    detail,
+    `type`,
+    author_id
+  )
+VALUES (
+    'This is title2',
+    'Welcome to Be:MySeason2',
+    'Detail',
+    2,
+    1
+  );
+
+INSERT INTO community (
+    title,
+    description,
+    detail,
+    `type`,
+    author_id
+  )
+VALUES (
+    'This is title3',
+    'Welcome to Be:MySeason3',
+    'Detail',
+    2,
+    1
+  );
