@@ -18,7 +18,6 @@ export default async function handleContent(req: NextApiRequest, res: NextApiRes
     ])
 
     const contents = rows2[0] as any
-    console.log('👀 - contents', contents)
 
     return res.status(200).json({
       nextContent: contents[1]
@@ -37,8 +36,8 @@ export default async function handleContent(req: NextApiRequest, res: NextApiRes
   if (req.method === 'PUT') {
     if (isEmptyObject(req.body)) return res.status(400).send({ message: '값을 입력해주세요.' })
 
-    const [rows] = await (await connection).query(updateContent, [req.query.id, req.body.contents])
-    return res.status(200).json({ rows })
+    await (await connection).query(updateContent, [req.body.contents, req.query.id])
+    return res.status(200).send({ message: 'Update complete' })
   }
 
   // Delete content

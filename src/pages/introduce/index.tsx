@@ -11,8 +11,8 @@ import { defaultFetcher } from 'src/utils'
 import styled from 'styled-components'
 import useSWR, { useSWRConfig } from 'swr'
 
-const ToastViewer = dynamic(() => import('src/components/ToastViewer'), { ssr: false })
 const ToastEditor = dynamic(() => import('src/components/ToastEditor'), { ssr: false })
+const ToastViewer = dynamic(() => import('src/components/ToastViewer'), { ssr: false })
 
 const description = ''
 

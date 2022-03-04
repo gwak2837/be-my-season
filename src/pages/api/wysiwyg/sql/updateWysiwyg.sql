@@ -1,3 +1,4 @@
 UPDATE wysiwyg
-SET contents = ?
+SET modification_time = CURRENT_TIMESTAMP,
+  contents = ?
 WHERE id = ?
