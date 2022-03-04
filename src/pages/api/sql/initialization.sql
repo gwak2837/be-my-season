@@ -166,11 +166,11 @@ INSERT INTO user (
   )
 VALUES (
     'nickname',
-    'gwak2837@kakao.com',
+    'be@myseason.com',
     1,
     '1998',
     '0412',
-    '010-9203-2837',
+    '010-0000-0000',
     1,
     1,
     'gwak2837',

@@ -4,5 +4,6 @@ SELECT content.id,
   description,
   `type`
 FROM content
+WHERE `type` = ?
 ORDER BY id DESC
 LIMIT ?, ?

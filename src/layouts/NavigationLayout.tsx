@@ -65,8 +65,9 @@ const HamburgerWrapper = styled.div`
 `
 
 const MinWidth = styled.ul`
-  min-width: 10rem;
-  height: 100vh;
+  min-width: 12rem;
+  height: 100%;
+  overflow: auto;
 
   background: #fff;
   display: flex;

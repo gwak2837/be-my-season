@@ -1,14 +1,31 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
 import createContent from './sql/createContent.sql'
-import getContents from './sql/createContent.sql'
+import getContents from './sql/getContents.sql'
+import getContentsByType from './sql/getContentsByType.sql'
 import { connection } from '..'
 
 export default async function handleContent(req: NextApiRequest, res: NextApiResponse) {
   // Get contents
   if (req.method === 'GET') {
-    const [rows] = await (await connection).query(getContents, [])
-    return res.status(200).json({ rows })
+    const { page, type } = req.query
+    if (!page) return res.status(400).send({ message: 'Please check your input of request' })
+
+    const count = 2
+
+    try {
+      if (type) {
+        const [rows] = await (
+          await connection
+        ).query(getContentsByType, [+type, +page * count, count])
+        return res.status(200).json({ contents: rows })
+      } else {
+        const [rows] = await (await connection).query(getContents, [+page * count, count])
+        return res.status(200).json({ contents: rows })
+      }
+    } catch (error) {
+      return res.status(500).send({ message: '500: 데이터베이스 쿼리 오류' })
+    }
   }
 
   // Create content

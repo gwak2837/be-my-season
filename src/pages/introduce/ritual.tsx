@@ -8,10 +8,26 @@ import useAuth from 'src/hooks/useAuth'
 import IntroduceLayout from 'src/layouts/IntroduceLayout'
 import NavigationLayout from 'src/layouts/NavigationLayout'
 import { defaultFetcher } from 'src/utils'
+import styled from 'styled-components'
 import useSWR, { useSWRConfig } from 'swr'
 
 const ToastViewer = dynamic(() => import('src/components/ToastViewer'), { ssr: false })
 const ToastEditor = dynamic(() => import('src/components/ToastEditor'), { ssr: false })
+
+const FlexCenterCenter = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
+const Button = styled.button`
+  background: #7a583a;
+  border-radius: 10px;
+  color: #fff;
+  padding: 1rem;
+  width: 100%;
+  max-width: 20rem;
+`
 
 const description = ''
 
@@ -54,6 +70,10 @@ export default function RitualMakerPage() {
       ) : (
         'loading'
       )}
+
+      <FlexCenterCenter>
+        <Button>지원하기</Button>
+      </FlexCenterCenter>
     </PageHead>
   )
 }

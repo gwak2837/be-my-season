@@ -10,6 +10,7 @@ export const Frame21to9 = styled.div`
 
 const FlexCenterCenter = styled.div`
   display: flex;
+  flex-flow: row wrap;
   justify-content: center;
   align-items: center;
   gap: min(max(2rem, 8vw), 5rem);

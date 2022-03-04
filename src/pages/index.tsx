@@ -147,7 +147,11 @@ export default function HomePage() {
         <div>
           <FlexBetweenPadding>
             <h3>Contents&nbsp;&nbsp;&nbsp;|</h3>
-            <h5>+ All</h5>
+            <Link href="/content" passHref>
+              <a>
+                <h5>+ All</h5>
+              </a>
+            </Link>
           </FlexBetweenPadding>
           <GridUl>
             <Card data={posts[0]} />
