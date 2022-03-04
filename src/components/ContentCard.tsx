@@ -1,13 +1,16 @@
 import Image from 'next/image'
+import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { SquareFrame } from 'src/styles/common'
 
-function decodeType(type: number) {
+export function decodeType(type: number) {
   switch (type) {
     case 0:
       return 'Column'
     case 1:
       return 'Interview'
+    default:
+      return ''
   }
 }
 
@@ -17,21 +20,19 @@ type Props = {
 }
 
 function ContentCard({ content, showType }: Props) {
-  const router = useRouter()
-
-  function goToContentPage() {
-    router.push(`/content/${content.id}`)
-  }
-
   return (
-    <li onClick={goToContentPage}>
-      <SquareFrame>
-        <Image src="/images/logo-transparent.png" alt="logo" layout="fill" objectFit="cover" />
-      </SquareFrame>
-      <div>
-        {showType && `[${decodeType(content.type)}]`} {content.title}
-      </div>
-      <div>{new Date(content.creation_time).toLocaleDateString()}</div>
+    <li>
+      <Link href={`/content/${content.id}`} passHref>
+        <a>
+          <SquareFrame>
+            <Image src="/images/logo-transparent.png" alt="logo" layout="fill" objectFit="cover" />
+          </SquareFrame>
+          <div>
+            {showType && `[${decodeType(content.type)}]`} {content.title}
+          </div>
+          <div>{new Date(content.creation_time).toLocaleDateString()}</div>
+        </a>
+      </Link>
     </li>
   )
 }

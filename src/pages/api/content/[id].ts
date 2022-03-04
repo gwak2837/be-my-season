@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { isEmptyObject } from 'src/utils'
 
 import deleteContent from './sql/deleteContent.sql'
+import getBeforeAndAfterContent from './sql/getBeforeAndAfterContent.sql'
 import getContent from './sql/getContent.sql'
 import updateContent from './sql/updateContent.sql'
 import { connection } from '..'
@@ -9,8 +10,27 @@ import { connection } from '..'
 export default async function handleContent(req: NextApiRequest, res: NextApiResponse) {
   // Get content
   if (req.method === 'GET') {
-    const [rows] = await (await connection).query(getContent, [req.query.id])
-    return res.status(200).json({ rows })
+    const contentId = req.query.id
+
+    const [rows, rows2] = await Promise.all([
+      (await connection).query(getContent, [contentId]),
+      (await connection).query(getBeforeAndAfterContent, [contentId, contentId]),
+    ])
+
+    const contents = rows2[0] as any
+    console.log('👀 - contents', contents)
+
+    return res.status(200).json({
+      nextContent: contents[1]
+        ? contents[1].id > contentId
+          ? contents[1]
+          : null
+        : contents[0].id > contentId
+        ? contents[0]
+        : null,
+      content: (rows[0] as any)[0],
+      previousContent: contents[0]?.id < contentId ? contents[0] : null,
+    })
   }
 
   // Update content

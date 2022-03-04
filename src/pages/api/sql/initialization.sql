@@ -188,7 +188,7 @@ VALUES ('hello world ritual mate');
 
 INSERT INTO content (title, description, `type`, author_id)
 VALUES (
-    'This is title1',
+    'This is colume title1',
     'Welcome to Be:MySeason1',
     0,
     1
@@ -196,7 +196,7 @@ VALUES (
 
 INSERT INTO content (title, description, `type`, author_id)
 VALUES (
-    'This is title2',
+    'This is colume title2',
     'Welcome to Be:MySeason2',
     0,
     1
@@ -204,7 +204,7 @@ VALUES (
 
 INSERT INTO content (title, description, `type`, author_id)
 VALUES (
-    'This is title3',
+    'This is colume title3',
     'Welcome to Be:MySeason3',
     0,
     1
@@ -212,7 +212,7 @@ VALUES (
 
 INSERT INTO content (title, description, `type`, author_id)
 VALUES (
-    'This is title1',
+    'This is interview title1',
     'Welcome to Be:MySeason1',
     1,
     1
@@ -220,7 +220,7 @@ VALUES (
 
 INSERT INTO content (title, description, `type`, author_id)
 VALUES (
-    'This is title2',
+    'This is interview title2',
     'Welcome to Be:MySeason2',
     1,
     1
@@ -228,7 +228,7 @@ VALUES (
 
 INSERT INTO content (title, description, `type`, author_id)
 VALUES (
-    'This is title3',
+    'This is interview title3',
     'Welcome to Be:MySeason3',
     1,
     1

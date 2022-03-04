@@ -4,7 +4,6 @@ SELECT content.id,
   description,
   `type`,
   user.id,
-  user.profile_image_url,
   user.nickname
 FROM content
   JOIN user ON content.author_id = user.id
