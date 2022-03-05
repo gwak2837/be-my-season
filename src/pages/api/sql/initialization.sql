@@ -37,7 +37,7 @@ CREATE TABLE ritual_maker (
   name varchar(255) NOT NULL,
   department varchar(255) NOT NULL,
   description text NOT NULL,
-  image_url text NOT NULL
+  image_url text
 );
 
 DROP TABLE IF EXISTS content;
@@ -136,7 +136,8 @@ CREATE TABLE project (
   creation_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modification_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   title varchar(255) NOT NULL,
-  description text NOT NULL
+  description text NOT NULL,
+  image_url text
 );
 
 DROP TABLE IF EXISTS faq;
@@ -519,4 +520,28 @@ VALUES (
     'Detail',
     2,
     1
+  );
+
+INSERT INTO project (title, description)
+VALUES (
+    'This is project title',
+    'Welcome to Be:MySeason, project description'
+  );
+
+INSERT INTO project (title, description)
+VALUES (
+    'This is project title2',
+    'Welcome to Be:MySeason, project description2'
+  );
+
+INSERT INTO project (title, description)
+VALUES (
+    'This is project title3',
+    'Welcome to Be:MySeason, project description3'
+  );
+
+INSERT INTO project (title, description)
+VALUES (
+    'This is project title4',
+    'Welcome to Be:MySeason, project description4'
   );

@@ -1,6 +1,6 @@
 # be-my-season
 
-## 개발 환경
+## Development Environment
 
 - Ubuntu Focal 20.04 (LTS)
 - Node.js 16.14
@@ -52,7 +52,7 @@ yarn dev
 
 개발 환경에 최적화된 서버를 실행합니다. 코드 변경 사항을 저장하면 서버가 자동으로 재실행됩니다.
 
-### MySQL SSH 연결
+### Connect to MySQL via SSH
 
 ```bash
 $ ssh -N -L 3306:localhost:3306 cloud-mysql-server-user-name@cloud-mysql-server-ip
