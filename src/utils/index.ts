@@ -15,6 +15,8 @@ export async function sha256(message: string) {
   return hashHex
 }
 
+export const formatNumber = new Intl.NumberFormat('ko-KR').format
+
 export function formatPhoneNumber(phoneNumber: string) {
   const value = phoneNumber.replace(/\D/g, '')
 

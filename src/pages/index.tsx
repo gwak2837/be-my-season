@@ -2,6 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { ReactElement } from 'react'
 import Card from 'src/components/Card'
+import ContentCard from 'src/components/ContentCard'
 import PageHead from 'src/components/PageHead'
 import NavigationLayout from 'src/layouts/NavigationLayout'
 import DownArrow from 'src/svgs/down-arrow.svg'
@@ -154,10 +155,10 @@ export default function HomePage() {
             </Link>
           </FlexBetweenPadding>
           <GridUl>
-            <Card data={posts[0]} />
-            <Card data={posts[1]} />
-            <Card data={posts[2]} />
-            <Card data={posts[3]} />
+            <ContentCard content={posts[0]} />
+            <ContentCard content={posts[1]} />
+            <ContentCard content={posts[2]} />
+            <ContentCard content={posts[3]} />
           </GridUl>
           <Margin>
             <DownArrow /> more [1/5]

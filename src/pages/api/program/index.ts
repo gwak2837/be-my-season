@@ -1,14 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import createContent from './sql/createContent.sql'
-import getContents from './sql/getContents.sql'
-import getContentsByType from './sql/getContentsByType.sql'
+import createProgram from './sql/createProgram.sql'
+import getPrograms from './sql/getPrograms.sql'
+import getProgramsByType from './sql/getProgramsByType.sql'
 import { connection } from '..'
 
 const count = 2
 
-export default async function handleContent(req: NextApiRequest, res: NextApiResponse) {
-  // Get contents
+export default async function handleProgram(req: NextApiRequest, res: NextApiResponse) {
+  // Get programs
   if (req.method === 'GET') {
     const { page, type } = req.query
     if (!page) return res.status(400).send({ message: 'Please check your input of request' })
@@ -17,20 +17,20 @@ export default async function handleContent(req: NextApiRequest, res: NextApiRes
       if (type) {
         const [rows] = await (
           await connection
-        ).query(getContentsByType, [+type, +page * count, count])
-        return res.status(200).json({ contents: rows })
+        ).query(getProgramsByType, [+type, +page * count, count])
+        return res.status(200).json({ programs: rows })
       } else {
-        const [rows] = await (await connection).query(getContents, [+page * count, count])
-        return res.status(200).json({ contents: rows })
+        const [rows] = await (await connection).query(getPrograms, [+page * count, count])
+        return res.status(200).json({ programs: rows })
       }
     } catch (error) {
       return res.status(500).send({ message: '500: 데이터베이스 쿼리 오류' })
     }
   }
 
-  // Create content
+  // Create program
   if (req.method === 'POST') {
-    const [rows] = await (await connection).query(createContent, [])
+    const [rows] = await (await connection).query(createProgram, [])
     return res.status(200).json({ rows })
   }
 

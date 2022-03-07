@@ -1,6 +1,6 @@
 # be-my-season
 
-## Development Environment
+## Requires
 
 - Ubuntu Focal 20.04 (LTS)
 - Node.js 16.14

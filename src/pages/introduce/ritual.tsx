@@ -72,7 +72,11 @@ export default function RitualMakerPage() {
       )}
 
       <FlexCenterCenter>
-        <Button>지원하기</Button>
+        <Button>
+          <a href="http://goo.gl/forms/59PPKebErV" target="_blank" rel="noreferrer">
+            지원하기
+          </a>
+        </Button>
       </FlexCenterCenter>
     </PageHead>
   )

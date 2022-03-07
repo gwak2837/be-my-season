@@ -73,7 +73,7 @@ export default function ProjectBeforePage() {
               </a>
             </Link>
           ) : (
-            <div>다음글이 없습니다.</div>
+            <div>다음 프로젝트가 없습니다.</div>
           )}
           {previousProject ? (
             <Link href={`/project/${previousProject.id}`} passHref>
@@ -82,7 +82,7 @@ export default function ProjectBeforePage() {
               </a>
             </Link>
           ) : (
-            <div>이전글이 없습니다.</div>
+            <div>이전 프로젝트가 없습니다.</div>
           )}
         </>
       ) : error ? (

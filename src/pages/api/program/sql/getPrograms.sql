@@ -1,8 +1,8 @@
 SELECT id,
   creation_time,
   title,
-  description,
+  price,
   `type`
-FROM content
+FROM program
 ORDER BY id DESC
 LIMIT ?, ?

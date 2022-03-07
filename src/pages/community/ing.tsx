@@ -1,14 +1,41 @@
-import { ReactElement } from 'react'
+import { ReactElement, useState } from 'react'
+import CommunityCard from 'src/components/CommunityCard'
 import PageHead from 'src/components/PageHead'
 import CommunityLayout from 'src/layouts/CommunityLayout'
 import NavigationLayout from 'src/layouts/NavigationLayout'
+import { defaultFetcher } from 'src/utils'
+import useSWR from 'swr'
+
+import { Ul, buttonCount } from '../content'
 
 const description = ''
 
 export default function CommunityIngPage() {
+  const [big, setBig] = useState(0)
+  const [page, setPage] = useState(1)
+  const { data, error } = useSWR(`/api/community?type=1&page=${page - 1}`, defaultFetcher)
+
   return (
-    <PageHead title="커뮤니티 - Be:MySeason" description={description}>
-      커뮤니티 id
+    <PageHead title="진행 중인 커뮤니티 - Be:MySeason" description={description}>
+      <Ul>
+        {data
+          ? data.communities.map((community: any) => (
+              <CommunityCard key={community.id} community={community} showType />
+            ))
+          : error
+          ? 'error'
+          : 'loading'}
+      </Ul>
+
+      <ol>
+        <button onClick={() => setBig(big - 1)}>{'<'}</button>
+        {Array.from(Array(buttonCount).keys()).map((key) => (
+          <button key={key} onClick={() => setPage(buttonCount * big + key + 1)}>
+            {buttonCount * big + key + 1}
+          </button>
+        ))}
+        <button onClick={() => setBig(big + 1)}>{'>'}</button>
+      </ol>
     </PageHead>
   )
 }

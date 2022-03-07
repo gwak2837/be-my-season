@@ -297,7 +297,7 @@ VALUES (
     'This is title1',
     'Welcome to Be:MySeason1',
     'Detail',
-    30000,
+    10000,
     1,
     1
   );
@@ -348,7 +348,7 @@ VALUES (
     'This is title1',
     'Welcome to Be:MySeason1',
     'Detail',
-    30000,
+    10000,
     2,
     1
   );
