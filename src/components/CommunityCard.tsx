@@ -7,11 +7,11 @@ import { formatNumber } from 'src/utils'
 export function decodeType(type: number) {
   switch (type) {
     case 0:
-      return 'before'
+      return '예정'
     case 1:
-      return 'ing'
+      return '진행중'
     case 2:
-      return 'after'
+      return '완료'
     default:
       return ''
   }

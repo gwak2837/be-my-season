@@ -2,17 +2,6 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { SquareFrame } from 'src/styles/common'
 
-export function decodeType(type: number) {
-  switch (type) {
-    case 0:
-      return 'Column'
-    case 1:
-      return 'Interview'
-    default:
-      return ''
-  }
-}
-
 type Props = {
   project: any
 }

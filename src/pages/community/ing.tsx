@@ -20,7 +20,7 @@ export default function CommunityIngPage() {
       <Ul>
         {data
           ? data.communities.map((community: any) => (
-              <CommunityCard key={community.id} community={community} showType />
+              <CommunityCard key={community.id} community={community} />
             ))
           : error
           ? 'error'
