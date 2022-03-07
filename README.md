@@ -15,7 +15,6 @@
 ```bash
 git clone https://github.com/rmfpdlxmtidl/be-my-season.git
 cd be-my-season
-yarn
 vi .env.local
 ```
 
@@ -31,7 +30,7 @@ NEXT_PUBLIC_KAKAO_REST_API_KEY=
 #### 1. Start server
 
 ```bash
-yarn build && pm2 --name be-my-season start yarn -- start
+yarn && yarn build && pm2 --name be-my-season start yarn -- start
 ```
 
 성능에 최적화된 서버를 실행합니다.

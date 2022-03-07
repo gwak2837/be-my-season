@@ -1,26 +1,26 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { isEmptyObject } from 'src/utils'
 
-import deleteProgram from './sql/deleteProgram.sql'
-import getBeforeAndAfterProgram from './sql/getBeforeAndAfterProgram.sql'
-import getProgram from './sql/getProgram.sql'
-import updateProgram from './sql/updateProgram.sql'
+import deleteCommunity from './sql/deleteCommunity.sql'
+import getBeforeAndAfterCommunity from './sql/getBeforeAndAfterCommunity.sql'
+import getCommunity from './sql/getCommunity.sql'
+import updateCommunity from './sql/updateCommunity.sql'
 import { connection } from '..'
 
-export default async function handleProgram(req: NextApiRequest, res: NextApiResponse) {
+export default async function handleCommunity(req: NextApiRequest, res: NextApiResponse) {
   // Get community
   if (req.method === 'GET') {
     const communityId = req.query.id
 
     const [rows, rows2] = await Promise.all([
-      (await connection).query(getProgram, [communityId]),
-      (await connection).query(getBeforeAndAfterProgram, [communityId, communityId]),
+      (await connection).query(getCommunity, [communityId]),
+      (await connection).query(getBeforeAndAfterCommunity, [communityId, communityId]),
     ])
 
     const communities = rows2[0] as any
 
     return res.status(200).json({
-      nextProgram: communities[1]
+      nextCommunity: communities[1]
         ? communities[1].id > communityId
           ? communities[1]
           : null
@@ -28,7 +28,7 @@ export default async function handleProgram(req: NextApiRequest, res: NextApiRes
         ? communities[0]
         : null,
       community: (rows[0] as any)[0],
-      previousProgram: communities[0]?.id < communityId ? communities[0] : null,
+      previousCommunity: communities[0]?.id < communityId ? communities[0] : null,
     })
   }
 
@@ -38,13 +38,13 @@ export default async function handleProgram(req: NextApiRequest, res: NextApiRes
 
     await (
       await connection
-    ).query(updateProgram, [req.body.description, req.body.detail, req.query.id])
+    ).query(updateCommunity, [req.body.description, req.body.detail, req.query.id])
     return res.status(200).send({ message: 'Update complete' })
   }
 
   // Delete community
   if (req.method === 'DELETE') {
-    const [rows] = await (await connection).query(deleteProgram, [req.query.id])
+    const [rows] = await (await connection).query(deleteCommunity, [req.query.id])
     return res.status(200).json({ rows })
   }
 
