@@ -46,7 +46,7 @@ export default function ContentPage() {
       const response = await fetch(`/api/content/${contentId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: editorRef.current.getInstance().getHTML() }),
+        body: JSON.stringify({ description: editorRef.current.getInstance().getHTML() }),
       })
 
       if (response.ok) {

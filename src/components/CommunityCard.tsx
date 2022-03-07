@@ -33,7 +33,7 @@ function CommunityCard({ community, showType }: Props) {
           <div>
             {showType && `[${decodeType(community.type)}]`} {community.title}
           </div>
-          <div>{formatNumber(community.price)}원</div>
+          <div>{new Date(community.creation_time).toLocaleDateString()}</div>
         </a>
       </Link>
     </li>

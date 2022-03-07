@@ -40,7 +40,7 @@ export default function ProjectBeforePage() {
       const response = await fetch(`/api/project/${projectId}`, {
         method: 'PUT',
         headers: { 'Project-Type': 'application/json' },
-        body: JSON.stringify({ projects: editorRef.current.getInstance().getHTML() }),
+        body: JSON.stringify({ description: editorRef.current.getInstance().getHTML() }),
       })
 
       if (response.ok) {

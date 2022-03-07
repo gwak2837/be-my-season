@@ -36,7 +36,7 @@ export default async function handleProject(req: NextApiRequest, res: NextApiRes
   if (req.method === 'PUT') {
     if (isEmptyObject(req.body)) return res.status(400).send({ message: '값을 입력해주세요.' })
 
-    await (await connection).query(updateProject, [req.body.project, req.query.id])
+    await (await connection).query(updateProject, [req.body.description, req.query.id])
     return res.status(200).send({ message: 'Update complete' })
   }
 

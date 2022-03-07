@@ -8,31 +8,31 @@ import updateProgram from './sql/updateProgram.sql'
 import { connection } from '..'
 
 export default async function handleProgram(req: NextApiRequest, res: NextApiResponse) {
-  // Get program
+  // Get community
   if (req.method === 'GET') {
-    const programId = req.query.id
+    const communityId = req.query.id
 
     const [rows, rows2] = await Promise.all([
-      (await connection).query(getProgram, [programId]),
-      (await connection).query(getBeforeAndAfterProgram, [programId, programId]),
+      (await connection).query(getProgram, [communityId]),
+      (await connection).query(getBeforeAndAfterProgram, [communityId, communityId]),
     ])
 
-    const programs = rows2[0] as any
+    const communities = rows2[0] as any
 
     return res.status(200).json({
-      nextProgram: programs[1]
-        ? programs[1].id > programId
-          ? programs[1]
+      nextProgram: communities[1]
+        ? communities[1].id > communityId
+          ? communities[1]
           : null
-        : programs[0].id > programId
-        ? programs[0]
+        : communities[0].id > communityId
+        ? communities[0]
         : null,
-      program: (rows[0] as any)[0],
-      previousProgram: programs[0]?.id < programId ? programs[0] : null,
+      community: (rows[0] as any)[0],
+      previousProgram: communities[0]?.id < communityId ? communities[0] : null,
     })
   }
 
-  // Update program
+  // Update community
   if (req.method === 'PUT') {
     if (isEmptyObject(req.body)) return res.status(400).send({ message: '값을 입력해주세요.' })
 
@@ -42,7 +42,7 @@ export default async function handleProgram(req: NextApiRequest, res: NextApiRes
     return res.status(200).send({ message: 'Update complete' })
   }
 
-  // Delete program
+  // Delete community
   if (req.method === 'DELETE') {
     const [rows] = await (await connection).query(deleteProgram, [req.query.id])
     return res.status(200).json({ rows })
