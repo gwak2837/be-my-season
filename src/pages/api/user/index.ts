@@ -8,7 +8,7 @@ import getMe from './sql/getMe.sql'
 import register from './sql/register.sql'
 import unregister from './sql/unregister.sql'
 import updateMe from './sql/updateMe.sql'
-import { connection } from '..'
+import { pool } from '..'
 
 export default async function handleUser(req: NextApiRequest, res: NextApiResponse) {
   const jwt = req.headers.authorization
@@ -22,7 +22,7 @@ export default async function handleUser(req: NextApiRequest, res: NextApiRespon
     if (!verifiedJwt) return res.status(400).send('Invalid JWT')
 
     // 내 정보
-    const [rows] = await (await connection).query(getMe, [verifiedJwt.userId])
+    const [rows] = await pool.query(getMe, [verifiedJwt.userId])
 
     return res.status(200)
   }
@@ -64,9 +64,7 @@ export default async function handleUser(req: NextApiRequest, res: NextApiRespon
     const passwordHashWithSalt = await hash(password, await genSalt())
 
     try {
-      const [newUserHeader] = await (
-        await connection
-      ).query(register, [
+      const [newUserHeader] = await pool.query(register, [
         nickname,
         profileImageUrl,
         email,
@@ -93,7 +91,7 @@ export default async function handleUser(req: NextApiRequest, res: NextApiRespon
     const verifiedJwt = await verifyJWT(jwt).catch(() => null)
     if (!verifiedJwt) return res.status(400).send({ message: 'Invalid JWT' })
 
-    const [rows] = await (await connection).query(updateMe, [verifiedJwt.userId])
+    const [rows] = await pool.query(updateMe, [verifiedJwt.userId])
 
     return res.status(200)
   }
@@ -106,10 +104,10 @@ export default async function handleUser(req: NextApiRequest, res: NextApiRespon
     const verifiedJwt = await verifyJWT(jwt).catch(() => null)
     if (!verifiedJwt) return res.status(400).send({ message: 'Invalid JWT' })
 
-    const [rows] = await (await connection).query(getKakaoId, [verifiedJwt.userId])
+    const [rows] = await pool.query(getKakaoId, [verifiedJwt.userId])
 
     await Promise.all([
-      (await connection).query(unregister, [verifiedJwt.userId]),
+      pool.query(unregister, [verifiedJwt.userId]),
       unregisterKakaoUser((rows as any)[0].kakao_id),
     ])
 

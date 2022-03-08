@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import createProgram from './sql/createProgram.sql'
 import getPrograms from './sql/getPrograms.sql'
 import getProgramsByType from './sql/getProgramsByType.sql'
-import { connection } from '..'
+import { pool } from '..'
 
 const count = 2
 
@@ -15,12 +15,10 @@ export default async function handleProgram(req: NextApiRequest, res: NextApiRes
 
     try {
       if (type) {
-        const [rows] = await (
-          await connection
-        ).query(getProgramsByType, [+type, +page * count, count])
+        const [rows] = await pool.query(getProgramsByType, [+type, +page * count, count])
         return res.status(200).json({ programs: rows })
       } else {
-        const [rows] = await (await connection).query(getPrograms, [+page * count, count])
+        const [rows] = await pool.query(getPrograms, [+page * count, count])
         return res.status(200).json({ programs: rows })
       }
     } catch (error) {
@@ -30,7 +28,7 @@ export default async function handleProgram(req: NextApiRequest, res: NextApiRes
 
   // Create program
   if (req.method === 'POST') {
-    const [rows] = await (await connection).query(createProgram, [])
+    const [rows] = await pool.query(createProgram, [])
     return res.status(200).json({ rows })
   }
 

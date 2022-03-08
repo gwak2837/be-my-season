@@ -5,7 +5,7 @@ import deleteProgram from './sql/deleteProgram.sql'
 import getBeforeAndAfterProgram from './sql/getBeforeAndAfterProgram.sql'
 import getProgram from './sql/getProgram.sql'
 import updateProgram from './sql/updateProgram.sql'
-import { connection } from '..'
+import { pool } from '..'
 
 export default async function handleProgram(req: NextApiRequest, res: NextApiResponse) {
   // Get program
@@ -13,8 +13,8 @@ export default async function handleProgram(req: NextApiRequest, res: NextApiRes
     const programId = req.query.id
 
     const [rows, rows2] = await Promise.all([
-      (await connection).query(getProgram, [programId]),
-      (await connection).query(getBeforeAndAfterProgram, [programId, programId]),
+      pool.query(getProgram, [programId]),
+      pool.query(getBeforeAndAfterProgram, [programId, programId]),
     ])
 
     const programs = rows2[0] as any
@@ -36,15 +36,13 @@ export default async function handleProgram(req: NextApiRequest, res: NextApiRes
   if (req.method === 'PUT') {
     if (isEmptyObject(req.body)) return res.status(400).send({ message: '값을 입력해주세요.' })
 
-    await (
-      await connection
-    ).query(updateProgram, [req.body.description, req.body.detail, req.query.id])
+    await pool.query(updateProgram, [req.body.description, req.body.detail, req.query.id])
     return res.status(200).send({ message: 'Update complete' })
   }
 
   // Delete program
   if (req.method === 'DELETE') {
-    const [rows] = await (await connection).query(deleteProgram, [req.query.id])
+    const [rows] = await pool.query(deleteProgram, [req.query.id])
     return res.status(200).json({ rows })
   }
 

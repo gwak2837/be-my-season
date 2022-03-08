@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 
-import { connection } from '../..'
+import { pool } from '../..'
 import unregisterByKakaoId from './sql/unregisterByKakaoId.sql'
 
 export default async function handleKakaoUnregister(req: NextApiRequest, res: NextApiResponse) {
@@ -13,7 +13,7 @@ export default async function handleKakaoUnregister(req: NextApiRequest, res: Ne
   if (req.headers.authorization !== `KakaoAK ${process.env.KAKAO_ADMIN_KEY}`)
     return res.status(403).send({ message: '접근 권한이 없습니다.' })
 
-  await (await connection).query(unregisterByKakaoId, [user_id])
+  await pool.query(unregisterByKakaoId, [user_id])
 
   return res.status(200).send({ message: '비마이시즌 서비스 탈퇴에 성공했습니다.' })
 }

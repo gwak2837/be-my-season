@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import isEmailUnique from './sql/isEmailUnique.sql'
 import isLoginIdUnique from './sql/isLoginIdUnique.sql'
 import isPhoneNumberUnique from './sql/isPhoneNumberUnique.sql'
-import { connection } from '..'
+import { pool } from '..'
 
 export default async function handleCheckingEmailIsUnique(
   req: NextApiRequest,
@@ -17,7 +17,7 @@ export default async function handleCheckingEmailIsUnique(
 
   // Login id
   if (loginId) {
-    const [rows] = await (await connection).query(isLoginIdUnique, [loginId])
+    const [rows] = await pool.query(isLoginIdUnique, [loginId])
     if ((rows as any).length === 0) {
       return res.status(200).send(1)
     } else {
@@ -27,7 +27,7 @@ export default async function handleCheckingEmailIsUnique(
 
   // Email
   else if (email) {
-    const [rows] = await (await connection).query(isEmailUnique, [email])
+    const [rows] = await pool.query(isEmailUnique, [email])
     if ((rows as any).length === 0) {
       return res.status(200).send(1)
     } else {
@@ -37,7 +37,7 @@ export default async function handleCheckingEmailIsUnique(
 
   // Phone number
   else if (phoneNumber) {
-    const [rows] = await (await connection).query(isPhoneNumberUnique, [phoneNumber])
+    const [rows] = await pool.query(isPhoneNumberUnique, [phoneNumber])
     if ((rows as any).length === 0) {
       return res.status(200).send(1)
     } else {

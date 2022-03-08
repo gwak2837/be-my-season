@@ -1,12 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 
 import getUser from './sql/getUser.sql'
-import { connection } from '..'
+import { pool } from '..'
 
 export default async function handleUser(req: NextApiRequest, res: NextApiResponse) {
   // Get user
   if (req.method === 'GET') {
-    const [rows] = await (await connection).query(getUser, [req.query.id])
+    const [rows] = await pool.query(getUser, [req.query.id])
     return res.status(200).json({ rows })
   }
 

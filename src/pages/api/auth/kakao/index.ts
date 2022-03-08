@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { encodeSex } from 'src/utils'
 import { generateJWT } from 'src/utils/jwt'
 
-import { connection } from '../..'
+import { pool } from '../..'
 import getKakaoUser from './sql/getKakaoUser.sql'
 import registerKakaoUser from './sql/registerKakaoUser.sql'
 
@@ -30,7 +30,7 @@ export default async function handleKakaoAuth(req: NextApiRequest, res: NextApiR
   //   return res.redirect(`/sorry?id=${kakaoUserInfo.id}`)
   // }
 
-  const [kakaoUserRows] = await (await connection).query(getKakaoUser, [kakaoUserInfo.id])
+  const [kakaoUserRows] = await pool.query(getKakaoUser, [kakaoUserInfo.id])
   const kakaoUser = (kakaoUserRows as any)[0]
 
   // 이미 kakao 소셜 로그인 정보가 존재하는 경우
@@ -55,9 +55,7 @@ export default async function handleKakaoAuth(req: NextApiRequest, res: NextApiR
   }
 
   // kakao 소셜 로그인 정보가 없는 경우
-  const [newUserHeader] = await (
-    await connection
-  ).query(registerKakaoUser, [
+  const [newUserHeader] = await pool.query(registerKakaoUser, [
     kakaoAccount.profile.nickname,
     kakaoAccount.profile.profile_image_url,
     kakaoAccount.email,

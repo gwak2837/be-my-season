@@ -4,7 +4,7 @@ import { generateJWT, verifyJWT } from 'src/utils/jwt'
 
 import getIsAdminFromUser from './sql/getIsAdminFromUser.sql'
 import getPasswordByLoginId from './sql/getPasswordByLoginId.sql'
-import { connection } from '..'
+import { pool } from '..'
 
 export default async function handleAuth(req: NextApiRequest, res: NextApiResponse) {
   // Auth
@@ -15,7 +15,7 @@ export default async function handleAuth(req: NextApiRequest, res: NextApiRespon
     const verifiedJwt = await verifyJWT(jwt).catch(() => null)
     if (!verifiedJwt) return res.status(400).send('Invalid JWT')
 
-    const [rows] = await (await connection).query(getIsAdminFromUser, [verifiedJwt.userId])
+    const [rows] = await pool.query(getIsAdminFromUser, [verifiedJwt.userId])
 
     return res.status(200).json({ userId: verifiedJwt.userId, isAdmin: (rows as any)[0].is_admin })
   }
@@ -31,7 +31,7 @@ export default async function handleAuth(req: NextApiRequest, res: NextApiRespon
     if (!loginId || !password)
       return res.status(400).send({ message: '아이디 또는 비밀번호를 입력해주세요.' })
 
-    const [rows] = await (await connection).query(getPasswordByLoginId, [loginId])
+    const [rows] = await pool.query(getPasswordByLoginId, [loginId])
     if ((rows as any).length === 0)
       return res
         .status(401)

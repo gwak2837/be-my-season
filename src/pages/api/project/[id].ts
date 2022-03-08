@@ -5,7 +5,7 @@ import deleteProject from './sql/deleteProject.sql'
 import getBeforeAndAfterProject from './sql/getBeforeAndAfterProject.sql'
 import getProject from './sql/getProject.sql'
 import updateProject from './sql/updateProject.sql'
-import { connection } from '..'
+import { pool } from '..'
 
 export default async function handleProject(req: NextApiRequest, res: NextApiResponse) {
   // Get project
@@ -13,8 +13,8 @@ export default async function handleProject(req: NextApiRequest, res: NextApiRes
     const projectId = req.query.id
 
     const [rows, rows2] = await Promise.all([
-      (await connection).query(getProject, [projectId]),
-      (await connection).query(getBeforeAndAfterProject, [projectId, projectId]),
+      pool.query(getProject, [projectId]),
+      pool.query(getBeforeAndAfterProject, [projectId, projectId]),
     ])
 
     const projects = rows2[0] as any
@@ -36,13 +36,13 @@ export default async function handleProject(req: NextApiRequest, res: NextApiRes
   if (req.method === 'PUT') {
     if (isEmptyObject(req.body)) return res.status(400).send({ message: '값을 입력해주세요.' })
 
-    await (await connection).query(updateProject, [req.body.description, req.query.id])
+    await pool.query(updateProject, [req.body.description, req.query.id])
     return res.status(200).send({ message: 'Update complete' })
   }
 
   // Delete project
   if (req.method === 'DELETE') {
-    const [rows] = await (await connection).query(deleteProject, [req.query.id])
+    const [rows] = await pool.query(deleteProject, [req.query.id])
     return res.status(200).json({ rows })
   }
 

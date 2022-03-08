@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import createCommunity from './sql/createCommunity.sql'
 import getCommunities from './sql/getCommunities.sql'
 import getCommunitiesByType from './sql/getCommunitiesByType.sql'
-import { connection } from '..'
+import { pool } from '..'
 
 const count = 2
 
@@ -15,12 +15,10 @@ export default async function handleCommunity(req: NextApiRequest, res: NextApiR
 
     try {
       if (type) {
-        const [rows] = await (
-          await connection
-        ).query(getCommunitiesByType, [+type, +page * count, count])
+        const [rows] = await pool.query(getCommunitiesByType, [+type, +page * count, count])
         return res.status(200).json({ communities: rows })
       } else {
-        const [rows] = await (await connection).query(getCommunities, [+page * count, count])
+        const [rows] = await pool.query(getCommunities, [+page * count, count])
         return res.status(200).json({ communities: rows })
       }
     } catch (error) {
@@ -30,7 +28,7 @@ export default async function handleCommunity(req: NextApiRequest, res: NextApiR
 
   // Create community
   if (req.method === 'POST') {
-    const [rows] = await (await connection).query(createCommunity, [])
+    const [rows] = await pool.query(createCommunity, [])
     return res.status(200).json({ rows })
   }
 

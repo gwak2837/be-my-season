@@ -5,7 +5,7 @@ import deleteContent from './sql/deleteContent.sql'
 import getBeforeAndAfterContent from './sql/getBeforeAndAfterContent.sql'
 import getContent from './sql/getContent.sql'
 import updateContent from './sql/updateContent.sql'
-import { connection } from '..'
+import { pool } from '..'
 
 export default async function handleContent(req: NextApiRequest, res: NextApiResponse) {
   // Get content
@@ -13,8 +13,8 @@ export default async function handleContent(req: NextApiRequest, res: NextApiRes
     const contentId = req.query.id
 
     const [rows, rows2] = await Promise.all([
-      (await connection).query(getContent, [contentId]),
-      (await connection).query(getBeforeAndAfterContent, [contentId, contentId]),
+      pool.query(getContent, [contentId]),
+      pool.query(getBeforeAndAfterContent, [contentId, contentId]),
     ])
 
     const contents = rows2[0] as any
@@ -36,13 +36,13 @@ export default async function handleContent(req: NextApiRequest, res: NextApiRes
   if (req.method === 'PUT') {
     if (isEmptyObject(req.body)) return res.status(400).send({ message: '값을 입력해주세요.' })
 
-    await (await connection).query(updateContent, [req.body.description, req.query.id])
+    await pool.query(updateContent, [req.body.description, req.query.id])
     return res.status(200).send({ message: 'Update complete' })
   }
 
   // Delete content
   if (req.method === 'DELETE') {
-    const [rows] = await (await connection).query(deleteContent, [req.query.id])
+    const [rows] = await pool.query(deleteContent, [req.query.id])
     return res.status(200).json({ rows })
   }
 

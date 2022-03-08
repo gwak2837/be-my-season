@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import createContent from './sql/createContent.sql'
 import getContents from './sql/getContents.sql'
 import getContentsByType from './sql/getContentsByType.sql'
-import { connection } from '..'
+import { pool } from '..'
 
 const count = 2
 
@@ -15,12 +15,10 @@ export default async function handleContent(req: NextApiRequest, res: NextApiRes
 
     try {
       if (type) {
-        const [rows] = await (
-          await connection
-        ).query(getContentsByType, [+type, +page * count, count])
+        const [rows] = await pool.query(getContentsByType, [+type, +page * count, count])
         return res.status(200).json({ contents: rows })
       } else {
-        const [rows] = await (await connection).query(getContents, [+page * count, count])
+        const [rows] = await pool.query(getContents, [+page * count, count])
         return res.status(200).json({ contents: rows })
       }
     } catch (error) {
@@ -30,7 +28,7 @@ export default async function handleContent(req: NextApiRequest, res: NextApiRes
 
   // Create content
   if (req.method === 'POST') {
-    const [rows] = await (await connection).query(createContent, [])
+    const [rows] = await pool.query(createContent, [])
     return res.status(200).json({ rows })
   }
 
