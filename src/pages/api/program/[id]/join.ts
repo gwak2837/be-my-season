@@ -1,0 +1,37 @@
+import { NextApiRequest, NextApiResponse } from 'next'
+import { isEmptyObject } from 'src/utils'
+import { verifyJWT } from 'src/utils/jwt'
+
+import { pool } from '../..'
+import deleteJoinedProgram from './sql/deleteJoinedProgram.sql'
+import getJoinedProgram from './sql/getJoinedProgram.sql'
+import joinProgram from './sql/joinProgram.sql'
+
+export default async function handleJoiningProgram(req: NextApiRequest, res: NextApiResponse) {
+  const jwt = req.headers.authorization
+  if (!jwt) return res.status(401).send('Need to authenticate')
+
+  const verifiedJwt = await verifyJWT(jwt).catch(() => null)
+  if (!verifiedJwt) return res.status(400).send('Invalid JWT')
+
+  // Get
+  if (req.method === 'GET') {
+    const [rows] = await pool.query(getJoinedProgram, [verifiedJwt.userId])
+    return res.status(200).json({ joinedProgram: (rows as any)[0] })
+  }
+
+  // Insert
+  if (req.method === 'POST') {
+    await pool.query(joinProgram, [verifiedJwt.userId, req.query.id])
+    return res.status(200).send({ message: 'Joining the program completed' })
+  }
+
+  // Delete
+  if (req.method === 'DELETE') {
+    await pool.query(deleteJoinedProgram, [verifiedJwt.userId, req.query.id])
+    return res.status(200).send({ message: 'Disjoining the program completed' })
+  }
+
+  // Else
+  return res.status(405).send({ message: 'Method not allowed' })
+}

@@ -2,11 +2,11 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import { isEmptyObject } from 'src/utils'
 import { verifyJWT } from 'src/utils/jwt'
 
+import { pool } from '../..'
 import deleteProgram from './sql/deleteProgram.sql'
 import getBeforeAndAfterProgram from './sql/getBeforeAndAfterProgram.sql'
 import getProgram from './sql/getProgram.sql'
 import updateProgram from './sql/updateProgram.sql'
-import { pool } from '..'
 
 export default async function handleProgram(req: NextApiRequest, res: NextApiResponse) {
   // Get program
