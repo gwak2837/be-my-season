@@ -299,14 +299,15 @@ export function ReviewCreationForm() {
     },
   })
 
-  // Create review
-  async function createReview({ title, description, point }: any) {
+  function checkLogin() {
     if (!user?.userId) {
       router.replace('/login')
       sessionStorage.setItem('redirectionUrlAfterLogin', router.asPath)
-      return
     }
+  }
 
+  // Create review
+  async function createReview({ title, description, point }: any) {
     setIsCreationLoading(true)
 
     const response = await fetch(`/api/program/${programId}/review`, {
@@ -374,7 +375,7 @@ export function ReviewCreationForm() {
           },
         })}
       />
-      <button disabled={isCreationLoading} type="submit">
+      <button disabled={isCreationLoading} onClick={checkLogin} type="submit">
         생성
       </button>
     </form>
@@ -400,14 +401,15 @@ export function QnACreationForm() {
     },
   })
 
-  // Create QnA
-  async function createQnA({ title, description }: any) {
+  function checkLogin() {
     if (!user?.userId) {
       router.replace('/login')
       sessionStorage.setItem('redirectionUrlAfterLogin', router.asPath)
-      return
     }
+  }
 
+  // Create QnA
+  async function createQnA({ title, description }: any) {
     setIsCreationLoading(true)
 
     const response = await fetch(`/api/program/${programId}/qna`, {
@@ -460,7 +462,7 @@ export function QnACreationForm() {
           },
         })}
       />
-      <button disabled={isCreationLoading} type="submit">
+      <button disabled={isCreationLoading} onClick={checkLogin} type="submit">
         생성
       </button>
     </form>

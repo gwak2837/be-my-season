@@ -7,8 +7,11 @@ import { toast } from 'react-toastify'
 import { decodeContentType } from 'src/components/ContentCard'
 import PageHead from 'src/components/PageHead'
 import useAuth from 'src/hooks/useAuth'
+import { MarginAuto } from 'src/layouts/IntroduceLayout'
 import NavigationLayout from 'src/layouts/NavigationLayout'
 import { defaultFetcher } from 'src/utils'
+import UpFilledArrow from 'src/svgs/up-filled-arrow.svg'
+import DownFilledArrow from 'src/svgs/down-filled-arrow.svg'
 import styled from 'styled-components'
 import useSWR, { useSWRConfig } from 'swr'
 
@@ -18,7 +21,64 @@ const ToastViewer = dynamic(() => import('src/components/ToastViewer'), { ssr: f
 const FlexGap = styled.div`
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.3rem;
+
+  * {
+    color: #000;
+  }
+`
+
+const H2 = styled.h2`
+  color: #7a583a;
+  margin: 0.4rem 0;
+`
+
+const H5 = styled.h5`
+  color: #c9c9c9;
+  font-weight: 400;
+  margin: 1.5rem 0;
+`
+
+const HorizontalBorder = styled.div`
+  border-top: 1px solid #7a583a;
+  width: 100%;
+  margin: 1rem 0;
+`
+
+const RightAlign = styled.div`
+  display: flex;
+  justify-content: end;
+  padding: 1rem;
+  margin: 2rem 0 0;
+`
+
+const Button = styled.button`
+  background: #de684a;
+  color: #fff;
+  padding: 1rem;
+  text-align: center;
+  width: 10rem;
+`
+
+const Button1 = styled.div`
+  background: #de684a;
+  color: #fff;
+  padding: 0.5rem;
+  text-align: center;
+  width: 5rem;
+`
+
+const Margin = styled.div`
+  margin: 1rem 0 4rem;
+`
+
+const FlexCenterA = styled.a`
+  display: flex;
+  align-items: center;
+  gap: 3rem;
+
+  color: #000;
+  padding: 0 1rem;
 `
 
 const description = ''
@@ -72,71 +132,84 @@ export default function ContentPage() {
 
   return (
     <PageHead title="컨텐츠 - Be:MySeason" description={description}>
-      <FlexGap>
-        <Link href="/" passHref>
-          <a>Home</a>
-        </Link>
-        {'>'}
-        <Link href="/content" passHref>
-          <a>Content</a>
-        </Link>
-        {'>'}
-        {content ? (
-          <Link href={`/content/${decodeContentType(content.type).toLowerCase()}`} passHref>
-            <a>{decodeContentType(content.type)}</a>
+      <MarginAuto>
+        <FlexGap>
+          <Link href="/" passHref>
+            <a>Home</a>
           </Link>
+          {'>'}
+          <Link href="/content" passHref>
+            <a>Content</a>
+          </Link>
+          {'>'}
+          {content ? (
+            <Link href={`/content/${decodeContentType(content.type).toLowerCase()}`} passHref>
+              <a>{decodeContentType(content.type)}</a>
+            </Link>
+          ) : (
+            <div>loading</div>
+          )}
+        </FlexGap>
+
+        {content ? (
+          <>
+            <H2>{content.title}</H2>
+            <H5>
+              {content.nickname} | {new Date(content.creation_time).toLocaleDateString()}
+            </H5>
+
+            <HorizontalBorder />
+
+            <Margin>
+              {isRefreshing &&
+                (user?.isAdmin ? (
+                  <>
+                    <RightAlign>
+                      <Button onClick={updateContent}>수정하기</Button>
+                    </RightAlign>
+                    <ToastEditor editorRef={editorRef} initialValue={content.description} />
+                  </>
+                ) : (
+                  <ToastViewer initialValue={content.description} />
+                ))}
+            </Margin>
+
+            <HorizontalBorder />
+            {nextContent ? (
+              <Link href={`/content/${nextContent.id}`} passHref>
+                <FlexCenterA onClick={refresh} role="button" tabIndex={0}>
+                  <UpFilledArrow />
+                  <div>{nextContent.title}</div>
+                </FlexCenterA>
+              </Link>
+            ) : (
+              <div>다음글이 없습니다.</div>
+            )}
+            <HorizontalBorder />
+            {previousContent ? (
+              <Link href={`/content/${previousContent.id}`} passHref>
+                <FlexCenterA onClick={refresh} role="button" tabIndex={0}>
+                  <DownFilledArrow />
+                  <div>{previousContent.title}</div>
+                </FlexCenterA>
+              </Link>
+            ) : (
+              <div>이전글이 없습니다.</div>
+            )}
+            <HorizontalBorder />
+          </>
+        ) : error ? (
+          <div>error</div>
         ) : (
           <div>loading</div>
         )}
-      </FlexGap>
 
-      {content ? (
-        <>
-          <h3>{content.title}</h3>
-          <div>
-            {content.nickname} | {new Date(content.creation_time).toLocaleDateString()}
-          </div>
-
-          <div>--------------</div>
-
-          {isRefreshing &&
-            (user?.isAdmin ? (
-              <>
-                <button onClick={updateContent}>수정하기</button>
-                <ToastEditor editorRef={editorRef} initialValue={content.description} />
-              </>
-            ) : (
-              <ToastViewer initialValue={content.description} />
-            ))}
-
-          {nextContent ? (
-            <Link href={`/content/${nextContent.id}`} passHref>
-              <a onClick={refresh} role="button" tabIndex={0}>
-                <div>{nextContent.title}</div>
-              </a>
-            </Link>
-          ) : (
-            <div>다음글이 없습니다.</div>
-          )}
-          {previousContent ? (
-            <Link href={`/content/${previousContent.id}`} passHref>
-              <a onClick={refresh} role="button" tabIndex={0}>
-                <div>{previousContent.title}</div>
-              </a>
-            </Link>
-          ) : (
-            <div>이전글이 없습니다.</div>
-          )}
-        </>
-      ) : error ? (
-        <div>error</div>
-      ) : (
-        <div>loading</div>
-      )}
-
-      <Link href="/content" passHref>
-        <a>목록</a>
-      </Link>
+        <Link href="/content" passHref>
+          <a>
+            <Button1>목록</Button1>
+          </a>
+        </Link>
+      </MarginAuto>
     </PageHead>
   )
 }
