@@ -10,7 +10,7 @@ export default async function handleAuth(req: NextApiRequest, res: NextApiRespon
   // Auth
   if (req.method === 'GET') {
     const jwt = req.headers.authorization
-    if (!jwt) return res.status(200).send({})
+    if (!jwt) return res.status(200).json({})
 
     const verifiedJwt = await verifyJWT(jwt).catch(() => null)
     if (!verifiedJwt) return res.status(400).send('Invalid JWT')
@@ -21,7 +21,7 @@ export default async function handleAuth(req: NextApiRequest, res: NextApiRespon
   }
 
   // Login
-  if (req.method === 'POST') {
+  else if (req.method === 'POST') {
     if (req.headers.authorization)
       return res
         .status(403)

@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { SquareFrame } from 'src/styles/common'
 import { formatNumber } from 'src/utils'
 
-export function decodeType(type: number) {
+export function decodeProgramType(type: number) {
   switch (type) {
     case 0:
       return 'Pre-W'
@@ -31,7 +31,7 @@ function ProgramCard({ program, showType }: Props) {
             <Image src="/images/logo-transparent.png" alt="logo" layout="fill" objectFit="cover" />
           </SquareFrame>
           <div>
-            {showType && `[${decodeType(program.type)}]`} {program.title}
+            {showType && `[${decodeProgramType(program.type)}]`} {program.title}
           </div>
           <div>{formatNumber(program.price)}원</div>
         </a>

@@ -23,13 +23,13 @@ export default async function handleJoiningProgram(req: NextApiRequest, res: Nex
   // Insert
   if (req.method === 'POST') {
     await pool.query(joinProgram, [verifiedJwt.userId, req.query.id])
-    return res.status(200).send({ message: 'Joining the program completed' })
+    return res.status(200).json({ message: 'Joining the program completed' })
   }
 
   // Delete
   if (req.method === 'DELETE') {
     await pool.query(deleteJoinedProgram, [verifiedJwt.userId, req.query.id])
-    return res.status(200).send({ message: 'Disjoining the program completed' })
+    return res.status(200).json({ message: 'Disjoining the program completed' })
   }
 
   // Else

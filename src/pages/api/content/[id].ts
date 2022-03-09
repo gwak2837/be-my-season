@@ -37,7 +37,7 @@ export default async function handleContent(req: NextApiRequest, res: NextApiRes
     if (isEmptyObject(req.body)) return res.status(400).send({ message: '값을 입력해주세요.' })
 
     await pool.query(updateContent, [req.body.description, req.query.id])
-    return res.status(200).send({ message: 'Update complete' })
+    return res.status(200).json({ message: 'Update complete' })
   }
 
   // Delete content

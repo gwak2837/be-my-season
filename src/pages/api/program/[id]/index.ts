@@ -29,13 +29,6 @@ export default async function handleProgram(req: NextApiRequest, res: NextApiRes
     const programs = rows2[0] as any
 
     return res.status(200).json({
-      nextProgram: programs[1]
-        ? programs[1].id > programId
-          ? programs[1]
-          : null
-        : programs[0].id > programId
-        ? programs[0]
-        : null,
       program: {
         id: program.id,
         creationTime: program.creationTime,
@@ -46,6 +39,13 @@ export default async function handleProgram(req: NextApiRequest, res: NextApiRes
         type: program.type,
         isJoined: Boolean(program.program_id),
       },
+      nextProgram: programs[1]
+        ? programs[1].id > programId
+          ? programs[1]
+          : null
+        : programs[0].id > programId
+        ? programs[0]
+        : null,
       previousProgram: programs[0]?.id < programId ? programs[0] : null,
     })
   }
@@ -62,7 +62,7 @@ export default async function handleProgram(req: NextApiRequest, res: NextApiRes
     if (isEmptyObject(req.body)) return res.status(400).send({ message: '값을 입력해주세요.' })
 
     await pool.query(updateProgram, [req.body.description, req.body.detail, req.query.id])
-    return res.status(200).send({ message: 'Update complete' })
+    return res.status(200).json({ message: 'Update complete' })
   }
 
   // Delete program

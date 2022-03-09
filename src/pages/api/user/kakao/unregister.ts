@@ -15,5 +15,5 @@ export default async function handleKakaoUnregister(req: NextApiRequest, res: Ne
 
   await pool.query(unregisterByKakaoId, [user_id])
 
-  return res.status(200).send({ message: '비마이시즌 서비스 탈퇴에 성공했습니다.' })
+  return res.status(200).json({ message: '비마이시즌 서비스 탈퇴에 성공했습니다.' })
 }

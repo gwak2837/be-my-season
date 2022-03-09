@@ -19,7 +19,7 @@ export default async function handleCheckingEmailIsUnique(
   if (loginId) {
     const [rows] = await pool.query(isLoginIdUnique, [loginId])
     if ((rows as any).length === 0) {
-      return res.status(200).send(1)
+      return res.status(200).json(1)
     } else {
       return res.status(400).send(0)
     }
@@ -29,7 +29,7 @@ export default async function handleCheckingEmailIsUnique(
   else if (email) {
     const [rows] = await pool.query(isEmailUnique, [email])
     if ((rows as any).length === 0) {
-      return res.status(200).send(1)
+      return res.status(200).json(1)
     } else {
       return res.status(400).send(0)
     }
@@ -39,7 +39,7 @@ export default async function handleCheckingEmailIsUnique(
   else if (phoneNumber) {
     const [rows] = await pool.query(isPhoneNumberUnique, [phoneNumber])
     if ((rows as any).length === 0) {
-      return res.status(200).send(1)
+      return res.status(200).json(1)
     } else {
       return res.status(400).send(0)
     }

@@ -11,7 +11,7 @@ export default async function handleContent(req: NextApiRequest, res: NextApiRes
   // Get contents
   if (req.method === 'GET') {
     const { page, type } = req.query
-    if (!page) return res.status(400).send({ message: 'Please check your input of request' })
+    if (!page) return res.status(400).send('Please check your input of request')
 
     try {
       if (type) {
@@ -22,7 +22,7 @@ export default async function handleContent(req: NextApiRequest, res: NextApiRes
         return res.status(200).json({ contents: rows })
       }
     } catch (error) {
-      return res.status(500).send({ message: '500: 데이터베이스 쿼리 오류' })
+      return res.status(500).send('500: 데이터베이스 쿼리 오류')
     }
   }
 
@@ -33,5 +33,5 @@ export default async function handleContent(req: NextApiRequest, res: NextApiRes
   }
 
   // Else
-  return res.status(405).send({ message: 'Method not allowed' })
+  return res.status(405).send('Method not allowed')
 }

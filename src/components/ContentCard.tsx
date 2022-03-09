@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { SquareFrame } from 'src/styles/common'
 
-export function decodeType(type: number) {
+export function decodeContentType(type: number) {
   switch (type) {
     case 0:
       return 'Column'
@@ -28,7 +28,7 @@ function ContentCard({ content, showType }: Props) {
             <Image src="/images/logo-transparent.png" alt="logo" layout="fill" objectFit="cover" />
           </SquareFrame>
           <div>
-            {showType && `[${decodeType(content.type)}]`} {content.title}
+            {showType && `[${decodeContentType(content.type)}]`} {content.title}
           </div>
           <div>{new Date(content.creation_time).toLocaleDateString()}</div>
         </a>

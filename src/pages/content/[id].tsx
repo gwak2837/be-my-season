@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ReactElement, useRef } from 'react'
 import { toast } from 'react-toastify'
-import { decodeType } from 'src/components/ContentCard'
+import { decodeContentType } from 'src/components/ContentCard'
 import PageHead from 'src/components/PageHead'
 import useAuth from 'src/hooks/useAuth'
 import NavigationLayout from 'src/layouts/NavigationLayout'
@@ -71,8 +71,8 @@ export default function ContentPage() {
         </Link>
         {'>'}
         {content ? (
-          <Link href={`/content/${decodeType(content.type).toLowerCase()}`} passHref>
-            <a>{decodeType(content.type)}</a>
+          <Link href={`/content/${decodeContentType(content.type).toLowerCase()}`} passHref>
+            <a>{decodeContentType(content.type)}</a>
           </Link>
         ) : (
           <div>loading</div>
