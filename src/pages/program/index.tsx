@@ -23,24 +23,30 @@ export default function ProgramsPage() {
 
   function goToPreviousPage() {
     setBig(big - 1)
-    setPage(buttonCount * big)
+    setPage(buttonCount * big + 1)
   }
 
   function goToNextPage() {
     setBig(big + 1)
-    setPage((buttonCount + 1) * big)
+    setPage(buttonCount * (big + 1) + 2)
   }
 
   return (
     <PageHead title="모든 프로그램 - Be:MySeason" description={description}>
       <Ul>
-        {programs
-          ? programs.map((program: any) => (
+        {programs ? (
+          programs.length > 0 ? (
+            programs.map((program: any) => (
               <ProgramCard key={program.id} program={program} showType />
             ))
-          : error
-          ? 'error'
-          : 'loading'}
+          ) : (
+            <div>프로그램이 없습니다</div>
+          )
+        ) : error ? (
+          'error'
+        ) : (
+          'loading'
+        )}
       </Ul>
 
       <Ol>

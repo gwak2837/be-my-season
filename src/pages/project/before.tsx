@@ -29,12 +29,12 @@ export default function ProjectBeforePage() {
 
   function goToPreviousPage() {
     setBig(big - 1)
-    setPage(buttonCount * big)
+    setPage(buttonCount * big + 1)
   }
 
   function goToNextPage() {
     setBig(big + 1)
-    setPage((buttonCount + 1) * big)
+    setPage(buttonCount * (big + 1) + 2)
   }
 
   return (

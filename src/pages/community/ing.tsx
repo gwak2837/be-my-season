@@ -3,17 +3,31 @@ import CommunityCard from 'src/components/CommunityCard'
 import PageHead from 'src/components/PageHead'
 import CommunityLayout from 'src/layouts/CommunityLayout'
 import NavigationLayout from 'src/layouts/NavigationLayout'
+import LeftArrow from 'src/svgs/left-arrow.svg'
+import RightArrow from 'src/svgs/right-arrow.svg'
 import { defaultFetcher } from 'src/utils'
 import useSWR from 'swr'
 
-import { Ul, buttonCount } from '../content'
+import { Button, Ol, Ul, buttonCount } from '../content'
 
 const description = ''
 
 export default function CommunityIngPage() {
-  const [big, setBig] = useState(0)
   const [page, setPage] = useState(1)
   const { data, error } = useSWR(`/api/community?type=1&page=${page - 1}`, defaultFetcher)
+
+  // Buttons
+  const [big, setBig] = useState(0)
+
+  function goToPreviousPage() {
+    setBig(big - 1)
+    setPage(buttonCount * big + 1)
+  }
+
+  function goToNextPage() {
+    setBig(big + 1)
+    setPage(buttonCount * (big + 1) + 2)
+  }
 
   return (
     <PageHead title="진행 중인 커뮤니티 - Be:MySeason" description={description}>
@@ -27,15 +41,19 @@ export default function CommunityIngPage() {
           : 'loading'}
       </Ul>
 
-      <ol>
-        <button onClick={() => setBig(big - 1)}>{'<'}</button>
+      <Ol>
+        <Button disabled={big === 0} onClick={goToPreviousPage}>
+          <LeftArrow />
+        </Button>
         {Array.from(Array(buttonCount).keys()).map((key) => (
-          <button key={key} onClick={() => setPage(buttonCount * big + key + 1)}>
+          <Button key={key} onClick={() => setPage(buttonCount * big + key + 1)}>
             {buttonCount * big + key + 1}
-          </button>
+          </Button>
         ))}
-        <button onClick={() => setBig(big + 1)}>{'>'}</button>
-      </ol>
+        <Button onClick={goToNextPage}>
+          <RightArrow />
+        </Button>
+      </Ol>
     </PageHead>
   )
 }

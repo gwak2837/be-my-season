@@ -28,31 +28,37 @@ const description = ''
 
 export default function ContentsPage() {
   const [page, setPage] = useState(1)
-  const { data, error } = useSWR(`/api/content?page=${page - 1}`, defaultFetcher)
+  const { data: contents, error } = useSWR(`/api/content?page=${page - 1}`, defaultFetcher)
 
   // Buttons
   const [big, setBig] = useState(0)
 
   function goToPreviousPage() {
     setBig(big - 1)
-    setPage(buttonCount * big)
+    setPage(buttonCount * big + 1)
   }
 
   function goToNextPage() {
     setBig(big + 1)
-    setPage((buttonCount + 1) * big)
+    setPage(buttonCount * (big + 1) + 2)
   }
 
   return (
     <PageHead title="모든 컨텐츠 - Be:MySeason" description={description}>
       <Ul>
-        {data
-          ? data.contents.map((content: any) => (
+        {contents ? (
+          contents.length > 0 ? (
+            contents.map((content: any) => (
               <ContentCard key={content.id} content={content} showType />
             ))
-          : error
-          ? 'error'
-          : 'loading'}
+          ) : (
+            <div>컨텐츠가 없습니다</div>
+          )
+        ) : error ? (
+          'error'
+        ) : (
+          'loading'
+        )}
       </Ul>
 
       <Ol>

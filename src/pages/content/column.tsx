@@ -21,12 +21,12 @@ export default function ColumnsPage() {
 
   function goToPreviousPage() {
     setBig(big - 1)
-    setPage(buttonCount * big)
+    setPage(buttonCount * big + 1)
   }
 
   function goToNextPage() {
     setBig(big + 1)
-    setPage((buttonCount + 1) * big)
+    setPage(buttonCount * (big + 1) + 2)
   }
 
   return (
@@ -36,7 +36,7 @@ export default function ColumnsPage() {
           contents.length > 0 ? (
             contents.map((content: any) => <ContentCard key={content.id} content={content} />)
           ) : (
-            <div>프로젝트가 없습니다</div>
+            <div>컨텐츠가 없습니다</div>
           )
         ) : error ? (
           'error'
