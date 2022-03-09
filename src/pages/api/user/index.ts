@@ -15,16 +15,15 @@ export default async function handleUser(req: NextApiRequest, res: NextApiRespon
 
   // Get me
   if (req.method === 'GET') {
-    const jwt = req.headers.authorization
     if (!jwt) return res.status(200).json({})
 
     const verifiedJwt = await verifyJWT(jwt).catch(() => null)
     if (!verifiedJwt) return res.status(400).send('Invalid JWT')
 
     // 내 정보
-    const [rows] = await pool.query(getMe, [verifiedJwt.userId])
+    const [rows] = await pool.query(getMe, [verifiedJwt.userId, verifiedJwt.userId])
 
-    return res.status(200)
+    return res.status(200).json({ myList: rows })
   }
 
   // Register

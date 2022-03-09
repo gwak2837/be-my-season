@@ -11,18 +11,18 @@ export default async function handleProgram(req: NextApiRequest, res: NextApiRes
   // Get programs
   if (req.method === 'GET') {
     const { page, type } = req.query
-    if (!page) return res.status(400).send({ message: 'Please check your input of request' })
+    if (!page) return res.status(400).send('Please check your input of request')
 
     try {
       if (type) {
         const [rows] = await pool.query(getProgramsByType, [+type, +page * count, count])
-        return res.status(200).json({ programs: rows })
+        return res.status(200).json(rows)
       } else {
         const [rows] = await pool.query(getPrograms, [+page * count, count])
-        return res.status(200).json({ programs: rows })
+        return res.status(200).json(rows)
       }
     } catch (error) {
-      return res.status(500).send({ message: '500: 데이터베이스 쿼리 오류' })
+      return res.status(500).send('500: Database query error')
     }
   }
 

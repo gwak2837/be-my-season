@@ -15,13 +15,13 @@ const description = ''
 export default function ProgramsPage() {
   const [big, setBig] = useState(0)
   const [page, setPage] = useState(1)
-  const { data, error } = useSWR(`/api/program?page=${page - 1}`, defaultFetcher)
+  const { data: programs, error } = useSWR(`/api/program?page=${page - 1}`, defaultFetcher)
 
   return (
     <PageHead title="모든 프로그램 - Be:MySeason" description={description}>
       <Ul>
-        {data
-          ? data.programs.map((program: any) => (
+        {programs
+          ? programs.map((program: any) => (
               <ProgramCard key={program.id} program={program} showType />
             ))
           : error

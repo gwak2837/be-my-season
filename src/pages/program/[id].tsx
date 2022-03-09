@@ -2,7 +2,7 @@ import type { Editor } from '@toast-ui/react-editor'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { ReactElement, useRef, useState } from 'react'
+import { ReactElement, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import PageHead from 'src/components/PageHead'
@@ -590,6 +590,17 @@ export default function ProgramPage() {
     defaultFetcher
   )
 
+  // Refresh toast editor
+  const [isRefreshing, setIsRefreshing] = useState(true)
+
+  function refresh() {
+    setIsRefreshing(false)
+  }
+
+  useEffect(() => {
+    setIsRefreshing(true)
+  }, [isRefreshing])
+
   return (
     <PageHead title="프로그램 - Be:MySeason" description={description}>
       <OverflowAuto>
@@ -631,16 +642,17 @@ export default function ProgramPage() {
             </Sticky>
 
             <div ref={detailRef}>
-              {user?.isAdmin ? (
-                <>
-                  <button disabled={isUpdateLoading} onClick={updateProgram}>
-                    수정하기
-                  </button>
-                  <ToastEditor editorRef={editorRef} initialValue={program.detail} />
-                </>
-              ) : (
-                <ToastViewer initialValue={program.detail} />
-              )}
+              {isRefreshing &&
+                (user?.isAdmin ? (
+                  <>
+                    <button disabled={isUpdateLoading} onClick={updateProgram}>
+                      수정하기
+                    </button>
+                    <ToastEditor editorRef={editorRef} initialValue={program.detail} />
+                  </>
+                ) : (
+                  <ToastViewer initialValue={program.detail} />
+                ))}
             </div>
 
             <ReviewCreationForm />
@@ -675,7 +687,7 @@ export default function ProgramPage() {
 
             {nextProgram ? (
               <Link href={`/program/${nextProgram.id}`} passHref>
-                <a>
+                <a onClick={refresh} role="button" tabIndex={0}>
                   <div>{nextProgram.title}</div>
                 </a>
               </Link>
@@ -684,7 +696,7 @@ export default function ProgramPage() {
             )}
             {previousProgram ? (
               <Link href={`/program/${previousProgram.id}`} passHref>
-                <a>
+                <a onClick={refresh} role="button" tabIndex={0}>
                   <div>{previousProgram.title}</div>
                 </a>
               </Link>

@@ -19,7 +19,7 @@
       "  // Get $2",
       "  if (req.method === 'GET') {",
       "    const [rows] = await pool.query(get$1, [req.query.id])",
-      "    return res.status(200).json({ $2: (rows as any)[0] })",
+      "    return res.status(200).json(rows)",
       "  }",
       "",
       "  // Update $2",

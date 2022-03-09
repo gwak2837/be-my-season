@@ -6,6 +6,7 @@ import getBeforeAndAfterProject from './sql/getBeforeAndAfterProject.sql'
 import getProject from './sql/getProject.sql'
 import updateProject from './sql/updateProject.sql'
 import { pool } from '..'
+import { verifyJWT } from 'src/utils/jwt'
 
 export default async function handleProject(req: NextApiRequest, res: NextApiResponse) {
   // Get project
@@ -34,9 +35,18 @@ export default async function handleProject(req: NextApiRequest, res: NextApiRes
 
   // Update project
   if (req.method === 'PUT') {
-    if (isEmptyObject(req.body)) return res.status(400).send({ message: '값을 입력해주세요.' })
+    const jwt = req.headers.authorization
+    if (!jwt) return res.status(401).send('Need to authenticate')
 
-    await pool.query(updateProject, [req.body.description, req.query.id])
+    const verifiedJwt = await verifyJWT(jwt).catch(() => null)
+    if (!verifiedJwt) return res.status(400).send('Invalid JWT')
+    if (!verifiedJwt.isAdmin) return res.status(403).send('Need administrator rights')
+
+    const { description } = req.body
+    if (!description) return res.status(400).send('값을 입력해주세요.')
+
+    const a = await pool.query(updateProject, [description, req.query.id])
+    console.log('👀 - a', a)
     return res.status(200).json({ message: 'Update complete' })
   }
 

@@ -3,7 +3,7 @@ import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { ReactElement, useRef } from 'react'
+import { ReactElement, useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
 import PageHead from 'src/components/PageHead'
 import useAuth from 'src/hooks/useAuth'
@@ -20,6 +20,7 @@ const description = ''
 export default function ProjectBeforePage() {
   const router = useRouter()
   const projectId = (router.query.id ?? '') as string
+  const { mutate } = useSWRConfig()
 
   // Fetch project
   const { data, error } = useSWR(
@@ -33,14 +34,18 @@ export default function ProjectBeforePage() {
   // Update project if user is admin
   const { data: user } = useAuth()
   const editorRef = useRef<Editor>(null)
-  const { mutate } = useSWRConfig()
 
   async function updateProject() {
     if (editorRef.current) {
       const response = await fetch(`/api/project/${projectId}`, {
         method: 'PUT',
-        headers: { 'Project-Type': 'application/json' },
-        body: JSON.stringify({ description: editorRef.current.getInstance().getHTML() }),
+        headers: {
+          authorization: sessionStorage.getItem('jwt') ?? localStorage.getItem('jwt') ?? '',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          description: editorRef.current.getInstance().getHTML(),
+        }),
       })
 
       if (response.ok) {
@@ -53,22 +58,34 @@ export default function ProjectBeforePage() {
     }
   }
 
+  // Refresh toast editor
+  const [isRefreshing, setIsRefreshing] = useState(true)
+
+  function refresh() {
+    setIsRefreshing(false)
+  }
+
+  useEffect(() => {
+    setIsRefreshing(true)
+  }, [isRefreshing])
+
   return (
     <PageHead title="프로젝트 - Be:MySeason" description={description}>
       {project ? (
         <>
-          {user?.isAdmin ? (
-            <>
-              <button onClick={updateProject}>수정하기</button>
-              <ToastEditor editorRef={editorRef} initialValue={project.description} />
-            </>
-          ) : (
-            <ToastViewer initialValue={project.description} />
-          )}
+          {isRefreshing &&
+            (user?.isAdmin ? (
+              <>
+                <button onClick={updateProject}>수정하기</button>
+                <ToastEditor editorRef={editorRef} initialValue={project.description} />
+              </>
+            ) : (
+              <ToastViewer initialValue={project.description} />
+            ))}
 
           {nextProject ? (
             <Link href={`/project/${nextProject.id}`} passHref>
-              <a>
+              <a onClick={refresh} role="button" tabIndex={0}>
                 <div>{nextProject.title}</div>
               </a>
             </Link>
@@ -77,7 +94,7 @@ export default function ProjectBeforePage() {
           )}
           {previousProject ? (
             <Link href={`/project/${previousProject.id}`} passHref>
-              <a>
+              <a onClick={refresh} role="button" tabIndex={0}>
                 <div>{previousProject.title}</div>
               </a>
             </Link>

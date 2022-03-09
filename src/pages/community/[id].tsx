@@ -2,7 +2,7 @@ import type { Editor } from '@toast-ui/react-editor'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { ReactElement, useRef, useState } from 'react'
+import { ReactElement, useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { decodeCommunityType } from 'src/components/CommunityCard'
@@ -153,6 +153,17 @@ export default function CommunityPage() {
     defaultFetcher
   )
 
+  // Refresh toast editor
+  const [isRefreshing, setIsRefreshing] = useState(true)
+
+  function refresh() {
+    setIsRefreshing(false)
+  }
+
+  useEffect(() => {
+    setIsRefreshing(true)
+  }, [isRefreshing])
+
   return (
     <PageHead title="커뮤니티 - Be:MySeason" description={description}>
       <OverflowAuto>
@@ -194,16 +205,17 @@ export default function CommunityPage() {
             </Sticky>
 
             <div ref={detailRef}>
-              {user?.isAdmin ? (
-                <>
-                  <button disabled={isUpdateLoading} onClick={updateCommunity}>
-                    수정하기
-                  </button>
-                  <ToastEditor editorRef={editorRef} initialValue={community.detail} />
-                </>
-              ) : (
-                <ToastViewer initialValue={community.detail} />
-              )}
+              {isRefreshing &&
+                (user?.isAdmin ? (
+                  <>
+                    <button disabled={isUpdateLoading} onClick={updateCommunity}>
+                      수정하기
+                    </button>
+                    <ToastEditor editorRef={editorRef} initialValue={community.detail} />
+                  </>
+                ) : (
+                  <ToastViewer initialValue={community.detail} />
+                ))}
             </div>
 
             <ReviewCreationForm />
@@ -238,7 +250,7 @@ export default function CommunityPage() {
 
             {nextCommunity ? (
               <Link href={`/community/${nextCommunity.id}`} passHref>
-                <a>
+                <a onClick={refresh} role="button" tabIndex={0}>
                   <div>{nextCommunity.title}</div>
                 </a>
               </Link>
@@ -247,7 +259,7 @@ export default function CommunityPage() {
             )}
             {previousCommunity ? (
               <Link href={`/community/${previousCommunity.id}`} passHref>
-                <a>
+                <a onClick={refresh} role="button" tabIndex={0}>
                   <div>{previousCommunity.title}</div>
                 </a>
               </Link>

@@ -64,6 +64,7 @@ CREATE TABLE program (
   price int NOT NULL,
   description text NOT NULL,
   detail text NOT NULL,
+  image_url text,
   `type` int NOT NULL,
   author_id int REFERENCES user ON DELETE CASCADE
 );
@@ -89,6 +90,7 @@ CREATE TABLE community (
   price int NOT NULL,
   description text NOT NULL,
   detail text NOT NULL,
+  image_url text,
   `type` int NOT NULL,
   author_id int REFERENCES user ON DELETE CASCADE
 );
@@ -250,7 +252,7 @@ INSERT INTO program (
 VALUES (
     'This is title1',
     'Welcome to Be:MySeason1',
-    'Detail',
+    'Detail1',
     10000,
     0,
     1
@@ -267,7 +269,7 @@ INSERT INTO program (
 VALUES (
     'This is title2',
     'Welcome to Be:MySeason2',
-    'Detail',
+    'Detail2',
     20000,
     0,
     1
@@ -284,7 +286,7 @@ INSERT INTO program (
 VALUES (
     'This is title3',
     'Welcome to Be:MySeason3',
-    'Detail',
+    'Detail3',
     30000,
     0,
     1
@@ -301,7 +303,7 @@ INSERT INTO program (
 VALUES (
     'This is title1',
     'Welcome to Be:MySeason1',
-    'Detail',
+    'Detail4',
     10000,
     1,
     1
@@ -318,7 +320,7 @@ INSERT INTO program (
 VALUES (
     'This is title2',
     'Welcome to Be:MySeason2',
-    'Detail',
+    'Detail5',
     20000,
     1,
     1
@@ -335,7 +337,7 @@ INSERT INTO program (
 VALUES (
     'This is title3',
     'Welcome to Be:MySeason3',
-    'Detail',
+    'Detail6',
     30000,
     1,
     1
@@ -352,7 +354,7 @@ INSERT INTO program (
 VALUES (
     'This is title1',
     'Welcome to Be:MySeason1',
-    'Detail',
+    'Detail7',
     10000,
     2,
     1
@@ -369,7 +371,7 @@ INSERT INTO program (
 VALUES (
     'This is title2',
     'Welcome to Be:MySeason2',
-    'Detail',
+    'Detail8',
     20000,
     2,
     1
@@ -386,11 +388,26 @@ INSERT INTO program (
 VALUES (
     'This is title3',
     'Welcome to Be:MySeason3',
-    'Detail',
+    'Detail9',
     30000,
     2,
     1
   );
+
+INSERT INTO user_x_program (user_id, program_id)
+VALUES (1, 1);
+
+INSERT INTO user_x_program (user_id, program_id)
+VALUES (1, 3);
+
+INSERT INTO user_x_program (user_id, program_id)
+VALUES (1, 5);
+
+INSERT INTO user_x_program (user_id, program_id)
+VALUES (1, 7);
+
+INSERT INTO user_x_program (user_id, program_id)
+VALUES (1, 9);
 
 INSERT INTO review (
     title,
@@ -564,7 +581,7 @@ VALUES (
     'This is title1',
     10000,
     'Welcome to Be:MySeason1',
-    'Detail',
+    'Detail1',
     0,
     1
   );
@@ -581,7 +598,7 @@ VALUES (
     'This is title2',
     20000,
     'Welcome to Be:MySeason2',
-    'Detail',
+    'Detail2',
     0,
     1
   );
@@ -598,7 +615,7 @@ VALUES (
     'This is title3',
     30000,
     'Welcome to Be:MySeason3',
-    'Detail',
+    'Detail3',
     0,
     1
   );
@@ -615,7 +632,7 @@ VALUES (
     'This is title1',
     40000,
     'Welcome to Be:MySeason1',
-    'Detail',
+    'Detail4',
     1,
     1
   );
@@ -632,7 +649,7 @@ VALUES (
     'This is title2',
     50000,
     'Welcome to Be:MySeason2',
-    'Detail',
+    'Detail5',
     1,
     1
   );
@@ -649,7 +666,7 @@ VALUES (
     'This is title3',
     60000,
     'Welcome to Be:MySeason3',
-    'Detail',
+    'Detail6',
     1,
     1
   );
@@ -666,7 +683,7 @@ VALUES (
     'This is title1',
     70000,
     'Welcome to Be:MySeason1',
-    'Detail',
+    'Detail7',
     2,
     1
   );
@@ -683,7 +700,7 @@ VALUES (
     'This is title2',
     80000,
     'Welcome to Be:MySeason2',
-    'Detail',
+    'Detail8',
     2,
     1
   );
@@ -700,10 +717,22 @@ VALUES (
     'This is title3',
     90000,
     'Welcome to Be:MySeason3',
-    'Detail',
+    'Detail9',
     2,
     1
   );
+
+INSERT INTO user_x_community (user_id, community_id)
+VALUES (1, 2);
+
+INSERT INTO user_x_community (user_id, community_id)
+VALUES (1, 4);
+
+INSERT INTO user_x_community (user_id, community_id)
+VALUES (1, 6);
+
+INSERT INTO user_x_community (user_id, community_id)
+VALUES (1, 8);
 
 INSERT INTO project (title, description)
 VALUES (
@@ -727,4 +756,46 @@ INSERT INTO project (title, description)
 VALUES (
     'This is project title4',
     'Welcome to Be:MySeason, project description4'
+  );
+
+INSERT INTO faq (category, title, description)
+VALUES (
+    0,
+    'This is faq title',
+    'This is faq description'
+  );
+
+INSERT INTO faq (category, title, description)
+VALUES (
+    1,
+    'This is faq title2',
+    'This is faq description2'
+  );
+
+INSERT INTO faq (category, title, description)
+VALUES (
+    1,
+    'This is faq title3',
+    'This is faq description3'
+  );
+
+INSERT INTO faq (category, title, description)
+VALUES (
+    2,
+    'This is faq title4',
+    'This is faq description4'
+  );
+
+INSERT INTO faq (category, title, description)
+VALUES (
+    2,
+    'This is faq title5',
+    'This is faq description5'
+  );
+
+INSERT INTO faq (category, title, description)
+VALUES (
+    2,
+    'This is faq title6',
+    'This is faq description6'
   );

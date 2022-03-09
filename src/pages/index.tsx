@@ -128,7 +128,11 @@ export default function HomePage() {
         <div>
           <FlexBetweenPadding>
             <h3>Learn&nbsp;&nbsp;&nbsp;|</h3>
-            <h5>+ All</h5>
+            <Link href="/program" passHref>
+              <a>
+                <h5>+ All</h5>
+              </a>
+            </Link>
           </FlexBetweenPadding>
           <GridUl>
             <Card data={posts[0]} />
@@ -168,7 +172,11 @@ export default function HomePage() {
         <div>
           <FlexBetweenPadding>
             <h3>Community&nbsp;&nbsp;&nbsp;|</h3>
-            <h5>+ All</h5>
+            <Link href="/community" passHref>
+              <a>
+                <h5>+ All</h5>
+              </a>
+            </Link>
           </FlexBetweenPadding>
           <GridUl>
             <Card data={posts[0]} />

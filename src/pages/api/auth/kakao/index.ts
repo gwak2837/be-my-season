@@ -48,7 +48,10 @@ export default async function handleKakaoAuth(req: NextApiRequest, res: NextApiR
 
     return res.redirect(
       `/auth?${new URLSearchParams({
-        jwt: await generateJWT({ userId: kakaoUser.id }),
+        jwt: await generateJWT({
+          userId: kakaoUser.id,
+          isAdmin: kakaoUser.is_admin,
+        }),
         userId: kakaoUser.id,
       })}`
     )
@@ -69,7 +72,10 @@ export default async function handleKakaoAuth(req: NextApiRequest, res: NextApiR
 
   return res.redirect(
     `/auth?${new URLSearchParams({
-      jwt: await generateJWT({ userId: insertId }),
+      jwt: await generateJWT({
+        userId: insertId,
+        isAdmin: false,
+      }),
       userId: insertId,
     })}`
   )

@@ -15,13 +15,13 @@ const description = ''
 export default function PreWProgramsPage() {
   const [big, setBig] = useState(0)
   const [page, setPage] = useState(1)
-  const { data, error } = useSWR(`/api/program?type=0&page=${page - 1}`, defaultFetcher)
+  const { data: programs, error } = useSWR(`/api/program?type=0&page=${page - 1}`, defaultFetcher)
 
   return (
     <PageHead title="Pre-W - Be:MySeason" description={description}>
       <Ul>
-        {data
-          ? data.programs.map((program: any) => <ProgramCard key={program.id} program={program} />)
+        {programs
+          ? programs.map((program: any) => <ProgramCard key={program.id} program={program} />)
           : error
           ? 'error'
           : 'loading'}

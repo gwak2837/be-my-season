@@ -2,7 +2,7 @@ import type { Editor } from '@toast-ui/react-editor'
 import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { ReactElement, useRef } from 'react'
+import { ReactElement, useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
 import { decodeContentType } from 'src/components/ContentCard'
 import PageHead from 'src/components/PageHead'
@@ -59,6 +59,17 @@ export default function ContentPage() {
     }
   }
 
+  // Refresh toast editor
+  const [isRefreshing, setIsRefreshing] = useState(true)
+
+  function refresh() {
+    setIsRefreshing(false)
+  }
+
+  useEffect(() => {
+    setIsRefreshing(true)
+  }, [isRefreshing])
+
   return (
     <PageHead title="컨텐츠 - Be:MySeason" description={description}>
       <FlexGap>
@@ -88,18 +99,19 @@ export default function ContentPage() {
 
           <div>--------------</div>
 
-          {user?.isAdmin ? (
-            <>
-              <button onClick={updateContent}>수정하기</button>
-              <ToastEditor editorRef={editorRef} initialValue={content.description} />
-            </>
-          ) : (
-            <ToastViewer initialValue={content.description} />
-          )}
+          {isRefreshing &&
+            (user?.isAdmin ? (
+              <>
+                <button onClick={updateContent}>수정하기</button>
+                <ToastEditor editorRef={editorRef} initialValue={content.description} />
+              </>
+            ) : (
+              <ToastViewer initialValue={content.description} />
+            ))}
 
           {nextContent ? (
             <Link href={`/content/${nextContent.id}`} passHref>
-              <a>
+              <a onClick={refresh} role="button" tabIndex={0}>
                 <div>{nextContent.title}</div>
               </a>
             </Link>
@@ -108,7 +120,7 @@ export default function ContentPage() {
           )}
           {previousContent ? (
             <Link href={`/content/${previousContent.id}`} passHref>
-              <a>
+              <a onClick={refresh} role="button" tabIndex={0}>
                 <div>{previousContent.title}</div>
               </a>
             </Link>
