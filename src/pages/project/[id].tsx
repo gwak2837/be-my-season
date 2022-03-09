@@ -7,13 +7,22 @@ import { ReactElement, useEffect, useRef, useState } from 'react'
 import { toast } from 'react-toastify'
 import PageHead from 'src/components/PageHead'
 import useAuth from 'src/hooks/useAuth'
+import { MarginAuto } from 'src/layouts/IntroduceLayout'
 import NavigationLayout from 'src/layouts/NavigationLayout'
+import DownFilledArrow from 'src/svgs/down-filled-arrow.svg'
+import UpFilledArrow from 'src/svgs/up-filled-arrow.svg'
 import { defaultFetcher } from 'src/utils'
 import styled from 'styled-components'
 import useSWR, { useSWRConfig } from 'swr'
 
+import { Button1, FlexCenterA, HorizontalBorder } from '../content/[id]'
+
 const ToastEditor = dynamic(() => import('src/components/ToastEditor'), { ssr: false })
 const ToastViewer = dynamic(() => import('src/components/ToastViewer'), { ssr: false })
+
+const Margin = styled.div`
+  margin: 1rem 0 4rem;
+`
 
 const description = ''
 
@@ -71,46 +80,57 @@ export default function ProjectBeforePage() {
 
   return (
     <PageHead title="프로젝트 - Be:MySeason" description={description}>
-      {project ? (
-        <>
-          {isRefreshing &&
-            (user?.isAdmin ? (
-              <>
-                <button onClick={updateProject}>수정하기</button>
-                <ToastEditor editorRef={editorRef} initialValue={project.description} />
-              </>
+      <MarginAuto>
+        {project ? (
+          <>
+            <Margin>
+              {isRefreshing &&
+                (user?.isAdmin ? (
+                  <>
+                    <button onClick={updateProject}>수정하기</button>
+                    <ToastEditor editorRef={editorRef} initialValue={project.description} />
+                  </>
+                ) : (
+                  <ToastViewer initialValue={project.description} />
+                ))}
+            </Margin>
+
+            <HorizontalBorder />
+            {nextProject ? (
+              <Link href={`/project/${nextProject.id}`} passHref>
+                <FlexCenterA onClick={refresh} role="button" tabIndex={0}>
+                  <UpFilledArrow />
+                  <div>{nextProject.title}</div>
+                </FlexCenterA>
+              </Link>
             ) : (
-              <ToastViewer initialValue={project.description} />
-            ))}
+              <div>다음 프로젝트가 없습니다.</div>
+            )}
+            <HorizontalBorder />
+            {previousProject ? (
+              <Link href={`/project/${previousProject.id}`} passHref>
+                <FlexCenterA onClick={refresh} role="button" tabIndex={0}>
+                  <DownFilledArrow />
+                  <div>{previousProject.title}</div>
+                </FlexCenterA>
+              </Link>
+            ) : (
+              <div>이전 프로젝트가 없습니다.</div>
+            )}
+            <HorizontalBorder />
+          </>
+        ) : error ? (
+          <div>error</div>
+        ) : (
+          <div>loading</div>
+        )}
 
-          {nextProject ? (
-            <Link href={`/project/${nextProject.id}`} passHref>
-              <a onClick={refresh} role="button" tabIndex={0}>
-                <div>{nextProject.title}</div>
-              </a>
-            </Link>
-          ) : (
-            <div>다음 프로젝트가 없습니다.</div>
-          )}
-          {previousProject ? (
-            <Link href={`/project/${previousProject.id}`} passHref>
-              <a onClick={refresh} role="button" tabIndex={0}>
-                <div>{previousProject.title}</div>
-              </a>
-            </Link>
-          ) : (
-            <div>이전 프로젝트가 없습니다.</div>
-          )}
-        </>
-      ) : error ? (
-        <div>error</div>
-      ) : (
-        <div>loading</div>
-      )}
-
-      <Link href="/project/before" passHref>
-        <a>목록</a>
-      </Link>
+        <Link href="/project/before" passHref>
+          <a>
+            <Button1>목록</Button1>
+          </a>
+        </Link>
+      </MarginAuto>
     </PageHead>
   )
 }

@@ -9,9 +9,9 @@ import PageHead from 'src/components/PageHead'
 import useAuth from 'src/hooks/useAuth'
 import { MarginAuto } from 'src/layouts/IntroduceLayout'
 import NavigationLayout from 'src/layouts/NavigationLayout'
-import { defaultFetcher } from 'src/utils'
-import UpFilledArrow from 'src/svgs/up-filled-arrow.svg'
 import DownFilledArrow from 'src/svgs/down-filled-arrow.svg'
+import UpFilledArrow from 'src/svgs/up-filled-arrow.svg'
+import { defaultFetcher } from 'src/utils'
 import styled from 'styled-components'
 import useSWR, { useSWRConfig } from 'swr'
 
@@ -39,7 +39,7 @@ const H5 = styled.h5`
   margin: 1.5rem 0;
 `
 
-const HorizontalBorder = styled.div`
+export const HorizontalBorder = styled.div`
   border-top: 1px solid #7a583a;
   width: 100%;
   margin: 1rem 0;
@@ -60,7 +60,7 @@ const Button = styled.button`
   width: 10rem;
 `
 
-const Button1 = styled.div`
+export const Button1 = styled.div`
   background: #de684a;
   color: #fff;
   padding: 0.5rem;
@@ -72,7 +72,7 @@ const Margin = styled.div`
   margin: 1rem 0 4rem;
 `
 
-const FlexCenterA = styled.a`
+export const FlexCenterA = styled.a`
   display: flex;
   align-items: center;
   gap: 3rem;
