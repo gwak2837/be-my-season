@@ -15,7 +15,7 @@ export default async function handleProjects(req: NextApiRequest, res: NextApiRe
 
     try {
       const [rows] = await pool.query(getProjects, [+page * count + 1, count]) // 첫번째 프로젝트 = 현재 프로젝트
-      return res.status(200).json({ projects: rows })
+      return res.status(200).json(rows)
     } catch (error) {
       return res.status(500).send({ message: '500: 데이터베이스 쿼리 오류' })
     }

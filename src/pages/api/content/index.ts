@@ -16,10 +16,10 @@ export default async function handleContent(req: NextApiRequest, res: NextApiRes
     try {
       if (type) {
         const [rows] = await pool.query(getContentsByType, [+type, +page * count, count])
-        return res.status(200).json({ contents: rows })
+        return res.status(200).json(rows)
       } else {
         const [rows] = await pool.query(getContents, [+page * count, count])
-        return res.status(200).json({ contents: rows })
+        return res.status(200).json(rows)
       }
     } catch (error) {
       return res.status(500).send('500: 데이터베이스 쿼리 오류')
