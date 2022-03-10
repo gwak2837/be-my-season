@@ -42,10 +42,10 @@ export default async function handleProject(req: NextApiRequest, res: NextApiRes
     if (!verifiedJwt) return res.status(400).send('Invalid JWT')
     if (!verifiedJwt.isAdmin) return res.status(403).send('Require administrator privileges')
 
-    const { description } = req.body
-    if (!description) return res.status(400).send('Please check your inputs of request')
+    const { title, description } = req.body
+    if (!title || !description) return res.status(400).send('Please check your inputs of request')
 
-    const a = await pool.query(updateProject, [description, req.query.id])
+    const a = await pool.query(updateProject, [title, description, req.query.id])
     return res.status(200).json({ message: 'Update complete' })
   }
 

@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ReactElement, useEffect, useRef, useState } from 'react'
+import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { decodeContentType } from 'src/components/ContentCard'
 import PageHead from 'src/components/PageHead'
@@ -32,7 +33,8 @@ const FlexGap = styled.div`
 
 const H2 = styled.h2`
   color: #7a583a;
-  margin: 0.4rem 0;
+  padding: 0.5rem 0;
+  margin: 0.5rem 0;
 `
 
 const H5 = styled.h5`
@@ -83,48 +85,98 @@ export const FlexCenterA = styled.a`
   padding: 0 1rem;
 `
 
+const Input = styled.input`
+  font-size: 1.5rem;
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+  border: none;
+  box-shadow: 0 0 0 1px #bebebe;
+  width: 100%;
+`
+
 const description = ''
 
 export default function ContentPage() {
   const router = useRouter()
   const contentId = (router.query.id ?? '') as string
 
+  const { data: user } = useAuth()
+  const { mutate } = useSWRConfig()
+
   // Fetch content
   const { data, error } = useSWR(
     () => (contentId ? `/api/content/${contentId}` : null),
-    defaultFetcher
+    defaultFetcher,
+    {
+      onSuccess: (response) => {
+        setTitle(response.content.title)
+      },
+    }
   )
   const content = data?.content
   const previousContent = data?.previousContent
   const nextContent = data?.nextContent
 
-  // Update content if user is admin
-  const { data: user } = useAuth()
+  // Update content
+  const [title, setTitle] = useState('')
   const editorRef = useRef<Editor>(null)
-  const { mutate } = useSWRConfig()
   const [isUpdateLoading, setIsUpdateLoading] = useState(false)
 
-  async function updateContent() {
+  async function updateContent(e: any) {
+    e.preventDefault()
+    e.stopPropagation()
+
     if (editorRef.current) {
       setIsUpdateLoading(true)
 
       const response = await fetch(`/api/content/${contentId}`, {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ description: editorRef.current.getInstance().getHTML() }),
+        headers: {
+          authorization: sessionStorage.getItem('jwt') ?? localStorage.getItem('jwt') ?? '',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          title,
+          description: editorRef.current.getInstance().getHTML(),
+        }),
       })
 
       if (response.ok) {
         toast.success('수정에 성공했습니다')
         mutate(`/api/content/${contentId}`)
+        setIsUpdateMode(false)
       } else {
-        const result = await response.json()
-        toast.warn(result.message)
+        toast.warn(await response.text())
       }
 
       setIsUpdateLoading(false)
-      setIsUpdateMode(false)
     }
+  }
+
+  // Delete content
+  const [isDeletionLoading, setIsDeletionLoading] = useState(false)
+
+  async function deleteContent(e: any) {
+    e.stopPropagation()
+    setIsDeletionLoading(true)
+
+    const response = await fetch(`/api/content/${contentId}`, {
+      method: 'DELETE',
+      headers: {
+        authorization: sessionStorage.getItem('jwt') ?? localStorage.getItem('jwt') ?? '',
+      },
+    })
+
+    if (response.ok) {
+      toast.success('삭제에 성공했습니다')
+      mutate(`/api/content/${contentId}`)
+      mutate('/api/content')
+      router.replace('/content')
+    } else {
+      toast.warn(await response.text())
+    }
+
+    setIsDeletionLoading(false)
   }
 
   // Toggle editor/viewer mode
@@ -161,7 +213,15 @@ export default function ContentPage() {
 
         {content ? (
           <>
-            <H2>{content.title}</H2>
+            {isUpdateMode ? (
+              <Input
+                placeholder="제목을 입력해주세요"
+                onChange={(e) => setTitle(e.target.value)}
+                value={title}
+              />
+            ) : (
+              <H2>{content.title}</H2>
+            )}
             <H5>
               {content.nickname} | {new Date(content.creation_time).toLocaleDateString()}
             </H5>
@@ -172,15 +232,22 @@ export default function ContentPage() {
               {user?.isAdmin === 1 &&
                 (isUpdateMode ? (
                   <>
-                    <WhiteButton disabled={isUpdateLoading} onClick={cancelUpdating}>
+                    <WhiteButton disabled={isUpdateLoading} onClick={cancelUpdating} type="reset">
                       취소
                     </WhiteButton>
-                    <OrangeButton disabled={isUpdateLoading} onClick={updateContent}>
+                    <OrangeButton disabled={isUpdateLoading} onClick={updateContent} type="submit">
                       완료
                     </OrangeButton>
                   </>
                 ) : (
-                  <OrangeButton onClick={beingUpdate}>수정하기</OrangeButton>
+                  <>
+                    <WhiteButton disabled={isDeletionLoading} onClick={deleteContent}>
+                      삭제하기
+                    </WhiteButton>
+                    <OrangeButton disabled={isDeletionLoading} onClick={beingUpdate}>
+                      수정하기
+                    </OrangeButton>
+                  </>
                 ))}
             </FlexEndCenter>
 

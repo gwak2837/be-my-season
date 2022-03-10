@@ -8,7 +8,7 @@ export default async function handleCurrentProject(req: NextApiRequest, res: Nex
   // Get
   if (req.method === 'GET') {
     const [rows] = await pool.query(getCurrentProject, [req.query.id])
-    return res.status(200).json({ project: (rows as any)[0] })
+    return res.status(200).json((rows as any)[0])
   }
 
   // Else
