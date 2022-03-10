@@ -10,14 +10,15 @@ export default async function handleWysiwyg(req: NextApiRequest, res: NextApiRes
   // Get wysiwyg
   if (req.method === 'GET') {
     const [rows] = await pool.query(getWysiwyg, [req.query.id])
-    return res.status(200).json({ contents: (rows as any)[0].contents })
+    return res.status(200).json((rows as any)[0])
   }
 
   // Update wysiwyg
   if (req.method === 'PUT') {
-    if (isEmptyObject(req.body)) return res.status(400).send({ message: '값을 입력해주세요.' })
+    const { contents } = req.body
+    if (!contents) return res.status(400).send('Please check your inputs of request')
 
-    const [rows] = await pool.query(updateWysiwyg, [req.body.contents, req.query.id])
+    const [rows] = await pool.query(updateWysiwyg, [contents, req.query.id])
     return res.status(200).json({ rows })
   }
 
@@ -28,5 +29,5 @@ export default async function handleWysiwyg(req: NextApiRequest, res: NextApiRes
   }
 
   // Else
-  return res.status(405).send({ message: 'Method not allowed' })
+  return res.status(405).send('Method not allowed')
 }

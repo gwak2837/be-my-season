@@ -19,7 +19,7 @@ const description = ''
 
 export default function AboutUsPage() {
   const { data: user } = useAuth()
-  const { data, error } = useSWR('/api/wysiwyg/2', defaultFetcher)
+  const { data: aboutUs, error } = useSWR('/api/wysiwyg/2', defaultFetcher)
   const { mutate } = useSWRConfig()
 
   // Update about us
@@ -67,25 +67,26 @@ export default function AboutUsPage() {
   return (
     <PageHead title="팀 소개 - Be:MySeason" description={description}>
       <FlexEndCenter>
-        {user?.isAdmin === 1 && isUpdateMode ? (
-          <>
-            <WhiteButton disabled={isUpdateLoading} onClick={cancelUpdating}>
-              취소
-            </WhiteButton>
-            <OrangeButton disabled={isUpdateLoading} onClick={updateBrandStory}>
-              완료
-            </OrangeButton>
-          </>
-        ) : (
-          <OrangeButton onClick={beingUpdate}>수정하기</OrangeButton>
-        )}
+        {user?.isAdmin === 1 &&
+          (isUpdateMode ? (
+            <>
+              <WhiteButton disabled={isUpdateLoading} onClick={cancelUpdating}>
+                취소
+              </WhiteButton>
+              <OrangeButton disabled={isUpdateLoading} onClick={updateBrandStory}>
+                완료
+              </OrangeButton>
+            </>
+          ) : (
+            <OrangeButton onClick={beingUpdate}>수정하기</OrangeButton>
+          ))}
       </FlexEndCenter>
 
-      {data ? (
+      {aboutUs ? (
         isUpdateMode && user?.isAdmin ? (
-          <ToastEditor editorRef={editorRef} initialValue={data.contents} />
+          <ToastEditor editorRef={editorRef} initialValue={aboutUs.contents} />
         ) : (
-          <ToastViewer initialValue={data.contents} />
+          <ToastViewer initialValue={aboutUs.contents} />
         )
       ) : error ? (
         <div>error</div>

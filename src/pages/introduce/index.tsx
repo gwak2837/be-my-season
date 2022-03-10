@@ -40,7 +40,7 @@ const description = ''
 
 export default function BrandStoryPage() {
   const { data: user } = useAuth()
-  const { data, error } = useSWR('/api/wysiwyg/1', defaultFetcher)
+  const { data: brandStory, error } = useSWR('/api/wysiwyg/1', defaultFetcher)
   const { mutate } = useSWRConfig()
 
   // Update brand story
@@ -84,25 +84,26 @@ export default function BrandStoryPage() {
   return (
     <PageHead title="브랜드 스토리 - Be:MySeason" description={description}>
       <FlexEndCenter>
-        {user?.isAdmin === 1 && isUpdateMode ? (
-          <>
-            <WhiteButton disabled={isUpdateLoading} onClick={cancelUpdating}>
-              취소
-            </WhiteButton>
-            <OrangeButton disabled={isUpdateLoading} onClick={updateBrandStory}>
-              완료
-            </OrangeButton>
-          </>
-        ) : (
-          <OrangeButton onClick={beingUpdate}>수정하기</OrangeButton>
-        )}
+        {user?.isAdmin === 1 &&
+          (isUpdateMode ? (
+            <>
+              <WhiteButton disabled={isUpdateLoading} onClick={cancelUpdating}>
+                취소
+              </WhiteButton>
+              <OrangeButton disabled={isUpdateLoading} onClick={updateBrandStory}>
+                완료
+              </OrangeButton>
+            </>
+          ) : (
+            <OrangeButton onClick={beingUpdate}>수정하기</OrangeButton>
+          ))}
       </FlexEndCenter>
 
-      {data ? (
+      {brandStory ? (
         isUpdateMode && user?.isAdmin ? (
-          <ToastEditor editorRef={editorRef} initialValue={data.contents} />
+          <ToastEditor editorRef={editorRef} initialValue={brandStory.contents} />
         ) : (
-          <ToastViewer initialValue={data.contents} />
+          <ToastViewer initialValue={brandStory.contents} />
         )
       ) : error ? (
         <div>error</div>
