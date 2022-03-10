@@ -15,7 +15,8 @@ import { defaultFetcher } from 'src/utils'
 import styled from 'styled-components'
 import useSWR, { useSWRConfig } from 'swr'
 
-import { Button1, FlexCenterA, HorizontalBorder } from '../content/[id]'
+import { BigInput, Button1, FlexCenterA, H2, HorizontalBorder } from '../content/[id]'
+import { FlexEndCenter, OrangeButton, WhiteButton } from '../introduce'
 
 const ToastEditor = dynamic(() => import('src/components/ToastEditor'), { ssr: false })
 const ToastViewer = dynamic(() => import('src/components/ToastViewer'), { ssr: false })
@@ -30,22 +31,32 @@ export default function ProjectBeforePage() {
   const router = useRouter()
   const projectId = (router.query.id ?? '') as string
   const { mutate } = useSWRConfig()
+  const { data: user } = useAuth()
 
   // Fetch project
   const { data, error } = useSWR(
     () => (projectId ? `/api/project/${projectId}` : null),
-    defaultFetcher
+    defaultFetcher,
+    {
+      onSuccess: (project) => {
+        setTitle(project.project.title)
+      },
+    }
   )
   const project = data?.project
   const previousProject = data?.previousProject
   const nextProject = data?.nextProject
 
   // Update project if user is admin
-  const { data: user } = useAuth()
   const editorRef = useRef<Editor>(null)
+  const [title, setTitle] = useState('')
+
+  const [isUpdateLoading, setIsUpdateLoading] = useState(false)
 
   async function updateProject() {
     if (editorRef.current) {
+      setIsUpdateLoading(true)
+
       const response = await fetch(`/api/project/${projectId}`, {
         method: 'PUT',
         headers: {
@@ -53,6 +64,7 @@ export default function ProjectBeforePage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          title,
           description: editorRef.current.getInstance().getHTML(),
         }),
       })
@@ -60,45 +72,106 @@ export default function ProjectBeforePage() {
       if (response.ok) {
         toast.success('수정에 성공했습니다')
         mutate(`/api/project/${projectId}`)
+        setIsUpdateMode(false)
       } else {
-        const result = await response.json()
-        toast.warn(result.message)
+        toast.warn(await response.text())
       }
+
+      setIsUpdateLoading(false)
     }
   }
 
-  // Refresh toast editor
-  const [isRefreshing, setIsRefreshing] = useState(true)
+  // Delete content
+  const [isDeletionLoading, setIsDeletionLoading] = useState(false)
 
-  function refresh() {
-    setIsRefreshing(false)
+  async function deleteProject() {
+    setIsDeletionLoading(true)
+
+    const response = await fetch(`/api/project/${projectId}`, {
+      method: 'DELETE',
+      headers: {
+        authorization: sessionStorage.getItem('jwt') ?? localStorage.getItem('jwt') ?? '',
+      },
+    })
+
+    if (response.ok) {
+      toast.success('삭제에 성공했습니다')
+      mutate(`/api/content/${projectId}`)
+      mutate('/api/content')
+      router.replace('/project')
+    } else {
+      toast.warn(await response.text())
+    }
+
+    setIsDeletionLoading(false)
   }
 
-  useEffect(() => {
-    setIsRefreshing(true)
-  }, [isRefreshing])
+  // Toggle editor/viewer mode
+  const [isUpdateMode, setIsUpdateMode] = useState(false)
 
+  function beingUpdate() {
+    setIsUpdateMode(true)
+  }
+
+  function cancelUpdating() {
+    setIsUpdateMode(false)
+  }
   return (
     <PageHead title="프로젝트 - Be:MySeason" description={description}>
       <MarginAuto>
         {project ? (
           <>
-            <Margin>
-              {isRefreshing &&
-                (user?.isAdmin ? (
+            <FlexEndCenter>
+              {user?.isAdmin === 1 &&
+                (isUpdateMode ? (
                   <>
-                    <button onClick={updateProject}>수정하기</button>
+                    <WhiteButton disabled={isUpdateLoading} onClick={cancelUpdating} type="reset">
+                      취소
+                    </WhiteButton>
+                    <OrangeButton disabled={isUpdateLoading} onClick={updateProject} type="submit">
+                      완료
+                    </OrangeButton>
+                  </>
+                ) : (
+                  <>
+                    <WhiteButton disabled={isDeletionLoading} onClick={deleteProject}>
+                      삭제하기
+                    </WhiteButton>
+                    <OrangeButton disabled={isDeletionLoading} onClick={beingUpdate}>
+                      수정하기
+                    </OrangeButton>
+                  </>
+                ))}
+            </FlexEndCenter>
+
+            <Margin>
+              {project ? (
+                isUpdateMode && user?.isAdmin ? (
+                  <>
+                    <BigInput
+                      placeholder="제목을 입력해주세요"
+                      onChange={(e) => setTitle(e.target.value)}
+                      value={title}
+                    />
                     <ToastEditor editorRef={editorRef} initialValue={project.description} />
                   </>
                 ) : (
-                  <ToastViewer initialValue={project.description} />
-                ))}
+                  <>
+                    <H2>{project.title}</H2>
+                    <ToastViewer initialValue={project.description} />
+                  </>
+                )
+              ) : error ? (
+                <div>error</div>
+              ) : (
+                <div>loading...</div>
+              )}
             </Margin>
 
             <HorizontalBorder />
             {nextProject ? (
               <Link href={`/project/${nextProject.id}`} passHref>
-                <FlexCenterA onClick={refresh} role="button" tabIndex={0}>
+                <FlexCenterA>
                   <UpFilledArrow />
                   <div>{nextProject.title}</div>
                 </FlexCenterA>
@@ -109,7 +182,7 @@ export default function ProjectBeforePage() {
             <HorizontalBorder />
             {previousProject ? (
               <Link href={`/project/${previousProject.id}`} passHref>
-                <FlexCenterA onClick={refresh} role="button" tabIndex={0}>
+                <FlexCenterA>
                   <DownFilledArrow />
                   <div>{previousProject.title}</div>
                 </FlexCenterA>

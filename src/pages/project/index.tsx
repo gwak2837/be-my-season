@@ -11,10 +11,16 @@ import { defaultFetcher } from 'src/utils'
 import styled from 'styled-components'
 import useSWR, { useSWRConfig } from 'swr'
 
+import { BigInput, H2 } from '../content/[id]'
 import { FlexEndCenter, OrangeButton, WhiteButton } from '../introduce'
 
 const ToastEditor = dynamic(() => import('src/components/ToastEditor'), { ssr: false })
 const ToastViewer = dynamic(() => import('src/components/ToastViewer'), { ssr: false })
+
+const GridGap = styled.div`
+  display: grid;
+  gap: 1rem;
+`
 
 const description = ''
 
@@ -23,9 +29,15 @@ export default function ProjectPage() {
   const { mutate } = useSWRConfig()
 
   // Fetch current project
-  const { data: currentProject, error } = useSWR('/api/project/current', defaultFetcher)
+  const { data: currentProject, error } = useSWR('/api/project/current', defaultFetcher, {
+    onSuccess: (currentProject) => {
+      setTitle(currentProject.title)
+    },
+  })
 
   // Update current project
+  const [title, setTitle] = useState('')
+
   const editorRef = useRef<Editor>(null)
   const [isUpdateLoading, setIsUpdateLoading] = useState(false)
 
@@ -40,6 +52,7 @@ export default function ProjectPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          title,
           description: editorRef.current.getInstance().getHTML(),
         }),
       })
@@ -48,8 +61,7 @@ export default function ProjectPage() {
         toast.success('현재 프로젝트 수정에 성공했습니다')
         mutate('/api/project/current')
       } else {
-        const result = await response.json()
-        toast.warn(result.message)
+        toast.warn(await response.text())
       }
     }
 
@@ -87,11 +99,23 @@ export default function ProjectPage() {
       </FlexEndCenter>
 
       {currentProject ? (
-        isUpdateMode && user?.isAdmin ? (
-          <ToastEditor editorRef={editorRef} initialValue={currentProject.description} />
-        ) : (
-          <ToastViewer initialValue={currentProject.description} />
-        )
+        <GridGap>
+          {isUpdateMode && user?.isAdmin ? (
+            <>
+              <BigInput
+                placeholder="제목을 입력해주세요"
+                onChange={(e) => setTitle(e.target.value)}
+                value={title}
+              />
+              <ToastEditor editorRef={editorRef} initialValue={currentProject.description} />
+            </>
+          ) : (
+            <>
+              <H2>{currentProject.title}</H2>
+              <ToastViewer initialValue={currentProject.description} />
+            </>
+          )}
+        </GridGap>
       ) : error ? (
         <div>error</div>
       ) : (

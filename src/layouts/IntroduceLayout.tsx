@@ -24,7 +24,7 @@ const FlexCenterCenter = styled.div`
 
 export const MarginAuto = styled.div`
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 1rem;
   max-width: 1024px;
 `
 

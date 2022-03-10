@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { isEmptyObject } from 'src/utils'
+import { verifyJWT } from 'src/utils/jwt'
 
 import createProject from './sql/createProject.sql'
 import getProjects from './sql/getProjects.sql'
@@ -23,7 +24,17 @@ export default async function handleProjects(req: NextApiRequest, res: NextApiRe
 
   // Create project
   if (req.method === 'POST') {
-    const [rows] = await pool.query(createProject, [])
+    const jwt = req.headers.authorization
+    if (!jwt) return res.status(401).send('Need to authenticate')
+
+    const verifiedJwt = await verifyJWT(jwt).catch(() => null)
+    if (!verifiedJwt) return res.status(400).send('Invalid JWT')
+    if (!verifiedJwt.isAdmin) return res.status(403).send('Require administrator privileges')
+
+    const { title, description } = req.body
+    if (!title || !description) return res.status(400).send('Please check your inputs of request')
+
+    const [rows] = await pool.query(createProject, [title, description])
     return res.status(200).json({ rows })
   }
 

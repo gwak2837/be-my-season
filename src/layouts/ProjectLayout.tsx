@@ -36,6 +36,9 @@ function ProjectLayout({ children }: Props) {
         <Link href="/project/before" passHref>
           <a>Before</a>
         </Link>
+        <Link href="/project/create" passHref>
+          <a>생성하기</a>
+        </Link>
       </FlexCenterCenter>
 
       <MarginAuto>{children}</MarginAuto>

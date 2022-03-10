@@ -31,7 +31,7 @@ const FlexGap = styled.div`
   }
 `
 
-const H2 = styled.h2`
+export const H2 = styled.h2`
   color: #7a583a;
   padding: 0.5rem 0;
   margin: 0.5rem 0;
@@ -85,7 +85,7 @@ export const FlexCenterA = styled.a`
   padding: 0 1rem;
 `
 
-const Input = styled.input`
+export const BigInput = styled.input`
   font-size: 1.5rem;
   padding: 0.5rem;
   margin: 0.5rem 0;
@@ -118,14 +118,12 @@ export default function ContentPage() {
   const nextContent = data?.nextContent
 
   // Update content
-  const [title, setTitle] = useState('')
   const editorRef = useRef<Editor>(null)
+  const [title, setTitle] = useState('')
+
   const [isUpdateLoading, setIsUpdateLoading] = useState(false)
 
-  async function updateContent(e: any) {
-    e.preventDefault()
-    e.stopPropagation()
-
+  async function updateContent() {
     if (editorRef.current) {
       setIsUpdateLoading(true)
 
@@ -156,8 +154,7 @@ export default function ContentPage() {
   // Delete content
   const [isDeletionLoading, setIsDeletionLoading] = useState(false)
 
-  async function deleteContent(e: any) {
-    e.stopPropagation()
+  async function deleteContent() {
     setIsDeletionLoading(true)
 
     const response = await fetch(`/api/content/${contentId}`, {
@@ -214,7 +211,7 @@ export default function ContentPage() {
         {content ? (
           <>
             {isUpdateMode ? (
-              <Input
+              <BigInput
                 placeholder="제목을 입력해주세요"
                 onChange={(e) => setTitle(e.target.value)}
                 value={title}

@@ -9,9 +9,13 @@ const FlexWrap = styled.div`
   display: flex;
   flex-flow: row wrap;
   gap: 0 7rem;
+
+  > div {
+    flex-grow: 1;
+  }
 `
 
-const GridGap = styled.div`
+const GridGap = styled.header`
   display: grid;
   gap: 0.5rem;
   height: fit-content;
