@@ -1,11 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { isEmptyObject } from 'src/utils'
+import { verifyJWT } from 'src/utils/jwt'
 
+import createFAQ from './sql/createFAQ.sql'
 import getFAQs from './sql/getFAQs.sql'
 import getFAQsByCategory from './sql/getFAQsByCategory.sql'
-import createFAQ from './sql/createFAQ.sql'
 import { pool } from '..'
-import { verifyJWT } from 'src/utils/jwt'
 
 export default async function handleFAQ(req: NextApiRequest, res: NextApiResponse) {
   // Get FAQs
@@ -36,7 +36,7 @@ export default async function handleFAQ(req: NextApiRequest, res: NextApiRespons
     if (!verifiedJwt.isAdmin) return res.status(403).send('Need administrator rights')
 
     const { category, title, description } = req.body
-    if (!category || !title || !description)
+    if (category === undefined || !title || !description)
       return res.status(400).send('Please check your inputs of request')
 
     const [rows] = await pool.query(createFAQ, [category, title, description])

@@ -41,7 +41,7 @@ export function ReviewCard({ review }: any) {
   const { data: user } = useAuth()
 
   // Update review
-  const { getValues, setValue, register } = useForm({
+  const { getValues, setValue, register, reset } = useForm({
     defaultValues: {
       title: review.title,
       description: review.description,
@@ -58,9 +58,7 @@ export function ReviewCard({ review }: any) {
 
   function cancelUpdating() {
     setIsReviewUpdating(false)
-    setValue('title', '')
-    setValue('description', '')
-    setValue('point', 0)
+    reset()
   }
 
   async function updateReview(reviewId: number) {
