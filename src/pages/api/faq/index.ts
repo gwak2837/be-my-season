@@ -33,7 +33,7 @@ export default async function handleFAQ(req: NextApiRequest, res: NextApiRespons
 
     const verifiedJwt = await verifyJWT(jwt).catch(() => null)
     if (!verifiedJwt) return res.status(400).send('Invalid JWT')
-    if (!verifiedJwt.isAdmin) return res.status(403).send('Need administrator rights')
+    if (!verifiedJwt.isAdmin) return res.status(403).send('Require administrator privileges')
 
     const { category, title, description } = req.body
     if (category === undefined || !title || !description)

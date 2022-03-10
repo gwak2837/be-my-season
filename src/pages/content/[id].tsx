@@ -15,6 +15,8 @@ import { defaultFetcher } from 'src/utils'
 import styled from 'styled-components'
 import useSWR, { useSWRConfig } from 'swr'
 
+import { FlexEndCenter, OrangeButton, WhiteButton } from '../introduce'
+
 const ToastEditor = dynamic(() => import('src/components/ToastEditor'), { ssr: false })
 const ToastViewer = dynamic(() => import('src/components/ToastViewer'), { ssr: false })
 
@@ -100,9 +102,12 @@ export default function ContentPage() {
   const { data: user } = useAuth()
   const editorRef = useRef<Editor>(null)
   const { mutate } = useSWRConfig()
+  const [isUpdateLoading, setIsUpdateLoading] = useState(false)
 
   async function updateContent() {
     if (editorRef.current) {
+      setIsUpdateLoading(true)
+
       const response = await fetch(`/api/content/${contentId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -116,19 +121,22 @@ export default function ContentPage() {
         const result = await response.json()
         toast.warn(result.message)
       }
+
+      setIsUpdateLoading(false)
+      setIsUpdateMode(false)
     }
   }
 
-  // Refresh toast editor
-  const [isRefreshing, setIsRefreshing] = useState(true)
+  // Toggle editor/viewer mode
+  const [isUpdateMode, setIsUpdateMode] = useState(false)
 
-  function refresh() {
-    setIsRefreshing(false)
+  function beingUpdate() {
+    setIsUpdateMode(true)
   }
 
-  useEffect(() => {
-    setIsRefreshing(true)
-  }, [isRefreshing])
+  function cancelUpdating() {
+    setIsUpdateMode(false)
+  }
 
   return (
     <PageHead title="컨텐츠 - Be:MySeason" description={description}>
@@ -160,24 +168,40 @@ export default function ContentPage() {
 
             <HorizontalBorder />
 
-            <Margin>
-              {isRefreshing &&
-                (user?.isAdmin ? (
+            <FlexEndCenter>
+              {user?.isAdmin === 1 &&
+                (isUpdateMode ? (
                   <>
-                    <RightAlign>
-                      <Button onClick={updateContent}>수정하기</Button>
-                    </RightAlign>
-                    <ToastEditor editorRef={editorRef} initialValue={content.description} />
+                    <WhiteButton disabled={isUpdateLoading} onClick={cancelUpdating}>
+                      취소
+                    </WhiteButton>
+                    <OrangeButton disabled={isUpdateLoading} onClick={updateContent}>
+                      완료
+                    </OrangeButton>
                   </>
                 ) : (
-                  <ToastViewer initialValue={content.description} />
+                  <OrangeButton onClick={beingUpdate}>수정하기</OrangeButton>
                 ))}
+            </FlexEndCenter>
+
+            <Margin>
+              {content ? (
+                isUpdateMode && user?.isAdmin ? (
+                  <ToastEditor editorRef={editorRef} initialValue={content.description} />
+                ) : (
+                  <ToastViewer initialValue={content.description} />
+                )
+              ) : error ? (
+                <div>error</div>
+              ) : (
+                <div>loading...</div>
+              )}
             </Margin>
 
             <HorizontalBorder />
             {nextContent ? (
               <Link href={`/content/${nextContent.id}`} passHref>
-                <FlexCenterA onClick={refresh} role="button" tabIndex={0}>
+                <FlexCenterA>
                   <UpFilledArrow />
                   <div>{nextContent.title}</div>
                 </FlexCenterA>
@@ -188,7 +212,7 @@ export default function ContentPage() {
             <HorizontalBorder />
             {previousContent ? (
               <Link href={`/content/${previousContent.id}`} passHref>
-                <FlexCenterA onClick={refresh} role="button" tabIndex={0}>
+                <FlexCenterA>
                   <DownFilledArrow />
                   <div>{previousContent.title}</div>
                 </FlexCenterA>

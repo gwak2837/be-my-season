@@ -53,8 +53,13 @@ export default function BrandStoryPage() {
 
       const response = await fetch('/api/wysiwyg/1', {
         method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ contents: editorRef.current.getInstance().getHTML() }),
+        headers: {
+          authorization: sessionStorage.getItem('jwt') ?? localStorage.getItem('jwt') ?? '',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          contents: editorRef.current.getInstance().getHTML(),
+        }),
       })
 
       if (response.ok) {

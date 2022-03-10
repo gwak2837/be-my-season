@@ -12,5 +12,5 @@ export default async function handleCurrentProject(req: NextApiRequest, res: Nex
   }
 
   // Else
-  return res.status(405).send({ message: 'Method not allowed' })
+  return res.status(405).send('Method not allowed')
 }

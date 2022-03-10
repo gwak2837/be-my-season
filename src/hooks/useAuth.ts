@@ -1,16 +1,8 @@
+import { fetcherWithJwt } from 'src/utils'
 import useSWR from 'swr'
 
-async function fetchAuthInfo(url: string) {
-  const response = await fetch(url, {
-    headers: {
-      authorization: sessionStorage.getItem('jwt') ?? localStorage.getItem('jwt') ?? '',
-    },
-  })
-  return response.json()
-}
-
 export default function useAuth() {
-  const { data, error } = useSWR('/api/auth', fetchAuthInfo, {
+  const { data, error } = useSWR('/api/auth', fetcherWithJwt, {
     onError: () => {
       sessionStorage.removeItem('jwt')
       localStorage.removeItem('jwt')

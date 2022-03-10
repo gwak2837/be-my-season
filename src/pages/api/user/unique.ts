@@ -9,7 +9,7 @@ export default async function handleCheckingEmailIsUnique(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method !== 'GET') return res.status(405).send({ message: 'Method not allowed' })
+  if (req.method !== 'GET') return res.status(405).send('Method not allowed')
 
   const { loginId, email, phoneNumber } = req.query
   if (!loginId && !email && !phoneNumber)

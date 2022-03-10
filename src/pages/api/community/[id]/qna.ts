@@ -23,7 +23,7 @@ export default async function handleCommunityQnA(req: NextApiRequest, res: NextA
     const verifiedJwt = await verifyJWT(jwt).catch(() => null)
     if (!verifiedJwt) return res.status(400).send('Invalid JWT')
 
-    if (isEmptyObject(req.body)) return res.status(400).send({ message: '값을 입력해주세요.' })
+    if (isEmptyObject(req.body)) return res.status(400).send('Please check your inputs of request')
 
     await pool.query(createCommunityQnA, [
       req.body.title,
@@ -43,7 +43,7 @@ export default async function handleCommunityQnA(req: NextApiRequest, res: NextA
     if (!verifiedJwt) return res.status(400).send('Invalid JWT')
 
     const { qnaId, title, description } = req.body
-    if (!qnaId) return res.status(400).send({ message: '값을 입력해주세요.' })
+    if (!qnaId) return res.status(400).send('Please check your inputs of request')
 
     await pool.query(updateCommunityQnA, [title, description, qnaId, verifiedJwt.userId])
     return res.status(200).json({ message: 'Delete completed' })
@@ -58,12 +58,12 @@ export default async function handleCommunityQnA(req: NextApiRequest, res: NextA
     if (!verifiedJwt) return res.status(400).send('Invalid JWT')
 
     const qnaId = req.query.qnaId
-    if (!qnaId) return res.status(400).send({ message: '값을 입력해주세요.' })
+    if (!qnaId) return res.status(400).send('Please check your inputs of request')
 
     await pool.query(deleteCommunityQnA, [qnaId, verifiedJwt.userId])
     return res.status(200).json({ message: 'Delete completed' })
   }
 
   // Else
-  return res.status(405).send({ message: 'Method not allowed' })
+  return res.status(405).send('Method not allowed')
 }

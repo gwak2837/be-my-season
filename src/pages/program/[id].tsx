@@ -82,8 +82,7 @@ export function ReviewCard({ review }: any) {
       toast.success('리뷰를 수정했습니다')
       mutate(`/api/program/${programId}/review`)
     } else {
-      const result = await response.text()
-      toast.warn(result)
+      toast.warn(await response.text())
     }
 
     setIsUpdateLoading(false)
@@ -107,8 +106,7 @@ export function ReviewCard({ review }: any) {
       toast.success('리뷰를 삭제했습니다')
       mutate(`/api/program/${programId}/review`)
     } else {
-      const result = await response.text()
-      toast.warn(result)
+      toast.warn(await response.text())
     }
 
     setIsDeletionLoading(false)
@@ -204,8 +202,7 @@ export function QnACard({ qna }: any) {
       toast.success('QnA를 수정했습니다')
       mutate(`/api/program/${programId}/qna`)
     } else {
-      const result = await response.text()
-      toast.warn(result)
+      toast.warn(await response.text())
     }
 
     setIsUpdateLoading(false)
@@ -229,8 +226,7 @@ export function QnACard({ qna }: any) {
       toast.success('QnA를 삭제했습니다')
       mutate(`/api/program/${programId}/qna`)
     } else {
-      const result = await response.text()
-      toast.warn(result)
+      toast.warn(await response.text())
     }
 
     setIsDeletionLoading(false)
@@ -321,8 +317,7 @@ export function ReviewCreationForm() {
       toast.success('리뷰를 작성했습니다')
       mutate(`/api/program/${programId}/review`)
     } else {
-      const result = await response.text()
-      toast.warn(result)
+      toast.warn(await response.text())
     }
 
     setIsCreationLoading(false)
@@ -554,8 +549,7 @@ export default function ProgramPage() {
       toast.success('프로그램 참가 신청했습니다')
       mutate(`/api/program/${programId}/join`)
     } else {
-      const result = await response.text()
-      toast.warn(result)
+      toast.warn(await response.text())
     }
   }
 
@@ -573,8 +567,7 @@ export default function ProgramPage() {
       toast.success('결제를 완료했습니다')
       mutate(`/api/program/${programId}/review`)
     } else {
-      const result = await response.text()
-      toast.warn(result)
+      toast.warn(await response.text())
     }
   }
 

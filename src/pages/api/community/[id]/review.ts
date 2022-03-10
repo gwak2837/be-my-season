@@ -24,7 +24,8 @@ export default async function handleCommunityReview(req: NextApiRequest, res: Ne
     if (!verifiedJwt) return res.status(400).send('Invalid JWT')
 
     const { title, description, point } = req.body
-    if (!title || !description || !point) return res.status(400).send('값을 입력해주세요.')
+    if (!title || !description || !point)
+      return res.status(400).send('Please check your inputs of request')
 
     await pool.query(createCommunityReview, [
       title,
@@ -45,7 +46,7 @@ export default async function handleCommunityReview(req: NextApiRequest, res: Ne
     if (!verifiedJwt) return res.status(400).send('Invalid JWT')
 
     const { reviewId, title, description, point } = req.body
-    if (!reviewId) return res.status(400).send('값을 입력해주세요.')
+    if (!reviewId) return res.status(400).send('Please check your inputs of request')
 
     await pool.query(updateCommunityReview, [
       title,
@@ -66,7 +67,7 @@ export default async function handleCommunityReview(req: NextApiRequest, res: Ne
     if (!verifiedJwt) return res.status(400).send('Invalid JWT')
 
     const reviewId = req.query.reviewId
-    if (!reviewId) return res.status(400).send({ message: '값을 입력해주세요.' })
+    if (!reviewId) return res.status(400).send('Please check your inputs of request')
 
     await pool.query(deleteCommunityReview, [reviewId, verifiedJwt.userId])
     return res.status(200).json('Delete completed')

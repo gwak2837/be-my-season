@@ -123,14 +123,18 @@ export default function LoginPage() {
       return
     }
 
-    toast.success('로그인에 성공했어요')
     if (sessionStorage.getItem('autoLogin')) {
       localStorage.setItem('jwt', result.jwt)
     } else {
       sessionStorage.setItem('jwt', result.jwt)
     }
-    mutate('/api/auth')
-    router.replace('/')
+
+    toast.success('로그인에 성공했어요')
+    mutate('/api/auth', undefined, true)
+
+    const redirectionUrlAfterLogin = sessionStorage.getItem('redirectionUrlAfterLogin') ?? '/'
+    sessionStorage.removeItem('redirectionUrlAfterLogin')
+    router.replace(redirectionUrlAfterLogin)
   }
 
   return (

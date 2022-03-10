@@ -6,6 +6,8 @@ import colorSyntax from '@toast-ui/editor-plugin-color-syntax'
 import { Editor, EditorProps } from '@toast-ui/react-editor'
 import { LegacyRef, useEffect, useState } from 'react'
 
+import { MinHeight } from './ToastViewer'
+
 type EditorPropsWithRef = EditorProps & { editorRef: LegacyRef<Editor> }
 
 function ToastEditor(props: EditorPropsWithRef) {
@@ -19,16 +21,20 @@ function ToastEditor(props: EditorPropsWithRef) {
     setShow(true)
   }, [show])
 
-  return show ? (
-    <Editor
-      initialEditType="wysiwyg"
-      height="min(max(25rem, 50vh), 50rem)"
-      plugins={[colorSyntax]}
-      ref={props.editorRef}
-      usageStatistics={false}
-      {...props}
-    />
-  ) : null
+  return (
+    <MinHeight>
+      {show ? (
+        <Editor
+          initialEditType="wysiwyg"
+          height="min(max(25rem, 50vh), 50rem)"
+          plugins={[colorSyntax]}
+          ref={props.editorRef}
+          usageStatistics={false}
+          {...props}
+        />
+      ) : null}
+    </MinHeight>
+  )
 }
 
 export default ToastEditor

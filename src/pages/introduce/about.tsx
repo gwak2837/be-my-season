@@ -33,6 +33,7 @@ export default function AboutUsPage() {
       const response = await fetch('/api/wysiwyg/2', {
         method: 'PUT',
         headers: {
+          authorization: sessionStorage.getItem('jwt') ?? localStorage.getItem('jwt') ?? '',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({

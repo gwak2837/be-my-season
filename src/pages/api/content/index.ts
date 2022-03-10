@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { verifyJWT } from 'src/utils/jwt'
 
 import createContent from './sql/createContent.sql'
 import getContents from './sql/getContents.sql'
@@ -28,7 +29,18 @@ export default async function handleContent(req: NextApiRequest, res: NextApiRes
 
   // Create content
   if (req.method === 'POST') {
-    const [rows] = await pool.query(createContent, [])
+    const jwt = req.headers.authorization
+    if (!jwt) return res.status(401).send('Need to authenticate')
+
+    const verifiedJwt = await verifyJWT(jwt).catch(() => null)
+    if (!verifiedJwt) return res.status(400).send('Invalid JWT')
+    if (!verifiedJwt.isAdmin) return res.status(403).send('Require administrator privileges')
+
+    const { title, description, type } = req.body
+    if (!title || !description || type === undefined)
+      return res.status(400).send('Please check your inputs of request')
+
+    const [rows] = await pool.query(createContent, [title, description, +type, verifiedJwt.userId])
     return res.status(200).json({ rows })
   }
 

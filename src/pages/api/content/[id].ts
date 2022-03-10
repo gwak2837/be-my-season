@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { isEmptyObject } from 'src/utils'
+import { verifyJWT } from 'src/utils/jwt'
 
 import deleteContent from './sql/deleteContent.sql'
 import getBeforeAndAfterContent from './sql/getBeforeAndAfterContent.sql'
@@ -34,7 +35,14 @@ export default async function handleContent(req: NextApiRequest, res: NextApiRes
 
   // Update content
   if (req.method === 'PUT') {
-    if (isEmptyObject(req.body)) return res.status(400).send({ message: '값을 입력해주세요.' })
+    const jwt = req.headers.authorization
+    if (!jwt) return res.status(401).send('Need to authenticate')
+
+    const verifiedJwt = await verifyJWT(jwt).catch(() => null)
+    if (!verifiedJwt) return res.status(400).send('Invalid JWT')
+    if (!verifiedJwt.isAdmin) return res.status(403).send('Require administrator privileges')
+
+    if (isEmptyObject(req.body)) return res.status(400).send('Please check your inputs of request')
 
     await pool.query(updateContent, [req.body.description, req.query.id])
     return res.status(200).json({ message: 'Update complete' })
@@ -42,10 +50,17 @@ export default async function handleContent(req: NextApiRequest, res: NextApiRes
 
   // Delete content
   if (req.method === 'DELETE') {
+    const jwt = req.headers.authorization
+    if (!jwt) return res.status(401).send('Need to authenticate')
+
+    const verifiedJwt = await verifyJWT(jwt).catch(() => null)
+    if (!verifiedJwt) return res.status(400).send('Invalid JWT')
+    if (!verifiedJwt.isAdmin) return res.status(403).send('Require administrator privileges')
+
     const [rows] = await pool.query(deleteContent, [req.query.id])
     return res.status(200).json({ rows })
   }
 
   // Else
-  return res.status(405).send({ message: 'Method not allowed' })
+  return res.status(405).send('Method not allowed')
 }

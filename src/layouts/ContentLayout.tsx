@@ -1,6 +1,9 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
+import useAuth from 'src/hooks/useAuth'
+import ExportIcon from 'src/svgs/export.svg'
 import styled from 'styled-components'
 
 import { Frame21to9, MarginAuto } from './IntroduceLayout'
@@ -19,11 +22,19 @@ const FlexCenterCenter = styled.div`
   }
 `
 
+const SelectableA = styled.a<{ selected?: boolean }>`
+  color: ${(p) => (p.selected ? '#DE684A' : '#C9C9C9')};
+  text-decoration-line: ${(p) => (p.selected ? 'underline' : 'none')};
+`
+
 type Props = {
   children: ReactNode
 }
 
 function ContentLayout({ children }: Props) {
+  const { asPath } = useRouter()
+  const { data: user } = useAuth()
+
   return (
     <>
       <Frame21to9>
@@ -32,23 +43,28 @@ function ContentLayout({ children }: Props) {
 
       <FlexCenterCenter>
         <Link href="/content" passHref>
-          <a>All</a>
+          <SelectableA selected={asPath === '/content'}>All</SelectableA>
         </Link>
         <Link href="/content/column" passHref>
-          <a>Column</a>
+          <SelectableA selected={asPath === '/content/column'}>Column</SelectableA>
         </Link>
         <Link href="/content/interview" passHref>
-          <a>Interview</a>
+          <SelectableA selected={asPath === '/content/interview'}>Interview</SelectableA>
         </Link>
-        <a href="https://www.instagram.com" target="_blank" rel="noreferrer">
-          Instagram
-        </a>
-        <a href="https://www.youtube.com" target="_blank" rel="noreferrer">
-          Youtube
-        </a>
-        <a href="https://www.tistory.com" target="_blank" rel="noreferrer">
-          Tistory
-        </a>
+        <SelectableA href="https://www.instagram.com" target="_blank" rel="noreferrer">
+          Instagram <ExportIcon />
+        </SelectableA>
+        <SelectableA href="https://www.youtube.com" target="_blank" rel="noreferrer">
+          Youtube <ExportIcon />
+        </SelectableA>
+        <SelectableA href="https://www.tistory.com" target="_blank" rel="noreferrer">
+          Tistory <ExportIcon />
+        </SelectableA>
+        {user?.isAdmin && (
+          <Link href="/content/create" passHref>
+            <SelectableA selected={asPath === '/content/create'}>작성하기</SelectableA>
+          </Link>
+        )}
       </FlexCenterCenter>
 
       <MarginAuto>{children}</MarginAuto>

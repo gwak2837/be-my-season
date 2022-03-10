@@ -4,8 +4,8 @@ import { Viewer, ViewerProps } from '@toast-ui/react-editor'
 import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
-const MinHeight = styled.div`
-  min-height: 50vh;
+export const MinHeight = styled.div`
+  min-height: 30vh;
 `
 
 function ToastViewer(props: ViewerProps) {
@@ -19,11 +19,13 @@ function ToastViewer(props: ViewerProps) {
     setShow(true)
   }, [show])
 
-  return show ? (
+  return (
     <MinHeight>
-      <Viewer initialValue="Hello world viewer" usageStatistics={false} {...props} />
+      {show ? (
+        <Viewer initialValue="Hello world viewer" usageStatistics={false} {...props} />
+      ) : null}
     </MinHeight>
-  ) : null
+  )
 }
 
 export default ToastViewer

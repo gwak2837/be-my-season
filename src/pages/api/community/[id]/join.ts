@@ -33,5 +33,5 @@ export default async function handleJoiningCommunity(req: NextApiRequest, res: N
   }
 
   // Else
-  return res.status(405).send({ message: 'Method not allowed' })
+  return res.status(405).send('Method not allowed')
 }

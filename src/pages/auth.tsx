@@ -12,9 +12,9 @@ export default function AuthPage() {
   useEffect(() => {
     const queryString = new URLSearchParams(location.search)
     const jwt = queryString.get('jwt')
-    const userId = queryString.get('userId')
+    const myUserId = queryString.get('userId')
 
-    if (jwt && userId) {
+    if (jwt && myUserId) {
       toast.success('로그인에 성공했어요')
 
       if (sessionStorage.getItem('autoLogin')) {
@@ -27,7 +27,7 @@ export default function AuthPage() {
       sessionStorage.removeItem('redirectionUrlAfterLogin')
 
       if (redirectionUrlAfterLogin === '/@') {
-        url.current = `/@${userId}`
+        url.current = `/@${myUserId}`
       } else {
         url.current = redirectionUrlAfterLogin
       }

@@ -24,7 +24,7 @@
       "",
       "  // Update $2",
       "  else if (req.method === 'PUT') {",
-      "    if (isEmptyObject(req.body)) return res.status(400).send('값을 입력해주세요.')",
+      "    if (isEmptyObject(req.body)) return res.status(400).send('Please check your inputs of request')",
       "",
       "    await pool.query(update$1, [req.query.id, req.body])",
       "    return res.status(200).json({ message: 'Modifications completed' })",

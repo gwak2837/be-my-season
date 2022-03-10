@@ -22,7 +22,7 @@ export default async function handleCommunity(req: NextApiRequest, res: NextApiR
         return res.status(200).json({ communities: rows })
       }
     } catch (error) {
-      return res.status(500).send({ message: '500: 데이터베이스 쿼리 오류' })
+      return res.status(500).send('500: Database query error')
     }
   }
 
@@ -33,5 +33,5 @@ export default async function handleCommunity(req: NextApiRequest, res: NextApiR
   }
 
   // Else
-  return res.status(405).send({ message: 'Method not allowed' })
+  return res.status(405).send('Method not allowed')
 }

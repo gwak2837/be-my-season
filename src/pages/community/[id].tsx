@@ -7,14 +7,14 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import { decodeCommunityType } from 'src/components/CommunityCard'
 import PageHead from 'src/components/PageHead'
-
 import useAuth from 'src/hooks/useAuth'
 import CommunityLayout from 'src/layouts/CommunityLayout'
 import NavigationLayout from 'src/layouts/NavigationLayout'
 import { defaultFetcher, formatNumber } from 'src/utils'
 import styled from 'styled-components'
 import useSWR, { useSWRConfig } from 'swr'
-import { Sticky, ReviewCreationForm, ReviewCard, QnACreationForm, QnACard } from '../program/[id]'
+
+import { QnACard, QnACreationForm, ReviewCard, ReviewCreationForm, Sticky } from '../program/[id]'
 
 const ToastEditor = dynamic(() => import('src/components/ToastEditor'), { ssr: false })
 const ToastViewer = dynamic(() => import('src/components/ToastViewer'), { ssr: false })
@@ -117,8 +117,7 @@ export default function CommunityPage() {
       toast.success('커뮤니티 참가 신청했습니다')
       mutate(`/api/community/${communityId}/join`)
     } else {
-      const result = await response.text()
-      toast.warn(result)
+      toast.warn(await response.text())
     }
   }
 
@@ -136,8 +135,7 @@ export default function CommunityPage() {
       toast.success('결제를 완료했습니다')
       mutate(`/api/community/${communityId}/review`)
     } else {
-      const result = await response.text()
-      toast.warn(result)
+      toast.warn(await response.text())
     }
   }
 

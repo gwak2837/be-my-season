@@ -8,7 +8,7 @@ export default async function handleKakaoUnregister(req: NextApiRequest, res: Ne
 
   const { user_id, referrer_type } = req.query
   if (!user_id || !referrer_type)
-    return res.status(400).send({ message: '필수 입력값을 입력해주세요.' })
+    return res.status(400).send({ message: '필수 입력Please check your inputs of request' })
 
   if (req.headers.authorization !== `KakaoAK ${process.env.KAKAO_ADMIN_KEY}`)
     return res.status(403).send({ message: '접근 권한이 없습니다.' })

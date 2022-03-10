@@ -1,12 +1,12 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { isEmptyObject } from 'src/utils'
+import { verifyJWT } from 'src/utils/jwt'
 
 import deleteProject from './sql/deleteProject.sql'
 import getBeforeAndAfterProject from './sql/getBeforeAndAfterProject.sql'
 import getProject from './sql/getProject.sql'
 import updateProject from './sql/updateProject.sql'
 import { pool } from '..'
-import { verifyJWT } from 'src/utils/jwt'
 
 export default async function handleProject(req: NextApiRequest, res: NextApiResponse) {
   // Get project
@@ -40,13 +40,12 @@ export default async function handleProject(req: NextApiRequest, res: NextApiRes
 
     const verifiedJwt = await verifyJWT(jwt).catch(() => null)
     if (!verifiedJwt) return res.status(400).send('Invalid JWT')
-    if (!verifiedJwt.isAdmin) return res.status(403).send('Need administrator rights')
+    if (!verifiedJwt.isAdmin) return res.status(403).send('Require administrator privileges')
 
     const { description } = req.body
-    if (!description) return res.status(400).send('값을 입력해주세요.')
+    if (!description) return res.status(400).send('Please check your inputs of request')
 
     const a = await pool.query(updateProject, [description, req.query.id])
-    console.log('👀 - a', a)
     return res.status(200).json({ message: 'Update complete' })
   }
 
@@ -57,5 +56,5 @@ export default async function handleProject(req: NextApiRequest, res: NextApiRes
   }
 
   // Else
-  return res.status(405).send({ message: 'Method not allowed' })
+  return res.status(405).send('Method not allowed')
 }

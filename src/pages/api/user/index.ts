@@ -55,7 +55,7 @@ export default async function handleUser(req: NextApiRequest, res: NextApiRespon
       !loginId ||
       !password
     )
-      return res.status(400).send({ message: '필수 입력값을 입력해주세요.' })
+      return res.status(400).send({ message: '필수 입력Please check your inputs of request' })
 
     if (!emailRegEx.test(email))
       return res.status(400).send({ message: '이메일 형식을 확인해주세요.' })
@@ -78,7 +78,7 @@ export default async function handleUser(req: NextApiRequest, res: NextApiRespon
         .status(200)
         .json({ jwt: await generateJWT({ userId: (newUserHeader as any).insertId }) })
     } catch (error) {
-      return res.status(500).send({ message: '500: 데이터베이스 쿼리 오류' })
+      return res.status(500).send('500: Database query error')
     }
   }
 
@@ -114,7 +114,7 @@ export default async function handleUser(req: NextApiRequest, res: NextApiRespon
   }
 
   // Else
-  return res.status(405).send({ message: 'Method not allowed' })
+  return res.status(405).send('Method not allowed')
 }
 
 async function unregisterKakaoUser(kakaoUserId: string) {

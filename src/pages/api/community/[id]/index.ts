@@ -52,7 +52,7 @@ export default async function handleCommunity(req: NextApiRequest, res: NextApiR
 
   // Update community
   if (req.method === 'PUT') {
-    if (isEmptyObject(req.body)) return res.status(400).send({ message: '값을 입력해주세요.' })
+    if (isEmptyObject(req.body)) return res.status(400).send('Please check your inputs of request')
 
     await pool.query(updateCommunity, [req.body.description, req.body.detail, req.query.id])
     return res.status(200).json({ message: 'Update complete' })
@@ -65,5 +65,5 @@ export default async function handleCommunity(req: NextApiRequest, res: NextApiR
   }
 
   // Else
-  return res.status(405).send({ message: 'Method not allowed' })
+  return res.status(405).send('Method not allowed')
 }
