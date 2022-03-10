@@ -22,7 +22,7 @@ const FlexCenterCenter = styled.div`
   }
 `
 
-const SelectableA = styled.a<{ selected?: boolean }>`
+export const SelectableA = styled.a<{ selected?: boolean }>`
   color: ${(p) => (p.selected ? '#DE684A' : '#C9C9C9')};
   text-decoration-line: ${(p) => (p.selected ? 'underline' : 'none')};
 `

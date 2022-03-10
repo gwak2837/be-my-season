@@ -1,8 +1,11 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
+import useAuth from 'src/hooks/useAuth'
 import styled from 'styled-components'
 
+import { SelectableA } from './ContentLayout'
 import { Frame21to9, MarginAuto } from './IntroduceLayout'
 
 const FlexCenterCenter = styled.div`
@@ -23,6 +26,9 @@ type Props = {
 }
 
 function ProjectLayout({ children }: Props) {
+  const { asPath } = useRouter()
+  const { data: user } = useAuth()
+
   return (
     <>
       <Frame21to9>
@@ -31,14 +37,16 @@ function ProjectLayout({ children }: Props) {
 
       <FlexCenterCenter>
         <Link href="/project" passHref>
-          <a>Now</a>
+          <SelectableA selected={asPath === '/project'}>Now</SelectableA>
         </Link>
         <Link href="/project/before" passHref>
-          <a>Before</a>
+          <SelectableA selected={asPath === '/project/before'}>Before</SelectableA>
         </Link>
-        <Link href="/project/create" passHref>
-          <a>생성하기</a>
-        </Link>
+        {user?.isAdmin && (
+          <Link href="/project/create" passHref>
+            <SelectableA selected={asPath === '/project/create'}>생성하기</SelectableA>
+          </Link>
+        )}
       </FlexCenterCenter>
 
       <MarginAuto>{children}</MarginAuto>
