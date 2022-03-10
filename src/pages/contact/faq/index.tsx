@@ -136,7 +136,7 @@ function FAQCreationForm() {
 }
 
 const MinWidth = styled.div`
-  min-width: 50vw;
+  min-width: 15rem;
 `
 
 const FlexBetweenCenter = styled.div`
@@ -182,12 +182,12 @@ function FAQCard({ faq }: any) {
   return (
     <MinWidth key={faq.id}>
       <HorizontalBorder />
-      <FlexBetweenCenter>
+      <FlexBetweenCenter onClick={toggleOpen}>
         <Grid>
           <h4>{decodeFAQType(faq.category)}</h4>
           <div>{faq.title}</div>
         </Grid>
-        <button onClick={toggleOpen}>{isOpen ? <UpFilledArrow /> : <DownFilledArrow />}</button>
+        <button>{isOpen ? <UpFilledArrow /> : <DownFilledArrow />}</button>
       </FlexBetweenCenter>
       {isOpen && (
         <>

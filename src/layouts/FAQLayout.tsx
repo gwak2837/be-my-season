@@ -13,6 +13,9 @@ const FlexWrap = styled.div`
   > div {
     flex-grow: 1;
   }
+  > header {
+    flex-grow: 0;
+  }
 `
 
 const GridGap = styled.header`
