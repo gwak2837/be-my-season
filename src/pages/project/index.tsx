@@ -83,7 +83,7 @@ export default function ProjectPage() {
   return (
     <PageHead title="현재 프로젝트 - Be:MySeason" description={description}>
       <FlexEndCenter>
-        {user?.isAdmin === 1 &&
+        {user?.isAdmin &&
           (isUpdateMode ? (
             <>
               <WhiteButton disabled={isUpdateLoading} onClick={cancelUpdating}>

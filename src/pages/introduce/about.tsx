@@ -68,7 +68,7 @@ export default function AboutUsPage() {
   return (
     <PageHead title="팀 소개 - Be:MySeason" description={description}>
       <FlexEndCenter>
-        {user?.isAdmin === 1 &&
+        {user?.isAdmin &&
           (isUpdateMode ? (
             <>
               <WhiteButton disabled={isUpdateLoading} onClick={cancelUpdating}>

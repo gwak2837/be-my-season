@@ -89,7 +89,7 @@ export default function BrandStoryPage() {
   return (
     <PageHead title="브랜드 스토리 - Be:MySeason" description={description}>
       <FlexEndCenter>
-        {user?.isAdmin === 1 &&
+        {user?.isAdmin &&
           (isUpdateMode ? (
             <>
               <WhiteButton disabled={isUpdateLoading} onClick={cancelUpdating}>

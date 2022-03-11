@@ -161,8 +161,16 @@ crontab -e
 
 매일 정오에 서버의 인증서가 다음 30일 이내에 만료되는지 확인하고 만료되면 갱신하는 명령을 실행합니다. `--quiet` 은 certbot이 출력을 생성하지 않게 하는 옵션입니다.
 
-#####
+## References
 
-- program CUD
-- community CUD
-- FAQ UD
+- [Next.js](https://nextjs.org/docs/getting-started)
+- [React.js](https://reactjs.org/docs/getting-started.html)
+- [MySQL](https://docs.oracle.com/en-us/iaas/mysql-database/doc/getting-started.html)
+- [HTML, CSS, JS](https://developer.mozilla.org/en-US/docs/Web/CSS)
+
+##### To do
+
+- program CUD, program + community
+- FAQ U
+- 결제 API 연동
+- 새로 생성하면 비포로 넘어가지는게 무조건 두개로 고정되는데.. 한페이지에 12개 정도..

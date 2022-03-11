@@ -122,7 +122,7 @@ export default function ProjectBeforePage() {
         {project ? (
           <>
             <FlexEndCenter>
-              {user?.isAdmin === 1 &&
+              {user?.isAdmin &&
                 (isUpdateMode ? (
                   <>
                     <WhiteButton disabled={isUpdateLoading} onClick={cancelUpdating} type="reset">

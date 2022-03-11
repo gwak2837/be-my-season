@@ -19,12 +19,6 @@ export default async function handleKakaoAuth(req: NextApiRequest, res: NextApiR
   const kakaoUserInfo = await fetchKakaoUserInfo(kakaoUserToken.access_token as string)
   const kakaoAccount = kakaoUserInfo.kakao_account as any
 
-  // 선택항목 미동의 시 다른 페이지로 리다이렉트 하기
-  // if (!kakaoAccount.birthyear || !kakaoAccount.birthday || !kakaoAccount.gender) {
-  //   unregisterKakaoUser(kakaoUserInfo.id as string)
-  //   return res.redirect('/need-info')
-  // }
-
   // 4050 여성이 아닌 경우
   // if (!verifyTargetCustomer(kakaoUserInfo)) {
   //   return res.redirect(`/sorry?id=${kakaoUserInfo.id}`)
@@ -50,7 +44,7 @@ export default async function handleKakaoAuth(req: NextApiRequest, res: NextApiR
       `/auth?${new URLSearchParams({
         jwt: await generateJWT({
           userId: kakaoUser.id,
-          isAdmin: kakaoUser.is_admin,
+          isAdmin: Boolean(kakaoUser.is_admin),
         }),
         userId: kakaoUser.id,
       })}`

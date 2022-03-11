@@ -85,7 +85,7 @@ export default function RitualMakerPage() {
   return (
     <PageHead title="리추얼 매이커 - Be:MySeason" description={description}>
       <FlexEndCenter>
-        {user?.isAdmin === 1 &&
+        {user?.isAdmin &&
           (isUpdateMode ? (
             <>
               <WhiteButton disabled={isUpdateLoading} onClick={cancelUpdating}>

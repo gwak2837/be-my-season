@@ -17,7 +17,10 @@ export default async function handleAuth(req: NextApiRequest, res: NextApiRespon
 
     const [rows] = await pool.query(getIsAdminFromUser, [verifiedJwt.userId])
 
-    return res.status(200).json({ userId: verifiedJwt.userId, isAdmin: (rows as any)[0].is_admin })
+    return res.status(200).json({
+      userId: verifiedJwt.userId,
+      isAdmin: Boolean((rows as any)[0].is_admin),
+    })
   }
 
   // Login
@@ -40,7 +43,7 @@ export default async function handleAuth(req: NextApiRequest, res: NextApiRespon
     return res.status(200).json({
       jwt: await generateJWT({
         userId: (rows as any)[0].id,
-        isAdmin: (rows as any)[0].is_admin,
+        isAdmin: Boolean((rows as any)[0].is_admin),
       }),
     })
   }

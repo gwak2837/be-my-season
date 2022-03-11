@@ -6,8 +6,10 @@ import PageHead from 'src/components/PageHead'
 import useAuth from 'src/hooks/useAuth'
 import FAQLayout from 'src/layouts/FAQLayout'
 import NavigationLayout from 'src/layouts/NavigationLayout'
+import faq from 'src/pages/api/faq'
+import user from 'src/pages/api/user'
 import { HorizontalBorder } from 'src/pages/content/[id]'
-import { OrangeButton } from 'src/pages/introduce'
+import { FlexEndCenter, OrangeButton, WhiteButton } from 'src/pages/introduce'
 import DownFilledArrow from 'src/svgs/down-filled-arrow.svg'
 import UpFilledArrow from 'src/svgs/up-filled-arrow.svg'
 import { defaultFetcher } from 'src/utils'
@@ -173,10 +175,81 @@ function decodeFAQType(type: number) {
 }
 
 function FAQCard({ faq }: any) {
+  const router = useRouter()
+
+  const { data: user } = useAuth()
+  const { mutate } = useSWRConfig()
+
+  // Toggle opening body
   const [isOpen, setIsOpen] = useState(false)
 
   function toggleOpen() {
     setIsOpen((prev) => !prev)
+  }
+
+  const [isUpdateLoading, setIsUpdateLoading] = useState(false)
+
+  async function updateContent() {
+    return toast.warn('구현 중')
+
+    setIsUpdateLoading(true)
+
+    const response = await fetch(`/api/faq/${faq.id}`, {
+      method: 'PUT',
+      headers: {
+        authorization: sessionStorage.getItem('jwt') ?? localStorage.getItem('jwt') ?? '',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        title: '',
+        description: '',
+      }),
+    })
+
+    if (response.ok) {
+      toast.success('수정에 성공했습니다')
+      mutate(`/api/faq`)
+      setIsUpdateMode(false)
+    } else {
+      toast.warn(await response.text())
+    }
+
+    setIsUpdateLoading(false)
+  }
+
+  // Delete content
+  const [isDeletionLoading, setIsDeletionLoading] = useState(false)
+
+  async function deleteContent() {
+    setIsDeletionLoading(true)
+
+    const response = await fetch(`/api/faq/${faq.id}`, {
+      method: 'DELETE',
+      headers: {
+        authorization: sessionStorage.getItem('jwt') ?? localStorage.getItem('jwt') ?? '',
+      },
+    })
+
+    if (response.ok) {
+      toast.success('삭제에 성공했습니다')
+      mutate('/api/faq')
+      router.replace('/content')
+    } else {
+      toast.warn(await response.text())
+    }
+
+    setIsDeletionLoading(false)
+  }
+
+  // Toggle editor/viewer mode
+  const [isUpdateMode, setIsUpdateMode] = useState(false)
+
+  function beingUpdate() {
+    setIsUpdateMode(true)
+  }
+
+  function cancelUpdating() {
+    setIsUpdateMode(false)
   }
 
   return (
@@ -193,6 +266,29 @@ function FAQCard({ faq }: any) {
         <>
           <HorizontalBorderGrey />
           <P>{applyLineBreak(faq.description)}</P>
+
+          <FlexEndCenter>
+            {user?.isAdmin &&
+              (isUpdateMode ? (
+                <>
+                  <WhiteButton disabled={isUpdateLoading} onClick={cancelUpdating} type="reset">
+                    취소
+                  </WhiteButton>
+                  <OrangeButton disabled={isUpdateLoading} onClick={updateContent} type="submit">
+                    완료
+                  </OrangeButton>
+                </>
+              ) : (
+                <>
+                  <WhiteButton disabled={isDeletionLoading} onClick={deleteContent}>
+                    삭제하기
+                  </WhiteButton>
+                  <OrangeButton disabled={isDeletionLoading} onClick={beingUpdate}>
+                    수정하기
+                  </OrangeButton>
+                </>
+              ))}
+          </FlexEndCenter>
         </>
       )}
     </MinWidth>
@@ -218,7 +314,7 @@ export default function FAQPage() {
 
   return (
     <PageHead title="자주 묻는 질문 - Be:MySeason" description={description}>
-      {user?.isAdmin === 1 && <FAQCreationForm />}
+      {user?.isAdmin && <FAQCreationForm />}
       {faqs ? (
         faqs.map((faq: any) => <FAQCard key={faq.id} faq={faq} />)
       ) : error ? (
@@ -226,6 +322,7 @@ export default function FAQPage() {
       ) : (
         <div>loading</div>
       )}
+      <HorizontalBorder />
     </PageHead>
   )
 }
