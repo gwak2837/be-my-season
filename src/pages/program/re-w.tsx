@@ -36,9 +36,11 @@ export default function ReWProgramsPage() {
       <Ul>
         {programs ? (
           programs.length > 0 ? (
-            programs.map((program: any) => <ProgramCard key={program.id} program={program} />)
+            programs.map((program: any) => (
+              <ProgramCard key={program.id} program={program} showStatus />
+            ))
           ) : (
-            <div>프로그램이 없습니다</div>
+            <div>Re-W 프로그램이 없습니다</div>
           )
         ) : error ? (
           'error'

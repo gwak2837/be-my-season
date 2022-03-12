@@ -1,6 +1,6 @@
 import { ReactElement, useState } from 'react'
-import CommunityCard from 'src/components/CommunityCard'
 import PageHead from 'src/components/PageHead'
+import ProgramCard from 'src/components/ProgramCard'
 import NavigationLayout from 'src/layouts/NavigationLayout'
 import ProgramLayout from 'src/layouts/ProgramLayout'
 import LeftArrow from 'src/svgs/left-arrow.svg'
@@ -12,9 +12,9 @@ import { Button, Ol, Ul, buttonCount } from '../content'
 
 const description = ''
 
-export default function CommunityBeforePage() {
+export default function ProgramBeforePage() {
   const [page, setPage] = useState(1)
-  const { data, error } = useSWR(`/api/community?type=0&page=${page - 1}`, defaultFetcher)
+  const { data: programs, error } = useSWR(`/api/program?status=0&page=${page - 1}`, defaultFetcher)
 
   // Buttons
   const [big, setBig] = useState(0)
@@ -30,15 +30,21 @@ export default function CommunityBeforePage() {
   }
 
   return (
-    <PageHead title="예정된 커뮤니티 - Be:MySeason" description={description}>
+    <PageHead title="예정된 프로그램 - Be:MySeason" description={description}>
       <Ul>
-        {data
-          ? data.communities.map((community: any) => (
-              <CommunityCard key={community.id} community={community} />
+        {programs ? (
+          programs.length > 0 ? (
+            programs.map((program: any) => (
+              <ProgramCard key={program.id} program={program} showType />
             ))
-          : error
-          ? 'error'
-          : 'loading'}
+          ) : (
+            <div>예정된 프로그램이 없습니다</div>
+          )
+        ) : error ? (
+          <div>error</div>
+        ) : (
+          <div>loading</div>
+        )}
       </Ul>
 
       <Ol>
@@ -62,7 +68,7 @@ export default function CommunityBeforePage() {
   )
 }
 
-CommunityBeforePage.getLayout = function getLayout(page: ReactElement) {
+ProgramBeforePage.getLayout = function getLayout(page: ReactElement) {
   return (
     <NavigationLayout>
       <ProgramLayout>{page}</ProgramLayout>

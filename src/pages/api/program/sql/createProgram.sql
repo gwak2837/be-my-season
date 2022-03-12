@@ -1,2 +1,10 @@
-INSERT INTO program (title, description, `type`, author_id)
-VALUES (?, ?, ?, ?)
+INSERT INTO program (
+    title,
+    price,
+    description,
+    detail,
+    image_url,
+    `type`,
+    author_id
+  )
+VALUES (?, ?, ?, ?, ?, ?, ?)

@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
+import { verifyJWT } from 'src/utils/jwt'
 
 import createProgram from './sql/createProgram.sql'
 import getPrograms from './sql/getPrograms.sql'
@@ -32,7 +33,35 @@ export default async function handleProgram(req: NextApiRequest, res: NextApiRes
 
   // Create program
   if (req.method === 'POST') {
-    const [rows] = await pool.query(createProgram, [])
+    const jwt = req.headers.authorization
+    if (!jwt) return res.status(401).send('Need to authenticate')
+
+    const verifiedJwt = await verifyJWT(jwt).catch(() => null)
+    if (!verifiedJwt) return res.status(400).send('Invalid JWT')
+    if (!verifiedJwt.isAdmin) return res.status(403).send('Require administrator privileges')
+
+    const { title, price, description, detail, imageUrl, type } = req.body
+    console.log(
+      '👀 - title, price, description, detail, imageUrl, type',
+      title,
+      price,
+      description,
+      detail,
+      imageUrl,
+      type
+    )
+    if (!title || price === undefined || !description || !detail || type === undefined)
+      return res.status(400).send('Please check your inputs of request')
+
+    const [rows] = await pool.query(createProgram, [
+      title,
+      price,
+      description,
+      detail,
+      imageUrl,
+      type,
+      verifiedJwt.userId,
+    ])
     return res.status(200).json({ rows })
   }
 

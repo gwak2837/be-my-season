@@ -596,117 +596,115 @@ export default function ProgramPage() {
 
   return (
     <PageHead title="프로그램 - Be:MySeason" description={description}>
-      <OverflowAuto>
-        <FlexGap>
-          <Link href="/" passHref>
-            <a>Home</a>
-          </Link>
-          {'>'}
-          <Link href="/program" passHref>
-            <a>Program</a>
-          </Link>
-          {'>'}
-          {program ? (
-            <Link href={`/program/${decodeProgramType(program.type).toLowerCase()}`} passHref>
-              <a>{decodeProgramType(program.type)}</a>
-            </Link>
-          ) : (
-            <div>loading</div>
-          )}
-        </FlexGap>
-
+      <FlexGap>
+        <Link href="/" passHref>
+          <a>Home</a>
+        </Link>
+        {'>'}
+        <Link href="/program" passHref>
+          <a>Program</a>
+        </Link>
+        {'>'}
         {program ? (
-          <>
-            <h3>{program.title}</h3>
-            <div>{formatNumber(program.price)} 원</div>
-            <p>{program.description}</p>
-            {program.price > 0 ? (
-              <button onClick={payProgram}>결제하기</button>
-            ) : (
-              <button onClick={joinProgram}>참가하기</button>
-            )}
-
-            <div>--------------</div>
-
-            <Sticky>
-              <button onClick={scrollToDetail}>상세정보</button>
-              <button onClick={scrollToReview}>후기</button>
-              <button onClick={scrollToQnA}>Q&A</button>
-            </Sticky>
-
-            <div ref={detailRef}>
-              {isRefreshing &&
-                (user?.isAdmin ? (
-                  <>
-                    <button disabled={isUpdateLoading} onClick={updateProgram}>
-                      수정하기
-                    </button>
-                    <ToastEditor editorRef={editorRef} initialValue={program.detail} />
-                  </>
-                ) : (
-                  <ToastViewer initialValue={program.detail} />
-                ))}
-            </div>
-
-            <ReviewCreationForm />
-            <ul ref={reviewRef}>
-              {reviews ? (
-                reviews.length > 0 ? (
-                  reviews.map((review: any) => <ReviewCard key={review.id} review={review} />)
-                ) : (
-                  <div>리뷰가 없어요</div>
-                )
-              ) : reviewsError ? (
-                <div>reviews error</div>
-              ) : (
-                <div>reviews loading...</div>
-              )}
-            </ul>
-
-            <QnACreationForm />
-            <ul ref={qnaRef}>
-              {qnas ? (
-                qnas.length > 0 ? (
-                  qnas.map((qna: any) => <QnACard key={qna.id} qna={qna} />)
-                ) : (
-                  <div>QnA가 없어요</div>
-                )
-              ) : qnasError ? (
-                <div>qna error</div>
-              ) : (
-                <div>qna loading...</div>
-              )}
-            </ul>
-
-            {nextProgram ? (
-              <Link href={`/program/${nextProgram.id}`} passHref>
-                <a onClick={refresh} role="button" tabIndex={0}>
-                  <div>{nextProgram.title}</div>
-                </a>
-              </Link>
-            ) : (
-              <div>다음글이 없습니다.</div>
-            )}
-            {previousProgram ? (
-              <Link href={`/program/${previousProgram.id}`} passHref>
-                <a onClick={refresh} role="button" tabIndex={0}>
-                  <div>{previousProgram.title}</div>
-                </a>
-              </Link>
-            ) : (
-              <div>이전글이 없습니다.</div>
-            )}
-          </>
-        ) : error ? (
-          <div>error</div>
+          <Link href={`/program/${decodeProgramType(program.type).toLowerCase()}`} passHref>
+            <a>{decodeProgramType(program.type)}</a>
+          </Link>
         ) : (
           <div>loading</div>
         )}
+      </FlexGap>
 
-        <Link href="/program" passHref>
-          <a>목록</a>
-        </Link>
-      </OverflowAuto>
+      {program ? (
+        <>
+          <h3>{program.title}</h3>
+          <div>{formatNumber(program.price)} 원</div>
+          <p>{program.description}</p>
+          {program.price > 0 ? (
+            <button onClick={payProgram}>결제하기</button>
+          ) : (
+            <button onClick={joinProgram}>참가하기</button>
+          )}
+
+          <div>--------------</div>
+
+          <Sticky>
+            <button onClick={scrollToDetail}>상세정보</button>
+            <button onClick={scrollToReview}>후기</button>
+            <button onClick={scrollToQnA}>Q&A</button>
+          </Sticky>
+
+          <div ref={detailRef}>
+            {isRefreshing &&
+              (user?.isAdmin ? (
+                <>
+                  <button disabled={isUpdateLoading} onClick={updateProgram}>
+                    수정하기
+                  </button>
+                  <ToastEditor editorRef={editorRef} initialValue={program.detail} />
+                </>
+              ) : (
+                <ToastViewer initialValue={program.detail} />
+              ))}
+          </div>
+
+          <ReviewCreationForm />
+          <ul ref={reviewRef}>
+            {reviews ? (
+              reviews.length > 0 ? (
+                reviews.map((review: any) => <ReviewCard key={review.id} review={review} />)
+              ) : (
+                <div>리뷰가 없어요</div>
+              )
+            ) : reviewsError ? (
+              <div>reviews error</div>
+            ) : (
+              <div>reviews loading...</div>
+            )}
+          </ul>
+
+          <QnACreationForm />
+          <ul ref={qnaRef}>
+            {qnas ? (
+              qnas.length > 0 ? (
+                qnas.map((qna: any) => <QnACard key={qna.id} qna={qna} />)
+              ) : (
+                <div>QnA가 없어요</div>
+              )
+            ) : qnasError ? (
+              <div>qna error</div>
+            ) : (
+              <div>qna loading...</div>
+            )}
+          </ul>
+
+          {nextProgram ? (
+            <Link href={`/program/${nextProgram.id}`} passHref>
+              <a onClick={refresh} role="button" tabIndex={0}>
+                <div>{nextProgram.title}</div>
+              </a>
+            </Link>
+          ) : (
+            <div>다음글이 없습니다.</div>
+          )}
+          {previousProgram ? (
+            <Link href={`/program/${previousProgram.id}`} passHref>
+              <a onClick={refresh} role="button" tabIndex={0}>
+                <div>{previousProgram.title}</div>
+              </a>
+            </Link>
+          ) : (
+            <div>이전글이 없습니다.</div>
+          )}
+        </>
+      ) : error ? (
+        <div>error</div>
+      ) : (
+        <div>loading</div>
+      )}
+
+      <Link href="/program" passHref>
+        <a>목록</a>
+      </Link>
     </PageHead>
   )
 }

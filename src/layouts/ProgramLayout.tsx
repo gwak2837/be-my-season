@@ -50,13 +50,13 @@ function ProgramLayout({ children }: Props) {
           <SelectableA selected={asPath === '/program/re-turnship'}>Re-turnship</SelectableA>
         </Link>
         <Link href="/program/scheduled" passHref>
-          <SelectableA selected={asPath === '/program/scheduled'}>모임 예정</SelectableA>
+          <SelectableA selected={asPath === '/program/scheduled'}>예정</SelectableA>
         </Link>
         <Link href="/program/ongoing" passHref>
           <SelectableA selected={asPath === '/program/ongoing'}>진행 중</SelectableA>
         </Link>
         <Link href="/program/done" passHref>
-          <SelectableA selected={asPath === '/program/done'}>모임 완료</SelectableA>
+          <SelectableA selected={asPath === '/program/done'}>완료</SelectableA>
         </Link>
         {user?.isAdmin && (
           <Link href="/program/create" passHref>

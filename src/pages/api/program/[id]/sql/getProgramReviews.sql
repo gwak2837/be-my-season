@@ -5,5 +5,4 @@ SELECT id,
   point,
   author_id
 FROM review
-WHERE `type` = 0
-  AND target_id = ?
+WHERE program_id = ?

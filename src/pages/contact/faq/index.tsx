@@ -23,11 +23,11 @@ const Input = styled.input`
   box-shadow: 0 0 0 1px #bebebe;
 `
 
-const TextArea = styled.textarea`
+export const TextArea = styled.textarea`
   width: 100%;
   min-height: 20vh;
   max-height: 50vh;
-  padding: 0.5rem;
+  padding: 0.5rem 1rem;
 
   box-shadow: 0 0 0 1px #bebebe;
   outline: none;

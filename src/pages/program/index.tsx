@@ -37,15 +37,15 @@ export default function ProgramsPage() {
         {programs ? (
           programs.length > 0 ? (
             programs.map((program: any) => (
-              <ProgramCard key={program.id} program={program} showType />
+              <ProgramCard key={program.id} program={program} showType showStatus />
             ))
           ) : (
             <div>프로그램이 없습니다</div>
           )
         ) : error ? (
-          'error'
+          <div>error</div>
         ) : (
-          'loading'
+          <div>loading</div>
         )}
       </Ul>
 
