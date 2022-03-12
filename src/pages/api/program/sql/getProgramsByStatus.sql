@@ -6,6 +6,6 @@ SELECT id,
   `type`,
   `status`
 FROM program
-WHERE `type` = ?
+WHERE `status` = ?
 ORDER BY id DESC
 LIMIT ?, ?

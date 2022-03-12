@@ -43,13 +43,13 @@ function ProgramLayout({ children }: Props) {
         <Link href="/program/re-turnship" passHref>
           <a>Re-turnship</a>
         </Link>
-        <Link href="/program/before" passHref>
+        <Link href="/program/scheduled" passHref>
           <a>모임 예정</a>
         </Link>
-        <Link href="/program/ing" passHref>
+        <Link href="/program/ongoing" passHref>
           <a>진행 중</a>
         </Link>
-        <Link href="/program/after" passHref>
+        <Link href="/program/done" passHref>
           <a>모임 완료</a>
         </Link>
       </FlexCenterCenter>

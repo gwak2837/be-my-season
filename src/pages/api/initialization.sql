@@ -56,6 +56,7 @@ CREATE TABLE content (
 DROP TABLE IF EXISTS program;
 
 -- type: 0 = pre-w, 1 = re-w, 2 = re-turnship
+-- status: 0 = scheduled, 1 = ongoing, 2 = done
 CREATE TABLE program (
   id int PRIMARY KEY AUTO_INCREMENT,
   creation_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -66,6 +67,7 @@ CREATE TABLE program (
   detail text NOT NULL,
   image_url text,
   `type` int NOT NULL,
+  `status` int NOT NULL,
   author_id int REFERENCES user ON DELETE CASCADE
 );
 

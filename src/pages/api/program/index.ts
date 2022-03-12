@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 import createProgram from './sql/createProgram.sql'
 import getPrograms from './sql/getPrograms.sql'
+import getProgramsByStatus from './sql/getProgramsByStatus.sql'
 import getProgramsByType from './sql/getProgramsByType.sql'
 import { pool } from '..'
 
@@ -10,12 +11,15 @@ const count = 12
 export default async function handleProgram(req: NextApiRequest, res: NextApiResponse) {
   // Get programs
   if (req.method === 'GET') {
-    const { page, type } = req.query
+    const { page, type, status } = req.query
     if (!page) return res.status(400).send('Please check your input of request')
 
     try {
       if (type) {
         const [rows] = await pool.query(getProgramsByType, [+type, +page * count, count])
+        return res.status(200).json(rows)
+      } else if (status) {
+        const [rows] = await pool.query(getProgramsByStatus, [+status, +page * count, count])
         return res.status(200).json(rows)
       } else {
         const [rows] = await pool.query(getPrograms, [+page * count, count])
