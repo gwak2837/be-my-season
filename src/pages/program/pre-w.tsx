@@ -52,7 +52,11 @@ export default function PreWProgramsPage() {
           <LeftArrow />
         </Button>
         {Array.from(Array(buttonCount).keys()).map((key) => (
-          <Button key={key} onClick={() => setPage(buttonCount * big + key + 1)}>
+          <Button
+            key={key}
+            onClick={() => setPage(buttonCount * big + key + 1)}
+            selected={page === buttonCount * big + key + 1}
+          >
             {buttonCount * big + key + 1}
           </Button>
         ))}

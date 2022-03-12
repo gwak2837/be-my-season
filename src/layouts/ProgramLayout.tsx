@@ -1,8 +1,11 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { ReactNode } from 'react'
+import useAuth from 'src/hooks/useAuth'
 import styled from 'styled-components'
 
+import { SelectableA } from './ContentLayout'
 import { Frame21to9, MarginAuto } from './IntroduceLayout'
 
 const FlexCenterCenter = styled.div`
@@ -24,6 +27,9 @@ type Props = {
 }
 
 function ProgramLayout({ children }: Props) {
+  const { asPath } = useRouter()
+  const { data: user } = useAuth()
+
   return (
     <>
       <Frame21to9>
@@ -32,26 +38,31 @@ function ProgramLayout({ children }: Props) {
 
       <FlexCenterCenter>
         <Link href="/program" passHref>
-          <a>All</a>
+          <SelectableA selected={asPath === '/program'}>All</SelectableA>
         </Link>
         <Link href="/program/pre-w" passHref>
-          <a>Pre-W</a>
+          <SelectableA selected={asPath === '/program/pre-w'}>Pre-W</SelectableA>
         </Link>
         <Link href="/program/re-w" passHref>
-          <a>Re-W</a>
+          <SelectableA selected={asPath === '/program/re-w'}>Re-W</SelectableA>
         </Link>
         <Link href="/program/re-turnship" passHref>
-          <a>Re-turnship</a>
+          <SelectableA selected={asPath === '/program/re-turnship'}>Re-turnship</SelectableA>
         </Link>
         <Link href="/program/scheduled" passHref>
-          <a>모임 예정</a>
+          <SelectableA selected={asPath === '/program/scheduled'}>모임 예정</SelectableA>
         </Link>
         <Link href="/program/ongoing" passHref>
-          <a>진행 중</a>
+          <SelectableA selected={asPath === '/program/ongoing'}>진행 중</SelectableA>
         </Link>
         <Link href="/program/done" passHref>
-          <a>모임 완료</a>
+          <SelectableA selected={asPath === '/program/done'}>모임 완료</SelectableA>
         </Link>
+        {user?.isAdmin && (
+          <Link href="/program/create" passHref>
+            <SelectableA selected={asPath === '/program/create'}>작성하기</SelectableA>
+          </Link>
+        )}
       </FlexCenterCenter>
 
       <MarginAuto>{children}</MarginAuto>

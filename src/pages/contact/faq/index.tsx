@@ -55,6 +55,7 @@ function FAQCreationForm() {
     formState: { errors },
     handleSubmit,
     register,
+    reset,
   } = useForm({
     defaultValues: {
       category: 0,
@@ -86,6 +87,7 @@ function FAQCreationForm() {
       toast.success('FAQ를 작성했습니다')
       mutate(`/api/faq`)
       mutate(`/api/faq?category=${category}`)
+      reset()
     } else {
       const result = await response.json()
       toast.warn(result.message)
@@ -213,7 +215,6 @@ function FAQCard({ faq }: any) {
     formState: { errors },
     handleSubmit,
     register,
-    getValues,
   } = useForm({
     defaultValues: {
       category: faq.category,
@@ -269,7 +270,6 @@ function FAQCard({ faq }: any) {
     if (response.ok) {
       toast.success('삭제에 성공했습니다')
       mutate('/api/faq')
-      router.replace('/content')
     } else {
       toast.warn(await response.text())
     }

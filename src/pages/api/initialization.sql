@@ -67,7 +67,7 @@ CREATE TABLE program (
   detail text NOT NULL,
   image_url text,
   `type` int NOT NULL,
-  `status` int NOT NULL,
+  `status` int NOT NULL DEFAULT 0,
   author_id int REFERENCES user ON DELETE CASCADE
 );
 

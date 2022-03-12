@@ -1,0 +1,2 @@
+DELETE FROM faq
+WHERE id = ?

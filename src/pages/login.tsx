@@ -104,10 +104,10 @@ export default function LoginPage() {
   })
 
   // Login request
-  const [loadingRegister, setLoadingRegister] = useState(false)
+  const [loadingLogin, setLoadingLogin] = useState(false)
 
   async function login({ loginId, password }: any) {
-    setLoadingRegister(true)
+    setLoadingLogin(true)
     const response = await fetch('/api/auth', {
       method: 'POST',
       headers: {
@@ -115,13 +115,13 @@ export default function LoginPage() {
       },
       body: JSON.stringify({ loginId, password: await sha256(password) }),
     })
-    const result = await response.json()
-    setLoadingRegister(false)
 
     if (!response.ok) {
-      toast.warn(result.message)
-      return
+      return toast.warn(await response.text())
     }
+
+    const result = await response.json()
+    setLoadingLogin(false)
 
     if (sessionStorage.getItem('autoLogin')) {
       localStorage.setItem('jwt', result.jwt)

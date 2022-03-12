@@ -16,14 +16,19 @@ export const Ul = styled.ul`
 `
 
 export const Ol = styled.ol`
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 2rem 0;
 `
 
-export const Button = styled.button`
+export const Button = styled.button<{ selected?: boolean }>`
   padding: 0.7rem;
+  color: ${(p) => (p.selected ? '#7A583A' : '#C9C9C9')};
 `
 
-export const buttonCount = 3
+export const buttonCount = 10
 const description = ''
 
 export default function ContentsPage() {
@@ -66,7 +71,11 @@ export default function ContentsPage() {
           <LeftArrow />
         </Button>
         {Array.from(Array(buttonCount).keys()).map((key) => (
-          <Button key={key} onClick={() => setPage(buttonCount * big + key + 1)}>
+          <Button
+            key={key}
+            onClick={() => setPage(buttonCount * big + key + 1)}
+            selected={page === buttonCount * big + key + 1}
+          >
             {buttonCount * big + key + 1}
           </Button>
         ))}

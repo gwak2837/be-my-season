@@ -6,15 +6,15 @@ import styled from 'styled-components'
 import { Frame21to9, MarginAuto } from './IntroduceLayout'
 
 const FlexWrap = styled.div`
-  display: flex;
-  flex-flow: row wrap;
+  display: grid;
   gap: 0 7rem;
 
   > div {
-    flex-grow: 1;
+    padding: 1rem 0 0;
   }
-  > header {
-    flex-grow: 0;
+
+  @media (min-width: 600px) {
+    grid-template-columns: auto 1fr;
   }
 `
 
@@ -26,8 +26,9 @@ const GridGap = styled.header`
   position: sticky;
   top: 5rem;
   padding: 1rem;
+
   background: #fff;
-  flex-grow: 1;
+  box-shadow: 0 0 0 1px #fff;
 `
 
 type Props = {

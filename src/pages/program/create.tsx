@@ -6,8 +6,8 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import PageHead from 'src/components/PageHead'
 import useRequireAdmin from 'src/hooks/useRequireAdmin'
-import ContentLayout from 'src/layouts/ContentLayout'
 import NavigationLayout from 'src/layouts/NavigationLayout'
+import ProgramLayout from 'src/layouts/ProgramLayout'
 import styled from 'styled-components'
 
 import { OrangeButton } from '../introduce'
@@ -72,8 +72,8 @@ export default function ContentCreationPage() {
       })
 
       if (response.ok) {
-        toast.success('컨텐츠를 생성했습니다')
-        router.replace('/content')
+        toast.success('프로그램을 생성했습니다')
+        router.replace('/program')
       } else {
         toast.warn(await response.text())
       }
@@ -88,12 +88,13 @@ export default function ContentCreationPage() {
         <FlexBetweenCenter>
           <FlexGap>
             <select disabled={isCreationLoading} {...register('type')}>
-              <option value={0}>Column</option>
-              <option value={1}>Interview</option>
+              <option value={0}>Pre-W</option>
+              <option value={1}>Re-W</option>
+              <option value={1}>Re-turnship</option>
             </select>
             <Input
-              placeholder="제목을 입력해주세요"
-              {...register('title', { required: '제목을 입력해주세요' })}
+              placeholder="프로그램 제목을 입력해주세요"
+              {...register('title', { required: '프로그램 제목을 입력해주세요' })}
             />
           </FlexGap>
           <OrangeButton disabled={isCreationLoading} type="submit">
@@ -110,7 +111,7 @@ export default function ContentCreationPage() {
 ContentCreationPage.getLayout = function getLayout(page: ReactElement) {
   return (
     <NavigationLayout>
-      <ContentLayout>{page}</ContentLayout>
+      <ProgramLayout>{page}</ProgramLayout>
     </NavigationLayout>
   )
 }
