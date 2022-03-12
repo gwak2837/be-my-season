@@ -518,6 +518,10 @@ const Margin = styled.div`
   padding: 8rem 0;
 `
 
+const DisplayNoneIf = styled.div<{ display: boolean }>`
+  display: ${(p) => (p.display ? 'block' : 'none')};
+`
+
 const description = ''
 
 export default function ProgramPage() {
@@ -731,25 +735,23 @@ export default function ProgramPage() {
             </FlexEndCenter>
           ))}
 
-        {isUpdateMode && (
-          <>
-            <BigInput
-              placeholder="제목을 입력해주세요"
-              {...register('title', { required: '제목을 입력해주세요' })}
-            />
-            <NumberInput
-              placeholder="프로그램 가격을 입력해주세요"
-              type="number"
-              {...register('price', { required: '프로그램 가격을 입력해주세요' })}
-            />
-            <TextArea
-              onKeyDown={submitWhenShiftEnter}
-              onInput={resizeTextareaHeight}
-              placeholder="프로그램 설명을 입력해주세요"
-              {...register('description', { required: '프로그램 설명을 입력해주세요' })}
-            />
-          </>
-        )}
+        <DisplayNoneIf display={isUpdateMode}>
+          <BigInput
+            placeholder="제목을 입력해주세요"
+            {...register('title', { required: '제목을 입력해주세요' })}
+          />
+          <NumberInput
+            placeholder="프로그램 가격을 입력해주세요"
+            type="number"
+            {...register('price', { required: '프로그램 가격을 입력해주세요' })}
+          />
+          <TextArea
+            onKeyDown={submitWhenShiftEnter}
+            onInput={resizeTextareaHeight}
+            placeholder="프로그램 설명을 입력해주세요"
+            {...register('description', { required: '프로그램 설명을 입력해주세요' })}
+          />
+        </DisplayNoneIf>
 
         {program ? (
           <>
