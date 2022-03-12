@@ -1,9 +1,10 @@
 SELECT id,
   program.creation_time,
   title,
+  price,
   description,
   detail,
-  price,
+  image_url,
   `type`,
   user_x_program.program_id
 FROM program

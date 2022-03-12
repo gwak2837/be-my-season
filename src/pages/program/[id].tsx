@@ -8,19 +8,21 @@ import { toast } from 'react-toastify'
 import PageHead from 'src/components/PageHead'
 import { decodeProgramType } from 'src/components/ProgramCard'
 import useAuth from 'src/hooks/useAuth'
+import { MarginAuto } from 'src/layouts/IntroduceLayout'
 import NavigationLayout from 'src/layouts/NavigationLayout'
-import { defaultFetcher, formatNumber } from 'src/utils'
+import DownFilledArrow from 'src/svgs/down-filled-arrow.svg'
+import UpFilledArrow from 'src/svgs/up-filled-arrow.svg'
+import { defaultFetcher, formatNumber, resizeTextareaHeight, submitWhenShiftEnter } from 'src/utils'
 import styled from 'styled-components'
 import useSWR, { useSWRConfig } from 'swr'
 
+import { TextArea } from '../contact/faq'
+import { BigInput, Button1, FlexCenterA, FlexCenterGap, HorizontalBorder } from '../content/[id]'
+import { FlexEndCenter, OrangeButton, WhiteButton } from '../introduce'
+import { NumberInput } from './create'
+
 const ToastEditor = dynamic(() => import('src/components/ToastEditor'), { ssr: false })
 const ToastViewer = dynamic(() => import('src/components/ToastViewer'), { ssr: false })
-
-const FlexGap = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-`
 
 const OverflowAuto = styled.div`
   overflow: auto;
@@ -468,12 +470,8 @@ export default function ProgramPage() {
   const router = useRouter()
   const programId = (router.query.id ?? '') as string
 
-  // Program form
-  const { getValues, resetField } = useForm({
-    defaultValues: {
-      description: '',
-    },
-  })
+  const { data: user } = useAuth()
+  const { mutate } = useSWRConfig()
 
   // Fetch program
   const { data, error } = useSWR(
@@ -488,6 +486,18 @@ export default function ProgramPage() {
   const program = data?.program
   const previousProgram = data?.previousProgram
   const nextProgram = data?.nextProgram
+
+  // Fetch program reviews
+  const { data: reviews, error: reviewsError } = useSWR(
+    () => (programId ? `/api/program/${programId}/review` : null),
+    defaultFetcher
+  )
+
+  // Fetch program QnAs
+  const { data: qnas, error: qnasError } = useSWR(
+    () => (programId ? `/api/program/${programId}/qna` : null),
+    defaultFetcher
+  )
 
   // scrollIntoView
   const detailRef = useRef<HTMLDivElement>(null)
@@ -505,13 +515,21 @@ export default function ProgramPage() {
     qnaRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
-  // Update program if user is admin
-  const { data: user } = useAuth()
+  // Update program
+  const { getValues, register, resetField } = useForm({
+    defaultValues: {
+      title: '',
+      price: 0,
+      description: '',
+      imageUrl: '',
+      type: 0,
+    },
+  })
+
   const editorRef = useRef<Editor>(null)
-  const { mutate } = useSWRConfig()
   const [isUpdateLoading, setIsUpdateLoading] = useState(false)
 
-  async function updateProgram() {
+  async function updateProgram({ title, price, description, imageUrl, type }: any) {
     if (editorRef.current) {
       setIsUpdateLoading(true)
 
@@ -522,8 +540,12 @@ export default function ProgramPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          description: getValues('description'),
+          title,
+          price,
+          description,
           detail: editorRef.current.getInstance().getHTML(),
+          imageUrl,
+          type,
         }),
       })
 
@@ -531,12 +553,36 @@ export default function ProgramPage() {
         toast.success('수정에 성공했습니다')
         mutate(`/api/program/${programId}`)
       } else {
-        const result = await response.json()
-        toast.warn(result.message)
+        toast.warn(await response.text())
       }
 
       setIsUpdateLoading(false)
     }
+  }
+
+  // Delete program
+  const [isDeletionLoading, setIsDeletionLoading] = useState(false)
+
+  async function deleteContent() {
+    setIsDeletionLoading(true)
+
+    const response = await fetch(`/api/program/${programId}`, {
+      method: 'DELETE',
+      headers: {
+        authorization: sessionStorage.getItem('jwt') ?? localStorage.getItem('jwt') ?? '',
+      },
+    })
+
+    if (response.ok) {
+      toast.success('삭제에 성공했습니다')
+      mutate(`/api/program/${programId}`)
+      mutate('/api/program')
+      router.replace('/program')
+    } else {
+      toast.warn(await response.text())
+    }
+
+    setIsDeletionLoading(false)
   }
 
   // Join program
@@ -571,71 +617,105 @@ export default function ProgramPage() {
     }
   }
 
-  // Fetch program reviews
-  const { data: reviews, error: reviewsError } = useSWR(
-    () => (programId ? `/api/program/${programId}/review` : null),
-    defaultFetcher
-  )
+  // Toggle editor/viewer mode
+  const [isUpdateMode, setIsUpdateMode] = useState(false)
 
-  // Fetch program QnAs
-  const { data: qnas, error: qnasError } = useSWR(
-    () => (programId ? `/api/program/${programId}/qna` : null),
-    defaultFetcher
-  )
-
-  // Refresh toast editor
-  const [isRefreshing, setIsRefreshing] = useState(true)
-
-  function refresh() {
-    setIsRefreshing(false)
+  function beingUpdate(e: any) {
+    e.preventDefault()
+    setIsUpdateMode(true)
   }
 
-  useEffect(() => {
-    setIsRefreshing(true)
-  }, [isRefreshing])
+  function cancelUpdating() {
+    setIsUpdateMode(false)
+  }
 
   return (
     <PageHead title="프로그램 - Be:MySeason" description={description}>
-      <FlexGap>
-        <Link href="/" passHref>
-          <a>Home</a>
-        </Link>
-        {'>'}
-        <Link href="/program" passHref>
-          <a>Program</a>
-        </Link>
-        {'>'}
-        {program ? (
-          <Link href={`/program/${decodeProgramType(program.type).toLowerCase()}`} passHref>
-            <a>{decodeProgramType(program.type)}</a>
+      <MarginAuto>
+        <FlexCenterGap>
+          <Link href="/" passHref>
+            <a>Home</a>
           </Link>
-        ) : (
-          <div>loading</div>
-        )}
-      </FlexGap>
-
-      {program ? (
-        <>
-          <h3>{program.title}</h3>
-          <div>{formatNumber(program.price)} 원</div>
-          <p>{program.description}</p>
-          {program.price > 0 ? (
-            <button onClick={payProgram}>결제하기</button>
+          {'>'}
+          <Link href="/program" passHref>
+            <a>Program</a>
+          </Link>
+          {'>'}
+          {program ? (
+            <Link href={`/program/${decodeProgramType(program.type).toLowerCase()}`} passHref>
+              <a>{decodeProgramType(program.type)}</a>
+            </Link>
           ) : (
-            <button onClick={joinProgram}>참가하기</button>
+            <div>loading</div>
           )}
+        </FlexCenterGap>
 
-          <div>--------------</div>
+        <FlexEndCenter>
+          {user?.isAdmin &&
+            (isUpdateMode ? (
+              <>
+                <WhiteButton disabled={isUpdateLoading} onClick={cancelUpdating} type="reset">
+                  취소
+                </WhiteButton>
+                <OrangeButton disabled={isUpdateLoading} onClick={updateProgram} type="submit">
+                  완료
+                </OrangeButton>
+              </>
+            ) : (
+              <>
+                <WhiteButton disabled={isDeletionLoading} onClick={deleteContent}>
+                  삭제하기
+                </WhiteButton>
+                <OrangeButton disabled={isDeletionLoading} onClick={beingUpdate}>
+                  수정하기
+                </OrangeButton>
+              </>
+            ))}
+        </FlexEndCenter>
 
-          <Sticky>
-            <button onClick={scrollToDetail}>상세정보</button>
-            <button onClick={scrollToReview}>후기</button>
-            <button onClick={scrollToQnA}>Q&A</button>
-          </Sticky>
+        {program ? (
+          <>
+            {isUpdateMode ? (
+              <>
+                <BigInput
+                  placeholder="제목을 입력해주세요"
+                  {...register('title', { required: '제목을 입력해주세요' })}
+                />
+                <NumberInput
+                  placeholder="프로그램 가격을 입력해주세요"
+                  type="number"
+                  {...register('price', { required: '프로그램 가격을 입력해주세요' })}
+                />
+                <TextArea
+                  onKeyDown={submitWhenShiftEnter}
+                  onInput={resizeTextareaHeight}
+                  placeholder="프로그램 설명을 입력해주세요"
+                  {...register('description', { required: '프로그램 설명을 입력해주세요' })}
+                />
+              </>
+            ) : (
+              <>
+                <h3>{program.title}</h3>
+                <div>{formatNumber(program.price)} 원</div>
+                <p>{program.description}</p>
+                {program.price > 0 ? (
+                  <button onClick={payProgram}>결제하기</button>
+                ) : (
+                  <button onClick={joinProgram}>참가하기</button>
+                )}
+              </>
+            )}
 
-          <div ref={detailRef}>
-            {isRefreshing &&
-              (user?.isAdmin ? (
+            <div>--------------</div>
+
+            <Sticky>
+              <button onClick={scrollToDetail}>상세정보</button>
+              <button onClick={scrollToReview}>후기</button>
+              <button onClick={scrollToQnA}>Q&A</button>
+            </Sticky>
+
+            <div ref={detailRef}>
+              {user?.isAdmin ? (
                 <>
                   <button disabled={isUpdateLoading} onClick={updateProgram}>
                     수정하기
@@ -644,67 +724,81 @@ export default function ProgramPage() {
                 </>
               ) : (
                 <ToastViewer initialValue={program.detail} />
-              ))}
-          </div>
+              )}
+            </div>
 
-          <ReviewCreationForm />
-          <ul ref={reviewRef}>
-            {reviews ? (
-              reviews.length > 0 ? (
-                reviews.map((review: any) => <ReviewCard key={review.id} review={review} />)
+            <ReviewCreationForm />
+            <ul ref={reviewRef}>
+              {reviews ? (
+                reviews.length > 0 ? (
+                  reviews.map((review: any) => <ReviewCard key={review.id} review={review} />)
+                ) : (
+                  <div>리뷰가 없어요</div>
+                )
+              ) : reviewsError ? (
+                <div>reviews error</div>
               ) : (
-                <div>리뷰가 없어요</div>
-              )
-            ) : reviewsError ? (
-              <div>reviews error</div>
-            ) : (
-              <div>reviews loading...</div>
-            )}
-          </ul>
+                <div>reviews loading...</div>
+              )}
+            </ul>
 
-          <QnACreationForm />
-          <ul ref={qnaRef}>
-            {qnas ? (
-              qnas.length > 0 ? (
-                qnas.map((qna: any) => <QnACard key={qna.id} qna={qna} />)
+            <QnACreationForm />
+            <ul ref={qnaRef}>
+              {qnas ? (
+                qnas.length > 0 ? (
+                  qnas.map((qna: any) => <QnACard key={qna.id} qna={qna} />)
+                ) : (
+                  <div>QnA가 없어요</div>
+                )
+              ) : qnasError ? (
+                <div>qna error</div>
               ) : (
-                <div>QnA가 없어요</div>
-              )
-            ) : qnasError ? (
-              <div>qna error</div>
+                <div>qna loading...</div>
+              )}
+            </ul>
+
+            <HorizontalBorder />
+            {nextProgram ? (
+              <Link href={`/program/${nextProgram.id}`} passHref>
+                <FlexCenterA>
+                  <UpFilledArrow />
+                  <div>{nextProgram.title}</div>
+                </FlexCenterA>
+              </Link>
             ) : (
-              <div>qna loading...</div>
+              <FlexCenterA hide>
+                <UpFilledArrow />
+                <div>다음글이 없습니다.</div>
+              </FlexCenterA>
             )}
-          </ul>
+            <HorizontalBorder />
+            {previousProgram ? (
+              <Link href={`/program/${previousProgram.id}`} passHref>
+                <FlexCenterA>
+                  <DownFilledArrow />
+                  <div>{previousProgram.title}</div>
+                </FlexCenterA>
+              </Link>
+            ) : (
+              <FlexCenterA hide>
+                <UpFilledArrow />
+                <div>이전글이 없습니다.</div>
+              </FlexCenterA>
+            )}
+            <HorizontalBorder />
+          </>
+        ) : error ? (
+          <div>error</div>
+        ) : (
+          <div>loading</div>
+        )}
 
-          {nextProgram ? (
-            <Link href={`/program/${nextProgram.id}`} passHref>
-              <a onClick={refresh} role="button" tabIndex={0}>
-                <div>{nextProgram.title}</div>
-              </a>
-            </Link>
-          ) : (
-            <div>다음글이 없습니다.</div>
-          )}
-          {previousProgram ? (
-            <Link href={`/program/${previousProgram.id}`} passHref>
-              <a onClick={refresh} role="button" tabIndex={0}>
-                <div>{previousProgram.title}</div>
-              </a>
-            </Link>
-          ) : (
-            <div>이전글이 없습니다.</div>
-          )}
-        </>
-      ) : error ? (
-        <div>error</div>
-      ) : (
-        <div>loading</div>
-      )}
-
-      <Link href="/program" passHref>
-        <a>목록</a>
-      </Link>
+        <Link href="/program" passHref>
+          <a>
+            <Button1>목록</Button1>
+          </a>
+        </Link>
+      </MarginAuto>
     </PageHead>
   )
 }

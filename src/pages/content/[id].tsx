@@ -13,7 +13,7 @@ import NavigationLayout from 'src/layouts/NavigationLayout'
 import DownFilledArrow from 'src/svgs/down-filled-arrow.svg'
 import UpFilledArrow from 'src/svgs/up-filled-arrow.svg'
 import { defaultFetcher } from 'src/utils'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import useSWR, { useSWRConfig } from 'swr'
 
 import { FlexEndCenter, OrangeButton, WhiteButton } from '../introduce'
@@ -21,7 +21,7 @@ import { FlexEndCenter, OrangeButton, WhiteButton } from '../introduce'
 const ToastEditor = dynamic(() => import('src/components/ToastEditor'), { ssr: false })
 const ToastViewer = dynamic(() => import('src/components/ToastViewer'), { ssr: false })
 
-const FlexGap = styled.div`
+export const FlexCenterGap = styled.div`
   display: flex;
   align-items: center;
   gap: 0.3rem;
@@ -76,13 +76,21 @@ const Margin = styled.div`
   margin: 1rem 0 4rem;
 `
 
-export const FlexCenterA = styled.a`
+export const FlexCenterA = styled.a<{ hide?: boolean }>`
   display: flex;
   align-items: center;
   gap: 3rem;
 
   color: #000;
   padding: 0 1rem;
+
+  ${(p) =>
+    p.hide &&
+    css`
+      > svg {
+        visibility: hidden;
+      }
+    `}
 `
 
 export const BigInput = styled.input`
@@ -190,7 +198,7 @@ export default function ContentPage() {
   return (
     <PageHead title="컨텐츠 - Be:MySeason" description={description}>
       <MarginAuto>
-        <FlexGap>
+        <FlexCenterGap>
           <Link href="/" passHref>
             <a>Home</a>
           </Link>
@@ -206,7 +214,7 @@ export default function ContentPage() {
           ) : (
             <div>loading</div>
           )}
-        </FlexGap>
+        </FlexCenterGap>
 
         {content ? (
           <>

@@ -42,7 +42,7 @@ const Input = styled.input`
   width: 100%;
 `
 
-const NumberInput = styled(Input)`
+export const NumberInput = styled(Input)`
   max-width: 10rem;
 `
 
