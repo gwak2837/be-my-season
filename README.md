@@ -170,7 +170,5 @@ crontab -e
 
 ##### To do
 
-- program CUD, program + community
-- FAQ U
+- program CUD
 - 결제 API 연동
-- 새로 생성하면 비포로 넘어가지는게 무조건 두개로 고정되는데.. 한페이지에 12개 정도..

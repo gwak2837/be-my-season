@@ -7,9 +7,10 @@ import { Frame21to9, MarginAuto } from './IntroduceLayout'
 
 const FlexCenterCenter = styled.div`
   display: flex;
+  flex-flow: row wrap;
   justify-content: center;
   align-items: center;
-  gap: min(max(2rem, 8vw), 5rem);
+  gap: 1rem min(max(2rem, 8vw), 5rem);
 
   padding: 2rem;
 
@@ -41,6 +42,15 @@ function ProgramLayout({ children }: Props) {
         </Link>
         <Link href="/program/re-turnship" passHref>
           <a>Re-turnship</a>
+        </Link>
+        <Link href="/program/before" passHref>
+          <a>모임 예정</a>
+        </Link>
+        <Link href="/program/ing" passHref>
+          <a>진행 중</a>
+        </Link>
+        <Link href="/program/after" passHref>
+          <a>모임 완료</a>
         </Link>
       </FlexCenterCenter>
 

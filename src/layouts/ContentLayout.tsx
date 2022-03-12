@@ -13,7 +13,7 @@ const FlexCenterCenter = styled.div`
   flex-flow: row wrap;
   justify-content: center;
   align-items: center;
-  gap: min(max(2rem, 8vw), 5rem);
+  gap: 1rem min(max(2rem, 8vw), 5rem);
 
   padding: 2rem;
 

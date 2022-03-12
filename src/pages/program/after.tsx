@@ -1,8 +1,8 @@
 import { ReactElement, useState } from 'react'
 import CommunityCard from 'src/components/CommunityCard'
 import PageHead from 'src/components/PageHead'
-import CommunityLayout from 'src/layouts/CommunityLayout'
 import NavigationLayout from 'src/layouts/NavigationLayout'
+import ProgramLayout from 'src/layouts/ProgramLayout'
 import LeftArrow from 'src/svgs/left-arrow.svg'
 import RightArrow from 'src/svgs/right-arrow.svg'
 import { defaultFetcher } from 'src/utils'
@@ -12,9 +12,9 @@ import { Button, Ol, Ul, buttonCount } from '../content'
 
 const description = ''
 
-export default function CommunityAllPage() {
+export default function CommunityAfterPage() {
   const [page, setPage] = useState(1)
-  const { data, error } = useSWR(`/api/community?page=${page - 1}`, defaultFetcher)
+  const { data, error } = useSWR(`/api/community?type=2&page=${page - 1}`, defaultFetcher)
 
   // Buttons
   const [big, setBig] = useState(0)
@@ -30,11 +30,11 @@ export default function CommunityAllPage() {
   }
 
   return (
-    <PageHead title="모든 커뮤니티 - Be:MySeason" description={description}>
+    <PageHead title="완료된 커뮤니티 - Be:MySeason" description={description}>
       <Ul>
         {data
           ? data.communities.map((community: any) => (
-              <CommunityCard key={community.id} community={community} showType />
+              <CommunityCard key={community.id} community={community} />
             ))
           : error
           ? 'error'
@@ -58,10 +58,10 @@ export default function CommunityAllPage() {
   )
 }
 
-CommunityAllPage.getLayout = function getLayout(page: ReactElement) {
+CommunityAfterPage.getLayout = function getLayout(page: ReactElement) {
   return (
     <NavigationLayout>
-      <CommunityLayout>{page}</CommunityLayout>
+      <ProgramLayout>{page}</ProgramLayout>
     </NavigationLayout>
   )
 }

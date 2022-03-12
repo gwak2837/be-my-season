@@ -12,7 +12,7 @@ import { HorizontalBorder } from 'src/pages/content/[id]'
 import { FlexEndCenter, OrangeButton, WhiteButton } from 'src/pages/introduce'
 import DownFilledArrow from 'src/svgs/down-filled-arrow.svg'
 import UpFilledArrow from 'src/svgs/up-filled-arrow.svg'
-import { defaultFetcher } from 'src/utils'
+import { defaultFetcher, resizeTextareaHeight, submitWhenShiftEnter } from 'src/utils'
 import styled from 'styled-components'
 import useSWR, { useSWRConfig } from 'swr'
 
@@ -25,8 +25,13 @@ const Input = styled.input`
 
 const TextArea = styled.textarea`
   width: 100%;
+  min-height: 20vh;
+  max-height: 50vh;
   padding: 0.5rem;
+
   box-shadow: 0 0 0 1px #bebebe;
+  outline: none;
+  resize: none;
 `
 
 const FlexGap = styled.div`
@@ -119,6 +124,8 @@ function FAQCreationForm() {
         />
         <TextArea
           disabled={isCreationLoading}
+          onKeyDown={submitWhenShiftEnter}
+          onInput={resizeTextareaHeight}
           placeholder="FAQ 내용을 입력해주세요"
           {...register('description', {
             required: 'FAQ 내용을 입력해주세요',
@@ -137,7 +144,7 @@ function FAQCreationForm() {
   )
 }
 
-const MinWidth = styled.div`
+const MinWidthForm = styled.form`
   min-width: 15rem;
 `
 
@@ -180,18 +187,44 @@ function FAQCard({ faq }: any) {
   const { data: user } = useAuth()
   const { mutate } = useSWRConfig()
 
+  // Toggle editor/viewer mode
+  const [isUpdateMode, setIsUpdateMode] = useState(false)
+
+  function beingUpdate(e: any) {
+    e.preventDefault()
+    setIsUpdateMode(true)
+  }
+
+  function cancelUpdating() {
+    setIsUpdateMode(false)
+  }
+
   // Toggle opening body
   const [isOpen, setIsOpen] = useState(false)
 
   function toggleOpen() {
-    setIsOpen((prev) => !prev)
+    if (!isUpdateMode) {
+      setIsOpen((prev) => !prev)
+    }
   }
+
+  // Update FAQ
+  const {
+    formState: { errors },
+    handleSubmit,
+    register,
+    getValues,
+  } = useForm({
+    defaultValues: {
+      category: faq.category,
+      title: faq.title,
+      description: faq.description,
+    },
+  })
 
   const [isUpdateLoading, setIsUpdateLoading] = useState(false)
 
-  async function updateContent() {
-    return toast.warn('구현 중')
-
+  async function updateContent({ category, title, description }: any) {
     setIsUpdateLoading(true)
 
     const response = await fetch(`/api/faq/${faq.id}`, {
@@ -201,8 +234,9 @@ function FAQCard({ faq }: any) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        title: '',
-        description: '',
+        category,
+        title,
+        description,
       }),
     })
 
@@ -220,7 +254,9 @@ function FAQCard({ faq }: any) {
   // Delete content
   const [isDeletionLoading, setIsDeletionLoading] = useState(false)
 
-  async function deleteContent() {
+  async function deleteContent(e: any) {
+    e.preventDefault()
+
     setIsDeletionLoading(true)
 
     const response = await fetch(`/api/faq/${faq.id}`, {
@@ -241,31 +277,68 @@ function FAQCard({ faq }: any) {
     setIsDeletionLoading(false)
   }
 
-  // Toggle editor/viewer mode
-  const [isUpdateMode, setIsUpdateMode] = useState(false)
-
-  function beingUpdate() {
-    setIsUpdateMode(true)
-  }
-
-  function cancelUpdating() {
-    setIsUpdateMode(false)
-  }
-
   return (
-    <MinWidth key={faq.id}>
+    <MinWidthForm onSubmit={handleSubmit(updateContent)}>
       <HorizontalBorder />
       <FlexBetweenCenter onClick={toggleOpen}>
         <Grid>
-          <h4>{decodeFAQType(faq.category)}</h4>
-          <div>{faq.title}</div>
+          {isUpdateMode ? (
+            <>
+              <select disabled={isUpdateLoading} {...register('category')}>
+                <option value={0}>Payment</option>
+                <option value={1}>Refund</option>
+                <option value={2}>Program</option>
+              </select>
+              <Input
+                disabled={isUpdateLoading}
+                placeholder="FAQ 제목을 입력해주세요"
+                {...register('title', {
+                  required: 'FAQ 제목을 입력해주세요',
+                  minLength: {
+                    value: 5,
+                    message: 'FAQ 제목을 5글자 이상 입력해주세요',
+                  },
+                  maxLength: {
+                    value: 100,
+                    message: 'FAQ 제목을 100글자 이하로 입력해주세요',
+                  },
+                })}
+              />
+            </>
+          ) : (
+            <>
+              <h4>{decodeFAQType(faq.category)}</h4>
+              <div>{faq.title}</div>
+            </>
+          )}
         </Grid>
         <button>{isOpen ? <UpFilledArrow /> : <DownFilledArrow />}</button>
       </FlexBetweenCenter>
+
       {isOpen && (
         <>
           <HorizontalBorderGrey />
-          <P>{applyLineBreak(faq.description)}</P>
+          {isUpdateMode ? (
+            <TextArea
+              disabled={isUpdateLoading}
+              onKeyDown={submitWhenShiftEnter}
+              onInput={resizeTextareaHeight}
+              placeholder="FAQ 내용을 입력해주세요"
+              {...register('description', {
+                required: 'FAQ 내용을 입력해주세요',
+                minLength: {
+                  value: 10,
+                  message: 'FAQ 내용을 10글자 이상 입력해주세요',
+                },
+                maxLength: {
+                  value: 1000,
+                  message: 'FAQ 내용을 1000글자 이하로 입력해주세요',
+                },
+              })}
+            />
+          ) : (
+            <P>{applyLineBreak(faq.description)}</P>
+          )}
 
           <FlexEndCenter>
             {user?.isAdmin &&
@@ -274,16 +347,16 @@ function FAQCard({ faq }: any) {
                   <WhiteButton disabled={isUpdateLoading} onClick={cancelUpdating} type="reset">
                     취소
                   </WhiteButton>
-                  <OrangeButton disabled={isUpdateLoading} onClick={updateContent} type="submit">
+                  <OrangeButton disabled={isUpdateLoading} type="submit">
                     완료
                   </OrangeButton>
                 </>
               ) : (
                 <>
-                  <WhiteButton disabled={isDeletionLoading} onClick={deleteContent}>
+                  <WhiteButton disabled={isDeletionLoading} onClick={deleteContent} type="button">
                     삭제하기
                   </WhiteButton>
-                  <OrangeButton disabled={isDeletionLoading} onClick={beingUpdate}>
+                  <OrangeButton disabled={isDeletionLoading} onClick={beingUpdate} type="button">
                     수정하기
                   </OrangeButton>
                 </>
@@ -291,7 +364,7 @@ function FAQCard({ faq }: any) {
           </FlexEndCenter>
         </>
       )}
-    </MinWidth>
+    </MinWidthForm>
   )
 }
 

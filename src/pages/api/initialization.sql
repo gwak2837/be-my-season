@@ -79,35 +79,8 @@ CREATE TABLE user_x_program (
   PRIMARY KEY (user_id, program_id)
 );
 
-DROP TABLE IF EXISTS community;
-
--- type: 0 = before, 1 = ing, 2 = after
-CREATE TABLE community (
-  id int PRIMARY KEY AUTO_INCREMENT,
-  creation_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  modification_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  title varchar(255) NOT NULL,
-  price int NOT NULL,
-  description text NOT NULL,
-  detail text NOT NULL,
-  image_url text,
-  `type` int NOT NULL,
-  author_id int REFERENCES user ON DELETE CASCADE
-);
-
-DROP TABLE IF EXISTS user_x_community;
-
-CREATE TABLE user_x_community (
-  user_id int REFERENCES user ON DELETE CASCADE,
-  community_id int REFERENCES program ON DELETE CASCADE,
-  creation_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  --
-  PRIMARY KEY (user_id, community_id)
-);
-
 DROP TABLE IF EXISTS review;
 
--- type: 0 = program, 1 = community
 CREATE TABLE review (
   id int PRIMARY KEY AUTO_INCREMENT,
   creation_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -115,24 +88,23 @@ CREATE TABLE review (
   title varchar(255) NOT NULL,
   description text NOT NULL,
   point int NOT NULL,
-  `type` int NOT NULL,
-  target_id int NOT NULL,
-  author_id int REFERENCES user ON DELETE
+  program_id int REFERENCES program ON DELETE
+  SET NULL,
+    author_id int REFERENCES user ON DELETE
   SET NULL
 );
 
 DROP TABLE IF EXISTS qna;
 
--- type: 0 = program, 1 = community
 CREATE TABLE qna (
   id int PRIMARY KEY AUTO_INCREMENT,
   creation_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   modification_time timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   title varchar(255) NOT NULL,
   description text NOT NULL,
-  `type` int NOT NULL,
-  target_id int NOT NULL,
-  author_id int REFERENCES user ON DELETE
+  program_id int REFERENCES program ON DELETE
+  SET NULL,
+    author_id int REFERENCES user ON DELETE
   SET NULL
 );
 
@@ -413,15 +385,13 @@ INSERT INTO review (
     title,
     description,
     point,
-    `type`,
-    target_id,
+    program_id,
     author_id
   )
 VALUES (
     'This is review title',
     'review description',
     4,
-    0,
     1,
     1
   );
@@ -430,15 +400,13 @@ INSERT INTO review (
     title,
     description,
     point,
-    `type`,
-    target_id,
+    program_id,
     author_id
   )
 VALUES (
     'This is review title2',
     'review description2',
     5,
-    0,
     1,
     1
   );
@@ -447,15 +415,13 @@ INSERT INTO review (
     title,
     description,
     point,
-    `type`,
-    target_id,
+    program_id,
     author_id
   )
 VALUES (
     'This is review title3',
     'review description3',
     3,
-    0,
     1,
     1
   );
@@ -464,15 +430,13 @@ INSERT INTO review (
     title,
     description,
     point,
-    `type`,
-    target_id,
+    program_id,
     author_id
   )
 VALUES (
     'This is review title4',
     'review description4',
     3,
-    0,
     2,
     1
   );
@@ -481,15 +445,13 @@ INSERT INTO review (
     title,
     description,
     point,
-    `type`,
-    target_id,
+    program_id,
     author_id
   )
 VALUES (
     'This is review title5',
     'review description5',
     2,
-    0,
     2,
     1
   );
@@ -497,14 +459,12 @@ VALUES (
 INSERT INTO qna (
     title,
     description,
-    `type`,
-    target_id,
+    program_id,
     author_id
   )
 VALUES (
     'This is qna title',
     'qna description',
-    0,
     1,
     1
   );
@@ -512,14 +472,12 @@ VALUES (
 INSERT INTO qna (
     title,
     description,
-    `type`,
-    target_id,
+    program_id,
     author_id
   )
 VALUES (
     'This is qna title2',
     'qna description2',
-    0,
     1,
     1
   );
@@ -527,14 +485,12 @@ VALUES (
 INSERT INTO qna (
     title,
     description,
-    `type`,
-    target_id,
+    program_id,
     author_id
   )
 VALUES (
     'This is qna title3',
     'qna description3',
-    0,
     1,
     1
   );
@@ -542,14 +498,12 @@ VALUES (
 INSERT INTO qna (
     title,
     description,
-    `type`,
-    target_id,
+    program_id,
     author_id
   )
 VALUES (
     'This is qna title4',
     'qna description4',
-    0,
     2,
     1
   );
@@ -557,182 +511,15 @@ VALUES (
 INSERT INTO qna (
     title,
     description,
-    `type`,
-    target_id,
+    program_id,
     author_id
   )
 VALUES (
     'This is qna title5',
     'qna description5',
-    0,
     2,
     1
   );
-
-INSERT INTO community (
-    title,
-    price,
-    description,
-    detail,
-    `type`,
-    author_id
-  )
-VALUES (
-    'This is title1',
-    10000,
-    'Welcome to Be:MySeason1',
-    'Detail1',
-    0,
-    1
-  );
-
-INSERT INTO community (
-    title,
-    price,
-    description,
-    detail,
-    `type`,
-    author_id
-  )
-VALUES (
-    'This is title2',
-    20000,
-    'Welcome to Be:MySeason2',
-    'Detail2',
-    0,
-    1
-  );
-
-INSERT INTO community (
-    title,
-    price,
-    description,
-    detail,
-    `type`,
-    author_id
-  )
-VALUES (
-    'This is title3',
-    30000,
-    'Welcome to Be:MySeason3',
-    'Detail3',
-    0,
-    1
-  );
-
-INSERT INTO community (
-    title,
-    price,
-    description,
-    detail,
-    `type`,
-    author_id
-  )
-VALUES (
-    'This is title1',
-    40000,
-    'Welcome to Be:MySeason1',
-    'Detail4',
-    1,
-    1
-  );
-
-INSERT INTO community (
-    title,
-    price,
-    description,
-    detail,
-    `type`,
-    author_id
-  )
-VALUES (
-    'This is title2',
-    50000,
-    'Welcome to Be:MySeason2',
-    'Detail5',
-    1,
-    1
-  );
-
-INSERT INTO community (
-    title,
-    price,
-    description,
-    detail,
-    `type`,
-    author_id
-  )
-VALUES (
-    'This is title3',
-    60000,
-    'Welcome to Be:MySeason3',
-    'Detail6',
-    1,
-    1
-  );
-
-INSERT INTO community (
-    title,
-    price,
-    description,
-    detail,
-    `type`,
-    author_id
-  )
-VALUES (
-    'This is title1',
-    70000,
-    'Welcome to Be:MySeason1',
-    'Detail7',
-    2,
-    1
-  );
-
-INSERT INTO community (
-    title,
-    price,
-    description,
-    detail,
-    `type`,
-    author_id
-  )
-VALUES (
-    'This is title2',
-    80000,
-    'Welcome to Be:MySeason2',
-    'Detail8',
-    2,
-    1
-  );
-
-INSERT INTO community (
-    title,
-    price,
-    description,
-    detail,
-    `type`,
-    author_id
-  )
-VALUES (
-    'This is title3',
-    90000,
-    'Welcome to Be:MySeason3',
-    'Detail9',
-    2,
-    1
-  );
-
-INSERT INTO user_x_community (user_id, community_id)
-VALUES (1, 2);
-
-INSERT INTO user_x_community (user_id, community_id)
-VALUES (1, 4);
-
-INSERT INTO user_x_community (user_id, community_id)
-VALUES (1, 6);
-
-INSERT INTO user_x_community (user_id, community_id)
-VALUES (1, 8);
 
 INSERT INTO project (title, description)
 VALUES (

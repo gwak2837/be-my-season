@@ -1,3 +1,5 @@
+import { KeyboardEvent } from 'react'
+
 export const emailRegEx = /\S+@\S+[.\S+]*/
 
 export async function sha256(message: string) {
@@ -66,5 +68,20 @@ export function encodeSex(sex: string) {
       return Sex.female
     default:
       return Sex.unknown
+  }
+}
+
+export function resizeTextareaHeight(e: KeyboardEvent<HTMLTextAreaElement>) {
+  const eventTarget = e.target as HTMLTextAreaElement
+  eventTarget.style.height = 'auto'
+  eventTarget.style.height = `${eventTarget.scrollHeight}px`
+}
+
+export function submitWhenShiftEnter(e: KeyboardEvent<HTMLTextAreaElement>) {
+  if (e.code === 'Enter' && e.shiftKey) {
+    e.preventDefault() // To prevent adding line break when shift+enter pressed
+    const submitEvent = new Event('submit', { bubbles: true })
+    const parentForm = (e.target as any).form as HTMLFormElement
+    parentForm.dispatchEvent(submitEvent)
   }
 }

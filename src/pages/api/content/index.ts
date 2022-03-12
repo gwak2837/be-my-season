@@ -6,7 +6,7 @@ import getContents from './sql/getContents.sql'
 import getContentsByType from './sql/getContentsByType.sql'
 import { pool } from '..'
 
-const count = 2
+const count = 12
 
 export default async function handleContent(req: NextApiRequest, res: NextApiResponse) {
   // Get contents

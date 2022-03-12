@@ -4,13 +4,13 @@ import { ReactNode, useState } from 'react'
 import Drawer from 'src/components/Drawer'
 import useAuth from 'src/hooks/useAuth'
 import { DESKTOP_MIN_WIDTH } from 'src/models/config'
+import { FlexBetween, GridGap } from 'src/styles/common'
 import DownArrow from 'src/svgs/down-arrow.svg'
 import HamburgerIcon from 'src/svgs/hamburger.svg'
-import styled, { css } from 'styled-components'
 import Instagram from 'src/svgs/instagram.svg'
 import Tistory from 'src/svgs/tistory.svg'
 import Youtube from 'src/svgs/youtube.svg'
-import { GridGap, FlexBetween } from 'src/styles/common'
+import styled, { css } from 'styled-components'
 
 const FlexBetweenNav = styled.nav`
   display: flex;
@@ -196,9 +196,6 @@ function NavigationLayout({ children }: Props) {
           <Link href="/program" passHref>
             <a>Program</a>
           </Link>
-          <Link href="/community" passHref>
-            <a>Community</a>
-          </Link>
           <Link href="/project" passHref>
             <a>Project</a>
           </Link>
@@ -297,24 +294,13 @@ function NavigationLayout({ children }: Props) {
                 <Link href="/program/re-turnship" passHref>
                   <a>Re-turnship</a>
                 </Link>
-              </Ul>
-            </li>
-
-            <li onClick={() => setIsCommunityOpen((prev) => !prev)}>
-              <h4>
-                Community <DownArrow />
-              </h4>
-              <Ul onClick={closeDrawer} isOpen={isCommunityOpen}>
-                <Link href="/community" passHref>
-                  <a>All</a>
-                </Link>
-                <Link href="/community/before" passHref>
+                <Link href="/program/before" passHref>
                   <a>모임 예정</a>
                 </Link>
-                <Link href="/community/ing" passHref>
+                <Link href="/program/ing" passHref>
                   <a>진행 중</a>
                 </Link>
-                <Link href="/community/after" passHref>
+                <Link href="/program/after" passHref>
                   <a>모임 완료</a>
                 </Link>
               </Ul>

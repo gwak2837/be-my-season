@@ -5,7 +5,7 @@ import getPrograms from './sql/getPrograms.sql'
 import getProgramsByType from './sql/getProgramsByType.sql'
 import { pool } from '..'
 
-const count = 2
+const count = 12
 
 export default async function handleProgram(req: NextApiRequest, res: NextApiResponse) {
   // Get programs

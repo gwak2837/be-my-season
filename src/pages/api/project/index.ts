@@ -6,7 +6,7 @@ import createProject from './sql/createProject.sql'
 import getProjects from './sql/getProjects.sql'
 import { pool } from '..'
 
-const count = 2
+const count = 12
 
 export default async function handleProjects(req: NextApiRequest, res: NextApiResponse) {
   // Get project
