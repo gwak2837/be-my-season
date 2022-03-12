@@ -43,8 +43,8 @@ const H5 = styled.h5`
   margin: 1.5rem 0;
 `
 
-export const HorizontalBorder = styled.div`
-  border-top: 1px solid #7a583a;
+export const HorizontalBorder = styled.div<{ color?: string }>`
+  border-top: 1px solid ${(p) => (p.color ? p.color : '#7a583a')};
   width: 100%;
   margin: 1rem 0;
 `

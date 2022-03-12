@@ -175,5 +175,5 @@ crontab -e
 
 ##### To do
 
-- program CUD
+- program RU
 - 결제 API 연동

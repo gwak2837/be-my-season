@@ -1,5 +1,6 @@
 import type { Editor } from '@toast-ui/react-editor'
 import dynamic from 'next/dynamic'
+import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { ReactElement, useEffect, useRef, useState } from 'react'
@@ -24,15 +25,22 @@ import { NumberInput } from './create'
 const ToastEditor = dynamic(() => import('src/components/ToastEditor'), { ssr: false })
 const ToastViewer = dynamic(() => import('src/components/ToastViewer'), { ssr: false })
 
-const OverflowAuto = styled.div`
-  overflow: auto;
-  height: calc(100vh - 5rem);
-`
-
 export const Sticky = styled.div`
   position: sticky;
-  top: 0;
+  top: 5rem;
+  z-index: 1;
+
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+
   background: #fff;
+`
+
+const BrownButton = styled.button<{ selected?: boolean }>`
+  background: ${(p) => (p.selected ? '#7A583A' : '#F9F9F9')};
+  box-shadow: 0 0 0 1px ${(p) => (p.selected ? '#7A583A' : '#eee')};
+  color: ${(p) => (p.selected ? '#fff' : '#7A583A')};
+  padding: 1rem;
 `
 
 export function ReviewCard({ review }: any) {
@@ -464,6 +472,52 @@ export function QnACreationForm() {
   )
 }
 
+const FlexWrapGap = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  gap: 3rem;
+  margin: 5rem 0;
+
+  > div {
+    flex-grow: 1;
+  }
+`
+
+const Relative = styled.div`
+  position: relative;
+  min-width: 200px;
+  min-height: 200px;
+`
+
+const H3 = styled.h2`
+  color: #7a583a;
+  margin: 1rem 0 2rem;
+`
+
+const PrimaryText = styled.div`
+  font-size: 1.3rem;
+  color: #7a583a;
+  margin: 1rem 0;
+`
+
+const P = styled.p`
+  color: #999999;
+  margin: 1rem 0 3rem;
+  min-height: 5rem;
+`
+
+const PrimaryBigButton = styled.button`
+  background: #de684a;
+  color: #fff;
+  font-size: 1.3rem;
+  padding: 1rem;
+  width: 100%;
+`
+
+const Margin = styled.div`
+  padding: 8rem 0;
+`
+
 const description = ''
 
 export default function ProgramPage() {
@@ -478,8 +532,13 @@ export default function ProgramPage() {
     () => (programId ? `/api/program/${programId}` : null),
     defaultFetcher,
     {
-      onSuccess: (program) => {
-        resetField('description', { defaultValue: program.description })
+      onSuccess: (response) => {
+        console.log('👀 - response', response.program)
+        resetField('title', { defaultValue: response.program.title })
+        resetField('price', { defaultValue: response.program.price })
+        resetField('description', { defaultValue: response.program.description })
+        resetField('imageUrl', { defaultValue: response.program.imageUrl })
+        resetField('type', { defaultValue: response.program.type })
       },
     }
   )
@@ -516,7 +575,7 @@ export default function ProgramPage() {
   }
 
   // Update program
-  const { getValues, register, resetField } = useForm({
+  const { register, reset, resetField } = useForm({
     defaultValues: {
       title: '',
       price: 0,
@@ -563,7 +622,7 @@ export default function ProgramPage() {
   // Delete program
   const [isDeletionLoading, setIsDeletionLoading] = useState(false)
 
-  async function deleteContent() {
+  async function deleteProgram() {
     setIsDeletionLoading(true)
 
     const response = await fetch(`/api/program/${programId}`, {
@@ -592,7 +651,7 @@ export default function ProgramPage() {
     })
 
     if (response.ok) {
-      toast.success('프로그램 참가 신청했습니다')
+      toast.success('프로그램 참가 신청을 완료했습니다')
       mutate(`/api/program/${programId}/join`)
     } else {
       toast.warn(await response.text())
@@ -627,6 +686,7 @@ export default function ProgramPage() {
 
   function cancelUpdating() {
     setIsUpdateMode(false)
+    reset()
   }
 
   return (
@@ -650,82 +710,88 @@ export default function ProgramPage() {
           )}
         </FlexCenterGap>
 
-        <FlexEndCenter>
-          {user?.isAdmin &&
-            (isUpdateMode ? (
-              <>
-                <WhiteButton disabled={isUpdateLoading} onClick={cancelUpdating} type="reset">
-                  취소
-                </WhiteButton>
-                <OrangeButton disabled={isUpdateLoading} onClick={updateProgram} type="submit">
-                  완료
-                </OrangeButton>
-              </>
-            ) : (
-              <>
-                <WhiteButton disabled={isDeletionLoading} onClick={deleteContent}>
-                  삭제하기
-                </WhiteButton>
-                <OrangeButton disabled={isDeletionLoading} onClick={beingUpdate}>
-                  수정하기
-                </OrangeButton>
-              </>
-            ))}
-        </FlexEndCenter>
+        {user?.isAdmin &&
+          (isUpdateMode ? (
+            <FlexEndCenter>
+              <WhiteButton disabled={isUpdateLoading} onClick={cancelUpdating} type="reset">
+                취소
+              </WhiteButton>
+              <OrangeButton disabled={isUpdateLoading} onClick={updateProgram} type="submit">
+                완료
+              </OrangeButton>
+            </FlexEndCenter>
+          ) : (
+            <FlexEndCenter>
+              <WhiteButton disabled={isDeletionLoading} onClick={deleteProgram}>
+                삭제하기
+              </WhiteButton>
+              <OrangeButton disabled={isDeletionLoading} onClick={beingUpdate}>
+                수정하기
+              </OrangeButton>
+            </FlexEndCenter>
+          ))}
+
+        {isUpdateMode && (
+          <>
+            <BigInput
+              placeholder="제목을 입력해주세요"
+              {...register('title', { required: '제목을 입력해주세요' })}
+            />
+            <NumberInput
+              placeholder="프로그램 가격을 입력해주세요"
+              type="number"
+              {...register('price', { required: '프로그램 가격을 입력해주세요' })}
+            />
+            <TextArea
+              onKeyDown={submitWhenShiftEnter}
+              onInput={resizeTextareaHeight}
+              placeholder="프로그램 설명을 입력해주세요"
+              {...register('description', { required: '프로그램 설명을 입력해주세요' })}
+            />
+          </>
+        )}
 
         {program ? (
           <>
-            {isUpdateMode ? (
-              <>
-                <BigInput
-                  placeholder="제목을 입력해주세요"
-                  {...register('title', { required: '제목을 입력해주세요' })}
-                />
-                <NumberInput
-                  placeholder="프로그램 가격을 입력해주세요"
-                  type="number"
-                  {...register('price', { required: '프로그램 가격을 입력해주세요' })}
-                />
-                <TextArea
-                  onKeyDown={submitWhenShiftEnter}
-                  onInput={resizeTextareaHeight}
-                  placeholder="프로그램 설명을 입력해주세요"
-                  {...register('description', { required: '프로그램 설명을 입력해주세요' })}
-                />
-              </>
-            ) : (
-              <>
-                <h3>{program.title}</h3>
-                <div>{formatNumber(program.price)} 원</div>
-                <p>{program.description}</p>
-                {program.price > 0 ? (
-                  <button onClick={payProgram}>결제하기</button>
-                ) : (
-                  <button onClick={joinProgram}>참가하기</button>
-                )}
-              </>
+            {!isUpdateMode && (
+              <FlexWrapGap>
+                <Relative>
+                  <Image
+                    src={program.image_url ?? '/images/sample.png'}
+                    alt="program cover"
+                    layout="fill"
+                    objectFit="cover"
+                  />
+                </Relative>
+                <div>
+                  <H3>{program.title}</H3>
+                  <PrimaryText>{formatNumber(program.price)} 원</PrimaryText>
+                  <HorizontalBorder color="#E5C6AD" />
+                  <P>{program.description}</P>
+                  {program.price > 0 ? (
+                    <PrimaryBigButton onClick={payProgram}>결제하기</PrimaryBigButton>
+                  ) : (
+                    <PrimaryBigButton onClick={joinProgram}>참가하기</PrimaryBigButton>
+                  )}
+                </div>
+              </FlexWrapGap>
             )}
 
-            <div>--------------</div>
-
             <Sticky>
-              <button onClick={scrollToDetail}>상세정보</button>
-              <button onClick={scrollToReview}>후기</button>
-              <button onClick={scrollToQnA}>Q&A</button>
+              <BrownButton onClick={scrollToDetail} selected>
+                상세정보
+              </BrownButton>
+              <BrownButton onClick={scrollToReview}>후기</BrownButton>
+              <BrownButton onClick={scrollToQnA}>Q&A</BrownButton>
             </Sticky>
 
-            <div ref={detailRef}>
-              {user?.isAdmin ? (
-                <>
-                  <button disabled={isUpdateLoading} onClick={updateProgram}>
-                    수정하기
-                  </button>
-                  <ToastEditor editorRef={editorRef} initialValue={program.detail} />
-                </>
+            <Margin ref={detailRef}>
+              {isUpdateMode ? (
+                <ToastEditor editorRef={editorRef} initialValue={program.detail} />
               ) : (
                 <ToastViewer initialValue={program.detail} />
               )}
-            </div>
+            </Margin>
 
             <ReviewCreationForm />
             <ul ref={reviewRef}>
