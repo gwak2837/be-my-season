@@ -3,17 +3,15 @@ import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
-import { ReactElement, useEffect, useRef, useState } from 'react'
+import { ReactElement, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import PageHead from 'src/components/PageHead'
 import { decodeProgramType } from 'src/components/ProgramCard'
+import QnACard from 'src/components/QnACard'
 import QnACreationForm from 'src/components/QnACreationForm'
-import ReviewCreationForm, {
-  CreationTextArea,
-  FlexWrap,
-  Input2,
-} from 'src/components/ReviewCreationForm'
+import ReviewCard from 'src/components/ReviewCard'
+import ReviewCreationForm from 'src/components/ReviewCreationForm'
 import useAuth from 'src/hooks/useAuth'
 import { MarginAuto } from 'src/layouts/IntroduceLayout'
 import NavigationLayout from 'src/layouts/NavigationLayout'
@@ -48,302 +46,6 @@ const BrownButton = styled.button<{ selected?: boolean }>`
   color: ${(p) => (p.selected ? '#fff' : '#7A583A')};
   padding: 1rem;
 `
-
-export function ReviewCard({ review }: any) {
-  const router = useRouter()
-  const programId = (router.query.id ?? '') as string
-
-  const { mutate } = useSWRConfig()
-  const { data: user } = useAuth()
-
-  // Update review
-  const { handleSubmit, register, reset } = useForm({
-    defaultValues: {
-      title: review.title,
-      description: review.description,
-      point: review.point,
-    },
-  })
-
-  const [isUpdateLoading, setIsUpdateLoading] = useState(false)
-  const [isReviewUpdating, setIsReviewUpdating] = useState(false)
-
-  function beingUpdate(e: any) {
-    e.preventDefault()
-    setIsReviewUpdating(true)
-  }
-
-  function cancelUpdating() {
-    setIsReviewUpdating(false)
-    reset()
-  }
-
-  async function updateReview({ title, description, point }: any) {
-    setIsUpdateLoading(true)
-
-    const response = await fetch(`/api/program/${programId}/review`, {
-      method: 'PUT',
-      headers: {
-        authorization: sessionStorage.getItem('jwt') ?? localStorage.getItem('jwt') ?? '',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        id: review.id,
-        title,
-        description,
-        point,
-      }),
-    })
-
-    if (response.ok) {
-      toast.success('리뷰를 수정했습니다')
-      mutate(`/api/program/${programId}/review`)
-    } else {
-      toast.warn(await response.text())
-    }
-
-    setIsUpdateLoading(false)
-    setIsReviewUpdating(false)
-  }
-
-  // Delete review
-  const [isDeletionLoading, setIsDeletionLoading] = useState(false)
-
-  async function deleteReview() {
-    setIsDeletionLoading(true)
-
-    const response = await fetch(`/api/program/${programId}/review?reviewId=${review.id}`, {
-      method: 'DELETE',
-      headers: {
-        authorization: sessionStorage.getItem('jwt') ?? localStorage.getItem('jwt') ?? '',
-      },
-    })
-
-    if (response.ok) {
-      toast.success('리뷰를 삭제했습니다')
-      mutate(`/api/program/${programId}/review`)
-    } else {
-      toast.warn(await response.text())
-    }
-
-    setIsDeletionLoading(false)
-  }
-
-  return (
-    <li>
-      <form onSubmit={handleSubmit(updateReview)}>
-        <div>
-          {isReviewUpdating ? (
-            <>
-              <FlexWrap>
-                <Input2
-                  disabled={isUpdateLoading}
-                  placeholder="리뷰 제목을 입력해주세요"
-                  {...register('title', {
-                    required: '리뷰 제목을 입력해주세요',
-                    minLength: {
-                      value: 5,
-                      message: '리뷰 제목을 5글자 이상 입력해주세요',
-                    },
-                    maxLength: {
-                      value: 100,
-                      message: '리뷰 제목을 100글자 이하로 입력해주세요',
-                    },
-                  })}
-                />
-                <NumberInput
-                  disabled={isUpdateLoading}
-                  placeholder="리뷰 점수를 입력해주세요"
-                  type="number"
-                  {...register('point', {
-                    required: '리뷰 점수를 입력해주세요',
-                    min: {
-                      value: 1,
-                      message: '리뷰 점수를 1점 이상 입력해주세요',
-                    },
-                    max: {
-                      value: 5,
-                      message: '리뷰 점수를 5점 이하로 입력해주세요',
-                    },
-                  })}
-                />
-              </FlexWrap>
-              <CreationTextArea
-                disabled={isUpdateLoading}
-                onKeyDown={submitWhenShiftEnter}
-                placeholder="리뷰 내용을 입력해주세요"
-                {...register('description', {
-                  required: '리뷰 내용을 입력해주세요',
-                  minLength: {
-                    value: 10,
-                    message: '리뷰 내용을 10글자 이상 입력해주세요',
-                  },
-                  maxLength: {
-                    value: 1000,
-                    message: '리뷰 내용을 1000글자 이하로 입력해주세요',
-                  },
-                })}
-              />
-            </>
-          ) : (
-            <>
-              <h4>{review.title}</h4>
-              <p>{review.description}</p>
-              <div>{review.point}</div>
-            </>
-          )}
-        </div>
-
-        {user.userId === review.user__id && (
-          <FlexEndCenter>
-            {isReviewUpdating ? (
-              <>
-                <WhiteButton disabled={isUpdateLoading} onClick={cancelUpdating} type="reset">
-                  취소
-                </WhiteButton>
-                <OrangeButton disabled={isUpdateLoading} type="submit">
-                  완료
-                </OrangeButton>
-              </>
-            ) : (
-              <>
-                <WhiteButton disabled={isDeletionLoading} onClick={deleteReview} type="button">
-                  삭제
-                </WhiteButton>
-                <OrangeButton onClick={beingUpdate} type="button">
-                  수정
-                </OrangeButton>
-              </>
-            )}
-          </FlexEndCenter>
-        )}
-      </form>
-    </li>
-  )
-}
-
-function QnACard({ qna }: any) {
-  const router = useRouter()
-  const programId = (router.query.id ?? '') as string
-
-  const { mutate } = useSWRConfig()
-  const { data: user } = useAuth()
-
-  // Update QnA
-  const { handleSubmit, register, reset } = useForm({
-    defaultValues: {
-      title: qna.title,
-      description: qna.description,
-    },
-  })
-
-  const [isUpdateLoading, setIsUpdateLoading] = useState(false)
-  const [isQnAUpdating, setIsQnAUpdating] = useState(false)
-
-  function beingUpdate(e: any) {
-    e.preventDefault()
-    setIsQnAUpdating(true)
-  }
-
-  function cancelUpdating() {
-    setIsQnAUpdating(false)
-    reset()
-  }
-
-  async function updateQnA({ title, description }: any) {
-    setIsUpdateLoading(true)
-
-    const response = await fetch(`/api/program/${programId}/qna`, {
-      method: 'PUT',
-      headers: {
-        authorization: sessionStorage.getItem('jwt') ?? localStorage.getItem('jwt') ?? '',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        id: qna.id,
-        title,
-        description,
-      }),
-    })
-
-    if (response.ok) {
-      toast.success('QnA를 수정했습니다')
-      mutate(`/api/program/${programId}/qna`)
-    } else {
-      toast.warn(await response.text())
-    }
-
-    setIsUpdateLoading(false)
-    setIsQnAUpdating(false)
-  }
-
-  // Delete QnA
-  const [isDeletionLoading, setIsDeletionLoading] = useState(false)
-
-  async function deleteQnA() {
-    setIsDeletionLoading(true)
-
-    const response = await fetch(`/api/program/${programId}/qna?qnaId=${qna.id}`, {
-      method: 'DELETE',
-      headers: {
-        authorization: sessionStorage.getItem('jwt') ?? localStorage.getItem('jwt') ?? '',
-      },
-    })
-
-    if (response.ok) {
-      toast.success('QnA를 삭제했습니다')
-      mutate(`/api/program/${programId}/qna`)
-    } else {
-      toast.warn(await response.text())
-    }
-
-    setIsDeletionLoading(false)
-  }
-
-  return (
-    <li>
-      <form onSubmit={handleSubmit(updateQnA)}>
-        <div>
-          {isQnAUpdating ? (
-            <>
-              <Input2 {...register('title')} />
-              <CreationTextArea {...register('description')} />
-            </>
-          ) : (
-            <>
-              <h4>{qna.title}</h4>
-              <p>{qna.description}</p>
-            </>
-          )}
-        </div>
-
-        {user.userId === qna.user__id && (
-          <FlexEndCenter>
-            {isQnAUpdating ? (
-              <>
-                <WhiteButton disabled={isUpdateLoading} onClick={cancelUpdating} type="reset">
-                  취소
-                </WhiteButton>
-                <OrangeButton disabled={isUpdateLoading} type="submit">
-                  완료
-                </OrangeButton>
-              </>
-            ) : (
-              <>
-                <WhiteButton disabled={isDeletionLoading} onClick={deleteQnA} type="button">
-                  삭제
-                </WhiteButton>
-                <OrangeButton onClick={beingUpdate} type="button">
-                  수정
-                </OrangeButton>
-              </>
-            )}
-          </FlexEndCenter>
-        )}
-      </form>
-    </li>
-  )
-}
 
 export const FlexWrapGap = styled.div`
   display: flex;
@@ -554,6 +256,9 @@ export default function ProgramPage() {
   async function joinProgram() {
     const response = await fetch(`/api/program/${programId}/join`, {
       method: 'POST',
+      headers: {
+        authorization: sessionStorage.getItem('jwt') ?? localStorage.getItem('jwt') ?? '',
+      },
     })
 
     if (response.ok) {
@@ -570,7 +275,6 @@ export default function ProgramPage() {
       method: 'POST',
       headers: {
         authorization: sessionStorage.getItem('jwt') ?? localStorage.getItem('jwt') ?? '',
-        'Content-Type': 'application/json',
       },
     })
 
@@ -628,10 +332,10 @@ export default function ProgramPage() {
             </FlexEndCenter>
           ) : (
             <FlexEndCenter>
-              <WhiteButton disabled={isDeletionLoading} onClick={deleteProgram}>
+              <WhiteButton disabled={isDeletionLoading} onClick={deleteProgram} type="button">
                 삭제하기
               </WhiteButton>
-              <OrangeButton disabled={isDeletionLoading} onClick={beingUpdate}>
+              <OrangeButton disabled={isDeletionLoading} onClick={beingUpdate} type="button">
                 수정하기
               </OrangeButton>
             </FlexEndCenter>

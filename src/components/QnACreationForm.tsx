@@ -61,7 +61,7 @@ function QnACreationForm() {
     reset()
   }
 
-  return (
+  return user?.userId ? (
     <form onSubmit={handleSubmit(createQnA)}>
       <h5>QnA 쓰기</h5>
       <FlexWrap>
@@ -101,7 +101,7 @@ function QnACreationForm() {
         })}
       />
     </form>
-  )
+  ) : null
 }
 
 export default QnACreationForm
