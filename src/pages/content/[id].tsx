@@ -49,21 +49,6 @@ export const HorizontalBorder = styled.div<{ color?: string }>`
   margin: 1rem 0;
 `
 
-const RightAlign = styled.div`
-  display: flex;
-  justify-content: end;
-  padding: 1rem;
-  margin: 2rem 0 0;
-`
-
-const Button = styled.button`
-  background: #de684a;
-  color: #fff;
-  padding: 1rem;
-  text-align: center;
-  width: 10rem;
-`
-
 export const Button1 = styled.div`
   background: #de684a;
   color: #fff;

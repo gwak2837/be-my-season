@@ -59,9 +59,33 @@ export default async function handleProgram(req: NextApiRequest, res: NextApiRes
     if (!verifiedJwt) return res.status(400).send('Invalid JWT')
     if (!verifiedJwt.isAdmin) return res.status(403).send('Require administrator privileges')
 
-    if (isEmptyObject(req.body)) return res.status(400).send('Please check your inputs of request')
+    const { title, price, description, detail, imageUrl, type } = req.body
+    console.log(
+      '👀 - title, price, description, detail, imageUrl, type',
+      title,
+      price,
+      description,
+      detail,
+      imageUrl,
+      type
+    )
+    if (!title || price === undefined || !description || !detail || type === undefined)
+      return res.status(400).send('Please check your inputs of request')
 
-    await pool.query(updateProgram, [req.body.description, req.body.detail, req.query.id])
+    const [resultHeader] = await pool.query(updateProgram, [
+      title,
+      price,
+      description,
+      detail,
+      imageUrl,
+      type,
+      req.query.id,
+    ])
+    if ((resultHeader as any).affectedRows === 0)
+      return res
+        .status(400)
+        .send('There is no such program, or you do not have permission to delete the program')
+
     return res.status(200).json({ message: 'Update complete' })
   }
 
@@ -74,8 +98,13 @@ export default async function handleProgram(req: NextApiRequest, res: NextApiRes
     if (!verifiedJwt) return res.status(400).send('Invalid JWT')
     if (!verifiedJwt.isAdmin) return res.status(403).send('Require administrator privileges')
 
-    const [rows] = await pool.query(deleteProgram, [req.query.id])
-    return res.status(200).json({ rows })
+    const [resultHeader] = await pool.query(deleteProgram, [req.query.id])
+    if ((resultHeader as any).affectedRows === 0)
+      return res
+        .status(400)
+        .send('There is no such program, or you do not have permission to delete the program')
+
+    return res.status(200).json({ message: 'Deletion complete' })
   }
 
   // Else

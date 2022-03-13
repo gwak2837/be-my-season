@@ -221,7 +221,14 @@ function NavigationLayout({ children }: Props) {
             <div>error</div>
           ) : (
             <Link href="/login" passHref>
-              <a onClick={closeDrawer} role="button" tabIndex={0}>
+              <a
+                onClick={() => {
+                  closeDrawer()
+                  saveUrl()
+                }}
+                role="button"
+                tabIndex={0}
+              >
                 로그인
               </a>
             </Link>
@@ -237,14 +244,7 @@ function NavigationLayout({ children }: Props) {
                 <div>loading</div>
               ) : userId ? (
                 <Link href={`/@${userId}`} passHref>
-                  <a
-                    onClick={() => {
-                      closeDrawer()
-                      saveUrl()
-                    }}
-                    role="button"
-                    tabIndex={0}
-                  >
+                  <a onClick={closeDrawer} role="button" tabIndex={0}>
                     {isAdmin ? '페이지 관리' : 'My season'}
                   </a>
                 </Link>

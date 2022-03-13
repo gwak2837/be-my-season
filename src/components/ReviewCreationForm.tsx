@@ -4,7 +4,6 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import useAuth from 'src/hooks/useAuth'
 import { TextArea } from 'src/pages/contact/faq'
-import { FlexCenterGap } from 'src/pages/content/[id]'
 import { OrangeButton } from 'src/pages/introduce'
 import { NumberInput } from 'src/pages/program/create'
 import { submitWhenShiftEnter } from 'src/utils'
@@ -20,6 +19,12 @@ export const FlexWrap = styled.div`
   > input:first-child {
     flex-grow: 1;
   }
+`
+
+const FlexCenterGap = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
 `
 
 export const Input2 = styled.input`
