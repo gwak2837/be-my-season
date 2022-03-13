@@ -60,15 +60,6 @@ export default async function handleProgram(req: NextApiRequest, res: NextApiRes
     if (!verifiedJwt.isAdmin) return res.status(403).send('Require administrator privileges')
 
     const { title, price, description, detail, imageUrl, type } = req.body
-    console.log(
-      '👀 - title, price, description, detail, imageUrl, type',
-      title,
-      price,
-      description,
-      detail,
-      imageUrl,
-      type
-    )
     if (!title || price === undefined || !description || !detail || type === undefined)
       return res.status(400).send('Please check your inputs of request')
 

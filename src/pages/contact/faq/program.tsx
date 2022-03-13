@@ -3,6 +3,7 @@ import FAQCard from 'src/components/FAQCard'
 import PageHead from 'src/components/PageHead'
 import FAQLayout from 'src/layouts/FAQLayout'
 import NavigationLayout from 'src/layouts/NavigationLayout'
+import { HorizontalBorder } from 'src/pages/content/[id]'
 import { defaultFetcher } from 'src/utils'
 import useSWR from 'swr'
 
@@ -21,6 +22,7 @@ export default function FAQPage() {
       ) : (
         <div>loading</div>
       )}
+      <HorizontalBorder />
     </PageHead>
   )
 }
