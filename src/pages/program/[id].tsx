@@ -8,6 +8,12 @@ import { useForm } from 'react-hook-form'
 import { toast } from 'react-toastify'
 import PageHead from 'src/components/PageHead'
 import { decodeProgramType } from 'src/components/ProgramCard'
+import QnACreationForm from 'src/components/QnACreationForm'
+import ReviewCreationForm, {
+  CreationTextArea,
+  FlexWrap,
+  Input2,
+} from 'src/components/ReviewCreationForm'
 import useAuth from 'src/hooks/useAuth'
 import { MarginAuto } from 'src/layouts/IntroduceLayout'
 import NavigationLayout from 'src/layouts/NavigationLayout'
@@ -51,7 +57,7 @@ export function ReviewCard({ review }: any) {
   const { data: user } = useAuth()
 
   // Update review
-  const { getValues, setValue, register, reset } = useForm({
+  const { handleSubmit, register, reset } = useForm({
     defaultValues: {
       title: review.title,
       description: review.description,
@@ -62,7 +68,8 @@ export function ReviewCard({ review }: any) {
   const [isUpdateLoading, setIsUpdateLoading] = useState(false)
   const [isReviewUpdating, setIsReviewUpdating] = useState(false)
 
-  function beingUpdate() {
+  function beingUpdate(e: any) {
+    e.preventDefault()
     setIsReviewUpdating(true)
   }
 
@@ -71,7 +78,7 @@ export function ReviewCard({ review }: any) {
     reset()
   }
 
-  async function updateReview(reviewId: number) {
+  async function updateReview({ title, description, point }: any) {
     setIsUpdateLoading(true)
 
     const response = await fetch(`/api/program/${programId}/review`, {
@@ -81,10 +88,10 @@ export function ReviewCard({ review }: any) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        reviewId,
-        title: getValues('title'),
-        description: getValues('description'),
-        point: getValues('point'),
+        id: review.id,
+        title,
+        description,
+        point,
       }),
     })
 
@@ -102,10 +109,10 @@ export function ReviewCard({ review }: any) {
   // Delete review
   const [isDeletionLoading, setIsDeletionLoading] = useState(false)
 
-  async function deleteReview(reviewId: number) {
+  async function deleteReview() {
     setIsDeletionLoading(true)
 
-    const response = await fetch(`/api/program/${programId}/review?reviewId=${reviewId}`, {
+    const response = await fetch(`/api/program/${programId}/review?reviewId=${review.id}`, {
       method: 'DELETE',
       headers: {
         authorization: sessionStorage.getItem('jwt') ?? localStorage.getItem('jwt') ?? '',
@@ -124,48 +131,98 @@ export function ReviewCard({ review }: any) {
 
   return (
     <li>
-      <div>
-        {isReviewUpdating ? (
-          <>
-            <input {...register('title')} />
-            <textarea {...register('description')} />
-            <input {...register('point')} type="number" />
-          </>
-        ) : (
-          <>
-            <h4>{review.title}</h4>
-            <p>{review.description}</p>
-            <div>{review.point}</div>
-          </>
-        )}
-      </div>
-
-      {user.userId === review.author_id && (
-        <>
+      <form onSubmit={handleSubmit(updateReview)}>
+        <div>
           {isReviewUpdating ? (
             <>
-              <button disabled={isUpdateLoading} onClick={cancelUpdating}>
-                취소
-              </button>
-              <button disabled={isUpdateLoading} onClick={() => updateReview(review.id)}>
-                완료
-              </button>
+              <FlexWrap>
+                <Input2
+                  disabled={isUpdateLoading}
+                  placeholder="리뷰 제목을 입력해주세요"
+                  {...register('title', {
+                    required: '리뷰 제목을 입력해주세요',
+                    minLength: {
+                      value: 5,
+                      message: '리뷰 제목을 5글자 이상 입력해주세요',
+                    },
+                    maxLength: {
+                      value: 100,
+                      message: '리뷰 제목을 100글자 이하로 입력해주세요',
+                    },
+                  })}
+                />
+                <NumberInput
+                  disabled={isUpdateLoading}
+                  placeholder="리뷰 점수를 입력해주세요"
+                  type="number"
+                  {...register('point', {
+                    required: '리뷰 점수를 입력해주세요',
+                    min: {
+                      value: 1,
+                      message: '리뷰 점수를 1점 이상 입력해주세요',
+                    },
+                    max: {
+                      value: 5,
+                      message: '리뷰 점수를 5점 이하로 입력해주세요',
+                    },
+                  })}
+                />
+              </FlexWrap>
+              <CreationTextArea
+                disabled={isUpdateLoading}
+                onKeyDown={submitWhenShiftEnter}
+                placeholder="리뷰 내용을 입력해주세요"
+                {...register('description', {
+                  required: '리뷰 내용을 입력해주세요',
+                  minLength: {
+                    value: 10,
+                    message: '리뷰 내용을 10글자 이상 입력해주세요',
+                  },
+                  maxLength: {
+                    value: 1000,
+                    message: '리뷰 내용을 1000글자 이하로 입력해주세요',
+                  },
+                })}
+              />
             </>
           ) : (
-            <button onClick={beingUpdate}>수정</button>
+            <>
+              <h4>{review.title}</h4>
+              <p>{review.description}</p>
+              <div>{review.point}</div>
+            </>
           )}
-          {!isReviewUpdating && (
-            <button disabled={isDeletionLoading} onClick={() => deleteReview(review.id)}>
-              삭제
-            </button>
-          )}
-        </>
-      )}
+        </div>
+
+        {user.userId === review.user__id && (
+          <FlexEndCenter>
+            {isReviewUpdating ? (
+              <>
+                <WhiteButton disabled={isUpdateLoading} onClick={cancelUpdating} type="reset">
+                  취소
+                </WhiteButton>
+                <OrangeButton disabled={isUpdateLoading} type="submit">
+                  완료
+                </OrangeButton>
+              </>
+            ) : (
+              <>
+                <WhiteButton disabled={isDeletionLoading} onClick={deleteReview} type="button">
+                  삭제
+                </WhiteButton>
+                <OrangeButton onClick={beingUpdate} type="button">
+                  수정
+                </OrangeButton>
+              </>
+            )}
+          </FlexEndCenter>
+        )}
+      </form>
     </li>
   )
 }
 
-export function QnACard({ qna }: any) {
+function QnACard({ qna }: any) {
   const router = useRouter()
   const programId = (router.query.id ?? '') as string
 
@@ -173,7 +230,7 @@ export function QnACard({ qna }: any) {
   const { data: user } = useAuth()
 
   // Update QnA
-  const { getValues, register, reset } = useForm({
+  const { handleSubmit, register, reset } = useForm({
     defaultValues: {
       title: qna.title,
       description: qna.description,
@@ -183,7 +240,8 @@ export function QnACard({ qna }: any) {
   const [isUpdateLoading, setIsUpdateLoading] = useState(false)
   const [isQnAUpdating, setIsQnAUpdating] = useState(false)
 
-  function beingUpdate() {
+  function beingUpdate(e: any) {
+    e.preventDefault()
     setIsQnAUpdating(true)
   }
 
@@ -192,7 +250,7 @@ export function QnACard({ qna }: any) {
     reset()
   }
 
-  async function updateQnA(qnaId: number) {
+  async function updateQnA({ title, description }: any) {
     setIsUpdateLoading(true)
 
     const response = await fetch(`/api/program/${programId}/qna`, {
@@ -202,9 +260,9 @@ export function QnACard({ qna }: any) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        qnaId,
-        title: getValues('title'),
-        description: getValues('description'),
+        id: qna.id,
+        title,
+        description,
       }),
     })
 
@@ -222,10 +280,10 @@ export function QnACard({ qna }: any) {
   // Delete QnA
   const [isDeletionLoading, setIsDeletionLoading] = useState(false)
 
-  async function deleteQnA(qnaId: number) {
+  async function deleteQnA() {
     setIsDeletionLoading(true)
 
-    const response = await fetch(`/api/program/${programId}/qna?qnaId=${qnaId}`, {
+    const response = await fetch(`/api/program/${programId}/qna?qnaId=${qna.id}`, {
       method: 'DELETE',
       headers: {
         authorization: sessionStorage.getItem('jwt') ?? localStorage.getItem('jwt') ?? '',
@@ -244,235 +302,50 @@ export function QnACard({ qna }: any) {
 
   return (
     <li>
-      <div>
-        {isQnAUpdating ? (
-          <>
-            <input {...register('title')} />
-            <textarea {...register('description')} />
-          </>
-        ) : (
-          <>
-            <h4>{qna.title}</h4>
-            <p>{qna.description}</p>
-          </>
-        )}
-      </div>
-
-      {user.userId === qna.author_id && (
-        <>
+      <form onSubmit={handleSubmit(updateQnA)}>
+        <div>
           {isQnAUpdating ? (
             <>
-              <button disabled={isUpdateLoading} onClick={cancelUpdating}>
-                취소
-              </button>
-              <button disabled={isUpdateLoading} onClick={() => updateQnA(qna.id)}>
-                완료
-              </button>
+              <Input2 {...register('title')} />
+              <CreationTextArea {...register('description')} />
             </>
           ) : (
-            <button onClick={beingUpdate}>수정</button>
+            <>
+              <h4>{qna.title}</h4>
+              <p>{qna.description}</p>
+            </>
           )}
-          {!isQnAUpdating && (
-            <button disabled={isDeletionLoading} onClick={() => deleteQnA(qna.id)}>
-              삭제
-            </button>
-          )}
-        </>
-      )}
+        </div>
+
+        {user.userId === qna.user__id && (
+          <FlexEndCenter>
+            {isQnAUpdating ? (
+              <>
+                <WhiteButton disabled={isUpdateLoading} onClick={cancelUpdating} type="reset">
+                  취소
+                </WhiteButton>
+                <OrangeButton disabled={isUpdateLoading} type="submit">
+                  완료
+                </OrangeButton>
+              </>
+            ) : (
+              <>
+                <WhiteButton disabled={isDeletionLoading} onClick={deleteQnA} type="button">
+                  삭제
+                </WhiteButton>
+                <OrangeButton onClick={beingUpdate} type="button">
+                  수정
+                </OrangeButton>
+              </>
+            )}
+          </FlexEndCenter>
+        )}
+      </form>
     </li>
   )
 }
 
-export function ReviewCreationForm() {
-  const router = useRouter()
-  const programId = (router.query.id ?? '') as string
-
-  const { data: user } = useAuth()
-  const { mutate } = useSWRConfig()
-  const [isCreationLoading, setIsCreationLoading] = useState(false)
-
-  const {
-    formState: { errors },
-    handleSubmit,
-    register,
-  } = useForm({
-    defaultValues: {
-      title: '',
-      description: '',
-      point: 0,
-    },
-  })
-
-  function checkLogin() {
-    if (!user?.userId) {
-      router.replace('/login')
-      sessionStorage.setItem('redirectionUrlAfterLogin', router.asPath)
-    }
-  }
-
-  // Create review
-  async function createReview({ title, description, point }: any) {
-    setIsCreationLoading(true)
-
-    const response = await fetch(`/api/program/${programId}/review`, {
-      method: 'POST',
-      headers: {
-        authorization: sessionStorage.getItem('jwt') ?? localStorage.getItem('jwt') ?? '',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ title, description, point }),
-    })
-
-    if (response.ok) {
-      toast.success('리뷰를 작성했습니다')
-      mutate(`/api/program/${programId}/review`)
-    } else {
-      toast.warn(await response.text())
-    }
-
-    setIsCreationLoading(false)
-  }
-
-  return (
-    <form onSubmit={handleSubmit(createReview)}>
-      <input
-        disabled={!user?.userId}
-        {...register('title', {
-          required: '리뷰 제목을 입력해주세요',
-          minLength: {
-            value: 5,
-            message: '리뷰 제목을 5글자 이상 입력해주세요',
-          },
-          maxLength: {
-            value: 100,
-            message: '리뷰 제목을 100글자 이하로 입력해주세요',
-          },
-        })}
-      />
-      <textarea
-        disabled={!user?.userId}
-        {...register('description', {
-          required: '리뷰 내용을 입력해주세요',
-          minLength: {
-            value: 10,
-            message: '리뷰 내용을 10글자 이상 입력해주세요',
-          },
-          maxLength: {
-            value: 1000,
-            message: '리뷰 내용을 1000글자 이하로 입력해주세요',
-          },
-        })}
-      />
-      <input
-        disabled={!user?.userId}
-        type="number"
-        {...register('point', {
-          required: '리뷰 점수를 입력해주세요',
-          min: {
-            value: 1,
-            message: '리뷰 점수를 1점 이상 입력해주세요',
-          },
-          max: {
-            value: 5,
-            message: '리뷰 점수를 5점 이하로 입력해주세요',
-          },
-        })}
-      />
-      <button disabled={isCreationLoading} onClick={checkLogin} type="submit">
-        생성
-      </button>
-    </form>
-  )
-}
-
-export function QnACreationForm() {
-  const router = useRouter()
-  const programId = (router.query.id ?? '') as string
-
-  const { data: user } = useAuth()
-  const { mutate } = useSWRConfig()
-  const [isCreationLoading, setIsCreationLoading] = useState(false)
-
-  const {
-    formState: { errors },
-    handleSubmit,
-    register,
-  } = useForm({
-    defaultValues: {
-      title: '',
-      description: '',
-    },
-  })
-
-  function checkLogin() {
-    if (!user?.userId) {
-      router.replace('/login')
-      sessionStorage.setItem('redirectionUrlAfterLogin', router.asPath)
-    }
-  }
-
-  // Create QnA
-  async function createQnA({ title, description }: any) {
-    setIsCreationLoading(true)
-
-    const response = await fetch(`/api/program/${programId}/qna`, {
-      method: 'POST',
-      headers: {
-        authorization: sessionStorage.getItem('jwt') ?? localStorage.getItem('jwt') ?? '',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ title, description }),
-    })
-
-    if (response.ok) {
-      toast.success('QnA를 작성했습니다')
-      mutate(`/api/program/${programId}/qna`)
-    } else {
-      const result = await response.json()
-      toast.warn(result.message)
-    }
-
-    setIsCreationLoading(false)
-  }
-
-  return (
-    <form onSubmit={handleSubmit(createQnA)}>
-      <input
-        disabled={!user?.userId}
-        {...register('title', {
-          required: 'QnA 제목을 입력해주세요',
-          minLength: {
-            value: 5,
-            message: 'QnA 제목을 5글자 이상 입력해주세요',
-          },
-          maxLength: {
-            value: 100,
-            message: 'QnA 제목을 100글자 이하로 입력해주세요',
-          },
-        })}
-      />
-      <textarea
-        disabled={!user?.userId}
-        {...register('description', {
-          required: 'QnA 내용을 입력해주세요',
-          minLength: {
-            value: 10,
-            message: 'QnA 내용을 10글자 이상 입력해주세요',
-          },
-          maxLength: {
-            value: 1000,
-            message: 'QnA 내용을 1000글자 이하로 입력해주세요',
-          },
-        })}
-      />
-      <button disabled={isCreationLoading} onClick={checkLogin} type="submit">
-        생성
-      </button>
-    </form>
-  )
-}
-
-const FlexWrapGap = styled.div`
+export const FlexWrapGap = styled.div`
   display: flex;
   flex-flow: row wrap;
   gap: 3rem;
@@ -485,8 +358,8 @@ const FlexWrapGap = styled.div`
 
 const Relative = styled.div`
   position: relative;
-  min-width: 200px;
-  min-height: 200px;
+  min-width: 300px;
+  min-height: 300px;
 `
 
 const H3 = styled.h2`
@@ -518,8 +391,37 @@ const Margin = styled.div`
   padding: 8rem 0;
 `
 
-const DisplayNoneIf = styled.div<{ display: boolean }>`
-  display: ${(p) => (p.display ? 'block' : 'none')};
+const DisplayNoneIf = styled.div<{ condition: boolean }>`
+  display: ${(p) => (p.condition ? 'none' : 'grid')};
+  gap: 1rem;
+  margin: 0 0 2rem;
+`
+
+const GridGap = styled.div`
+  display: grid;
+  gap: 0.5rem;
+
+  > input {
+    margin: 0;
+  }
+`
+
+const Input = styled.input`
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+  border: none;
+  box-shadow: 0 0 0 1px #bebebe;
+  width: 100%;
+`
+
+const GridUl = styled.ul`
+  display: grid;
+  gap: 1rem;
+  margin: 2rem 0;
+`
+
+const MarginH4 = styled.h5`
+  margin: 1rem 0;
 `
 
 const description = ''
@@ -537,7 +439,6 @@ export default function ProgramPage() {
     defaultFetcher,
     {
       onSuccess: (response) => {
-        console.log('👀 - response', response.program)
         resetField('title', { defaultValue: response.program.title })
         resetField('price', { defaultValue: response.program.price })
         resetField('description', { defaultValue: response.program.description })
@@ -568,18 +469,18 @@ export default function ProgramPage() {
     detailRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
-  const reviewRef = useRef<HTMLUListElement>(null)
+  const reviewRef = useRef<HTMLDivElement>(null)
   function scrollToReview() {
     reviewRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
-  const qnaRef = useRef<HTMLUListElement>(null)
+  const qnaRef = useRef<HTMLDivElement>(null)
   function scrollToQnA() {
     qnaRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
   // Update program
-  const { register, reset, resetField } = useForm({
+  const { getValues, register, reset, resetField } = useForm({
     defaultValues: {
       title: '',
       price: 0,
@@ -592,7 +493,7 @@ export default function ProgramPage() {
   const editorRef = useRef<Editor>(null)
   const [isUpdateLoading, setIsUpdateLoading] = useState(false)
 
-  async function updateProgram({ title, price, description, imageUrl, type }: any) {
+  async function updateProgram() {
     if (editorRef.current) {
       setIsUpdateLoading(true)
 
@@ -603,12 +504,12 @@ export default function ProgramPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          title,
-          price,
-          description,
+          title: getValues('title'),
+          price: getValues('price'),
+          description: getValues('description'),
           detail: editorRef.current.getInstance().getHTML(),
-          imageUrl,
-          type,
+          imageUrl: getValues('imageUrl'),
+          type: getValues('type'),
         }),
       })
 
@@ -620,6 +521,7 @@ export default function ProgramPage() {
       }
 
       setIsUpdateLoading(false)
+      setIsUpdateMode(false)
     }
   }
 
@@ -735,22 +637,38 @@ export default function ProgramPage() {
             </FlexEndCenter>
           ))}
 
-        <DisplayNoneIf display={isUpdateMode}>
-          <BigInput
-            placeholder="제목을 입력해주세요"
-            {...register('title', { required: '제목을 입력해주세요' })}
-          />
-          <NumberInput
-            placeholder="프로그램 가격을 입력해주세요"
-            type="number"
-            {...register('price', { required: '프로그램 가격을 입력해주세요' })}
-          />
-          <TextArea
-            onKeyDown={submitWhenShiftEnter}
-            onInput={resizeTextareaHeight}
-            placeholder="프로그램 설명을 입력해주세요"
-            {...register('description', { required: '프로그램 설명을 입력해주세요' })}
-          />
+        <DisplayNoneIf condition={!isUpdateMode}>
+          <GridGap>
+            <label htmlFor="title">제목</label>
+            <BigInput
+              id="title"
+              placeholder="제목을 입력해주세요"
+              {...register('title', { required: '제목을 입력해주세요' })}
+            />
+          </GridGap>
+          <GridGap>
+            <label htmlFor="imageUrl">커버 이미지 URL</label>
+            <Input id="imageUrl" placeholder="제목을 입력해주세요" {...register('imageUrl')} />
+          </GridGap>
+          <GridGap>
+            <label htmlFor="price">가격</label>
+            <NumberInput
+              id="price"
+              placeholder="프로그램 가격을 입력해주세요"
+              type="number"
+              {...register('price', { required: '프로그램 가격을 입력해주세요' })}
+            />
+          </GridGap>
+          <GridGap>
+            <label htmlFor="description">설명</label>
+            <TextArea
+              id="description"
+              onKeyDown={submitWhenShiftEnter}
+              onInput={resizeTextareaHeight}
+              placeholder="프로그램 설명을 입력해주세요"
+              {...register('description', { required: '프로그램 설명을 입력해주세요' })}
+            />
+          </GridGap>
         </DisplayNoneIf>
 
         {program ? (
@@ -768,7 +686,9 @@ export default function ProgramPage() {
                 <div>
                   <H3>{program.title}</H3>
                   <PrimaryText>{formatNumber(program.price)} 원</PrimaryText>
+
                   <HorizontalBorder color="#E5C6AD" />
+
                   <P>{program.description}</P>
                   {program.price > 0 ? (
                     <PrimaryBigButton onClick={payProgram}>결제하기</PrimaryBigButton>
@@ -795,8 +715,11 @@ export default function ProgramPage() {
               )}
             </Margin>
 
+            <HorizontalBorder color="#E5C6AD" ref={reviewRef} />
+
             <ReviewCreationForm />
-            <ul ref={reviewRef}>
+            <MarginH4>리뷰 {reviews?.length ?? '...'}개</MarginH4>
+            <GridUl>
               {reviews ? (
                 reviews.length > 0 ? (
                   reviews.map((review: any) => <ReviewCard key={review.id} review={review} />)
@@ -808,10 +731,13 @@ export default function ProgramPage() {
               ) : (
                 <div>reviews loading...</div>
               )}
-            </ul>
+            </GridUl>
+
+            <HorizontalBorder color="#E5C6AD" ref={qnaRef} />
 
             <QnACreationForm />
-            <ul ref={qnaRef}>
+            <MarginH4>QnA {qnas?.length ?? '...'}개</MarginH4>
+            <GridUl>
               {qnas ? (
                 qnas.length > 0 ? (
                   qnas.map((qna: any) => <QnACard key={qna.id} qna={qna} />)
@@ -823,9 +749,10 @@ export default function ProgramPage() {
               ) : (
                 <div>qna loading...</div>
               )}
-            </ul>
+            </GridUl>
 
             <HorizontalBorder />
+
             {nextProgram ? (
               <Link href={`/program/${nextProgram.id}`} passHref>
                 <FlexCenterA>
@@ -839,7 +766,9 @@ export default function ProgramPage() {
                 <div>다음글이 없습니다.</div>
               </FlexCenterA>
             )}
+
             <HorizontalBorder />
+
             {previousProgram ? (
               <Link href={`/program/${previousProgram.id}`} passHref>
                 <FlexCenterA>
@@ -853,6 +782,7 @@ export default function ProgramPage() {
                 <div>이전글이 없습니다.</div>
               </FlexCenterA>
             )}
+
             <HorizontalBorder />
           </>
         ) : error ? (

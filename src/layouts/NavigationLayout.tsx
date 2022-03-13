@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { ReactNode, useState } from 'react'
 import Drawer from 'src/components/Drawer'
 import useAuth from 'src/hooks/useAuth'
@@ -151,6 +152,8 @@ type Props = {
 }
 
 function NavigationLayout({ children }: Props) {
+  const router = useRouter()
+
   const { data, isLoading, hasError } = useAuth()
   const userId = data?.userId
   const isAdmin = data?.isAdmin
@@ -169,6 +172,10 @@ function NavigationLayout({ children }: Props) {
 
   function closeDrawer() {
     setOpen(false)
+  }
+
+  function saveUrl() {
+    sessionStorage.setItem('redirectionUrlAfterLogin', router.asPath)
   }
 
   return (
@@ -214,7 +221,9 @@ function NavigationLayout({ children }: Props) {
             <div>error</div>
           ) : (
             <Link href="/login" passHref>
-              <a>로그인</a>
+              <a onClick={closeDrawer} role="button" tabIndex={0}>
+                로그인
+              </a>
             </Link>
           )}
         </FlexCenter>
@@ -228,7 +237,14 @@ function NavigationLayout({ children }: Props) {
                 <div>loading</div>
               ) : userId ? (
                 <Link href={`/@${userId}`} passHref>
-                  <a onClick={closeDrawer} role="button" tabIndex={0}>
+                  <a
+                    onClick={() => {
+                      closeDrawer()
+                      saveUrl()
+                    }}
+                    role="button"
+                    tabIndex={0}
+                  >
                     {isAdmin ? '페이지 관리' : 'My season'}
                   </a>
                 </Link>
@@ -236,7 +252,14 @@ function NavigationLayout({ children }: Props) {
                 <div>error</div>
               ) : (
                 <Link href="/login" passHref>
-                  <a onClick={closeDrawer} role="button" tabIndex={0}>
+                  <a
+                    onClick={() => {
+                      closeDrawer()
+                      saveUrl()
+                    }}
+                    role="button"
+                    tabIndex={0}
+                  >
                     로그인
                   </a>
                 </Link>

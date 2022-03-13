@@ -1,5 +1,4 @@
 import { NextApiRequest, NextApiResponse } from 'next'
-import { isEmptyObject } from 'src/utils'
 import { verifyJWT } from 'src/utils/jwt'
 
 import { pool } from '../..'
@@ -45,11 +44,22 @@ export default async function handleProgramReview(req: NextApiRequest, res: Next
     const verifiedJwt = await verifyJWT(jwt).catch(() => null)
     if (!verifiedJwt) return res.status(400).send('Invalid JWT')
 
-    const { reviewId, title, description, point } = req.body
-    if (!reviewId) return res.status(400).send('Please check your inputs of request')
+    const { id, title, description, point } = req.body
+    if (!id) return res.status(400).send('Please check your inputs of request')
 
-    await pool.query(updateProgramReview, [title, description, point, reviewId, verifiedJwt.userId])
-    return res.status(200).json('Delete completed')
+    const [resultHeader] = await pool.query(updateProgramReview, [
+      title,
+      description,
+      point,
+      id,
+      verifiedJwt.userId,
+    ])
+    if ((resultHeader as any).affectedRows === 0)
+      return res
+        .status(400)
+        .send('There is no such review, or you do not have permission to delete the review')
+
+    return res.status(200).json('Update completed')
   }
 
   // Delete program review
@@ -60,10 +70,15 @@ export default async function handleProgramReview(req: NextApiRequest, res: Next
     const verifiedJwt = await verifyJWT(jwt).catch(() => null)
     if (!verifiedJwt) return res.status(400).send('Invalid JWT')
 
-    const reviewId = req.query.reviewId
+    const { reviewId } = req.query
     if (!reviewId) return res.status(400).send('Please check your inputs of request')
 
-    await pool.query(deleteProgramReview, [reviewId, verifiedJwt.userId])
+    const [resultHeader] = await pool.query(deleteProgramReview, [reviewId, verifiedJwt.userId])
+    if ((resultHeader as any).affectedRows === 0)
+      return res
+        .status(400)
+        .send('There is no such review, or you do not have permission to delete the review')
+
     return res.status(200).json('Delete completed')
   }
 

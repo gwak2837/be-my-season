@@ -4,5 +4,4 @@ SET modification_time = CURRENT_TIMESTAMP,
   description = ?,
   point = ?
 WHERE id = ?
-  AND `type` = 0
   AND author_id = ?

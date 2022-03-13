@@ -1,2 +1,2 @@
-INSERT INTO qna (title, description, `type`, target_id, author_id)
-VALUES (?, ?, 0, ?, ?)
+INSERT INTO qna (title, description, program_id, author_id)
+VALUES (?, ?, ?, ?)
