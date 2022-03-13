@@ -17,7 +17,13 @@ import { MarginAuto } from 'src/layouts/IntroduceLayout'
 import NavigationLayout from 'src/layouts/NavigationLayout'
 import DownFilledArrow from 'src/svgs/down-filled-arrow.svg'
 import UpFilledArrow from 'src/svgs/up-filled-arrow.svg'
-import { defaultFetcher, formatNumber, resizeTextareaHeight, submitWhenShiftEnter } from 'src/utils'
+import {
+  defaultFetcher,
+  fetcherWithJwt,
+  formatNumber,
+  resizeTextareaHeight,
+  submitWhenShiftEnter,
+} from 'src/utils'
 import styled from 'styled-components'
 import useSWR, { useSWRConfig } from 'swr'
 
@@ -82,7 +88,7 @@ const P = styled.p`
 `
 
 const PrimaryBigButton = styled.button`
-  background: #de684a;
+  background: ${(p) => (p.disabled ? '#ccc' : '#de684a')};
   color: #fff;
   font-size: 1.3rem;
   padding: 1rem;
@@ -138,7 +144,7 @@ export default function ProgramPage() {
   // Fetch program
   const { data, error } = useSWR(
     () => (programId ? `/api/program/${programId}` : null),
-    defaultFetcher,
+    fetcherWithJwt,
     {
       onSuccess: (response) => {
         resetField('title', { defaultValue: response.program.title })
@@ -302,25 +308,25 @@ export default function ProgramPage() {
   return (
     <PageHead title="프로그램 - Be:MySeason" description={description}>
       <MarginAuto>
-        <form onSubmit={handleSubmit(updateProgram)}>
-          <FlexCenterGap>
-            <Link href="/" passHref>
-              <a>Home</a>
+        <FlexCenterGap>
+          <Link href="/" passHref>
+            <a>Home</a>
+          </Link>
+          {'>'}
+          <Link href="/program" passHref>
+            <a>Program</a>
+          </Link>
+          {'>'}
+          {program ? (
+            <Link href={`/program/${decodeProgramType(program.type).toLowerCase()}`} passHref>
+              <a>{decodeProgramType(program.type)}</a>
             </Link>
-            {'>'}
-            <Link href="/program" passHref>
-              <a>Program</a>
-            </Link>
-            {'>'}
-            {program ? (
-              <Link href={`/program/${decodeProgramType(program.type).toLowerCase()}`} passHref>
-                <a>{decodeProgramType(program.type)}</a>
-              </Link>
-            ) : (
-              <div>loading</div>
-            )}
-          </FlexCenterGap>
+          ) : (
+            <div>loading</div>
+          )}
+        </FlexCenterGap>
 
+        <form onSubmit={handleSubmit(updateProgram)}>
           {user?.isAdmin &&
             (isUpdateMode ? (
               <FlexEndCenter>
@@ -341,167 +347,171 @@ export default function ProgramPage() {
                 </OrangeButton>
               </FlexEndCenter>
             ))}
-
-          <DisplayNoneIf condition={!isUpdateMode}>
-            <GridGap>
-              <label htmlFor="title">제목</label>
-              <BigInput
-                id="title"
-                placeholder="제목을 입력해주세요"
-                {...register('title', { required: '제목을 입력해주세요' })}
-              />
-            </GridGap>
-            <GridGap>
-              <label htmlFor="imageUrl">커버 이미지 URL</label>
-              <Input id="imageUrl" placeholder="제목을 입력해주세요" {...register('imageUrl')} />
-            </GridGap>
-            <GridGap>
-              <label htmlFor="price">가격</label>
-              <NumberInput
-                id="price"
-                placeholder="프로그램 가격을 입력해주세요"
-                type="number"
-                {...register('price', { required: '프로그램 가격을 입력해주세요' })}
-              />
-            </GridGap>
-            <GridGap>
-              <label htmlFor="description">설명</label>
-              <TextArea
-                id="description"
-                onKeyDown={submitWhenShiftEnter}
-                onInput={resizeTextareaHeight}
-                placeholder="프로그램 설명을 입력해주세요"
-                {...register('description', { required: '프로그램 설명을 입력해주세요' })}
-              />
-            </GridGap>
-          </DisplayNoneIf>
-
-          {program ? (
-            <>
-              {!isUpdateMode && (
-                <FlexWrapGap>
-                  <Relative>
-                    <Image
-                      src={program.image_url ?? '/images/sample.png'}
-                      alt="program cover"
-                      layout="fill"
-                      objectFit="cover"
-                    />
-                  </Relative>
-                  <div>
-                    <H3>{program.title}</H3>
-                    <PrimaryText>{formatNumber(program.price)} 원</PrimaryText>
-
-                    <HorizontalBorder color="#E5C6AD" />
-
-                    <P>{program.description}</P>
-                    {program.price > 0 ? (
-                      <PrimaryBigButton onClick={payProgram}>결제하기</PrimaryBigButton>
-                    ) : (
-                      <PrimaryBigButton onClick={joinProgram}>참가하기</PrimaryBigButton>
-                    )}
-                  </div>
-                </FlexWrapGap>
-              )}
-
-              <Sticky>
-                <BrownButton onClick={scrollToDetail} selected>
-                  상세정보
-                </BrownButton>
-                <BrownButton onClick={scrollToReview}>후기</BrownButton>
-                <BrownButton onClick={scrollToQnA}>Q&A</BrownButton>
-              </Sticky>
-
-              <Margin ref={detailRef}>
-                {isUpdateMode ? (
-                  <ToastEditor editorRef={editorRef} initialValue={program.detail} />
-                ) : (
-                  <ToastViewer initialValue={program.detail} />
-                )}
-              </Margin>
-
-              <HorizontalBorder color="#E5C6AD" ref={reviewRef} />
-
-              <ReviewCreationForm />
-              <MarginH4>리뷰 {reviews?.length ?? '...'}개</MarginH4>
-              <GridUl>
-                {reviews ? (
-                  reviews.length > 0 ? (
-                    reviews.map((review: any) => <ReviewCard key={review.id} review={review} />)
-                  ) : (
-                    <div>리뷰가 없어요</div>
-                  )
-                ) : reviewsError ? (
-                  <div>reviews error</div>
-                ) : (
-                  <div>reviews loading...</div>
-                )}
-              </GridUl>
-
-              <HorizontalBorder color="#E5C6AD" ref={qnaRef} />
-
-              <QnACreationForm />
-              <MarginH4>QnA {qnas?.length ?? '...'}개</MarginH4>
-              <GridUl>
-                {qnas ? (
-                  qnas.length > 0 ? (
-                    qnas.map((qna: any) => <QnACard key={qna.id} qna={qna} />)
-                  ) : (
-                    <div>QnA가 없어요</div>
-                  )
-                ) : qnasError ? (
-                  <div>qna error</div>
-                ) : (
-                  <div>qna loading...</div>
-                )}
-              </GridUl>
-
-              <HorizontalBorder />
-
-              {nextProgram ? (
-                <Link href={`/program/${nextProgram.id}`} passHref>
-                  <FlexCenterA>
-                    <UpFilledArrow />
-                    <div>{nextProgram.title}</div>
-                  </FlexCenterA>
-                </Link>
-              ) : (
-                <FlexCenterA hide>
-                  <UpFilledArrow />
-                  <div>다음글이 없습니다.</div>
-                </FlexCenterA>
-              )}
-
-              <HorizontalBorder />
-
-              {previousProgram ? (
-                <Link href={`/program/${previousProgram.id}`} passHref>
-                  <FlexCenterA>
-                    <DownFilledArrow />
-                    <div>{previousProgram.title}</div>
-                  </FlexCenterA>
-                </Link>
-              ) : (
-                <FlexCenterA hide>
-                  <UpFilledArrow />
-                  <div>이전글이 없습니다.</div>
-                </FlexCenterA>
-              )}
-
-              <HorizontalBorder />
-            </>
-          ) : error ? (
-            <div>error</div>
-          ) : (
-            <div>loading</div>
-          )}
-
-          <Link href="/program" passHref>
-            <a>
-              <Button1>목록</Button1>
-            </a>
-          </Link>
         </form>
+
+        <DisplayNoneIf condition={!isUpdateMode}>
+          <GridGap>
+            <label htmlFor="title">제목</label>
+            <BigInput
+              id="title"
+              placeholder="제목을 입력해주세요"
+              {...register('title', { required: '제목을 입력해주세요' })}
+            />
+          </GridGap>
+          <GridGap>
+            <label htmlFor="imageUrl">커버 이미지 URL</label>
+            <Input id="imageUrl" placeholder="제목을 입력해주세요" {...register('imageUrl')} />
+          </GridGap>
+          <GridGap>
+            <label htmlFor="price">가격</label>
+            <NumberInput
+              id="price"
+              placeholder="프로그램 가격을 입력해주세요"
+              type="number"
+              {...register('price', { required: '프로그램 가격을 입력해주세요' })}
+            />
+          </GridGap>
+          <GridGap>
+            <label htmlFor="description">설명</label>
+            <TextArea
+              id="description"
+              onKeyDown={submitWhenShiftEnter}
+              onInput={resizeTextareaHeight}
+              placeholder="프로그램 설명을 입력해주세요"
+              {...register('description', { required: '프로그램 설명을 입력해주세요' })}
+            />
+          </GridGap>
+        </DisplayNoneIf>
+
+        {program ? (
+          <>
+            {!isUpdateMode && (
+              <FlexWrapGap>
+                <Relative>
+                  <Image
+                    src={program.image_url ?? '/images/sample.png'}
+                    alt="program cover"
+                    layout="fill"
+                    objectFit="cover"
+                  />
+                </Relative>
+                <div>
+                  <H3>{program.title}</H3>
+                  <PrimaryText>{formatNumber(program.price)} 원</PrimaryText>
+
+                  <HorizontalBorder color="#E5C6AD" />
+
+                  <P>{program.description}</P>
+                  {program.price > 0 ? (
+                    <PrimaryBigButton disabled={program.isJoined} onClick={payProgram}>
+                      {program.isJoined ? '결제 완료' : '결제하기'}
+                    </PrimaryBigButton>
+                  ) : (
+                    <PrimaryBigButton disabled={program.isJoined} onClick={joinProgram}>
+                      {program.isJoined ? '참가 완료' : '참가하기'}
+                    </PrimaryBigButton>
+                  )}
+                </div>
+              </FlexWrapGap>
+            )}
+
+            <Sticky>
+              <BrownButton onClick={scrollToDetail} selected>
+                상세정보
+              </BrownButton>
+              <BrownButton onClick={scrollToReview}>후기</BrownButton>
+              <BrownButton onClick={scrollToQnA}>Q&A</BrownButton>
+            </Sticky>
+
+            <Margin ref={detailRef}>
+              {isUpdateMode ? (
+                <ToastEditor editorRef={editorRef} initialValue={program.detail} />
+              ) : (
+                <ToastViewer initialValue={program.detail} />
+              )}
+            </Margin>
+
+            <HorizontalBorder color="#E5C6AD" ref={reviewRef} />
+
+            <ReviewCreationForm />
+            <MarginH4>리뷰 {reviews?.length ?? '...'}개</MarginH4>
+            <GridUl>
+              {reviews ? (
+                reviews.length > 0 ? (
+                  reviews.map((review: any) => <ReviewCard key={review.id} review={review} />)
+                ) : (
+                  <div>리뷰가 없어요</div>
+                )
+              ) : reviewsError ? (
+                <div>reviews error</div>
+              ) : (
+                <div>reviews loading...</div>
+              )}
+            </GridUl>
+
+            <HorizontalBorder color="#E5C6AD" ref={qnaRef} />
+
+            <QnACreationForm />
+            <MarginH4>QnA {qnas?.length ?? '...'}개</MarginH4>
+            <GridUl>
+              {qnas ? (
+                qnas.length > 0 ? (
+                  qnas.map((qna: any) => <QnACard key={qna.id} qna={qna} />)
+                ) : (
+                  <div>QnA가 없어요</div>
+                )
+              ) : qnasError ? (
+                <div>qna error</div>
+              ) : (
+                <div>qna loading...</div>
+              )}
+            </GridUl>
+
+            <HorizontalBorder />
+
+            {nextProgram ? (
+              <Link href={`/program/${nextProgram.id}`} passHref>
+                <FlexCenterA>
+                  <UpFilledArrow />
+                  <div>{nextProgram.title}</div>
+                </FlexCenterA>
+              </Link>
+            ) : (
+              <FlexCenterA hide>
+                <UpFilledArrow />
+                <div>다음글이 없습니다.</div>
+              </FlexCenterA>
+            )}
+
+            <HorizontalBorder />
+
+            {previousProgram ? (
+              <Link href={`/program/${previousProgram.id}`} passHref>
+                <FlexCenterA>
+                  <DownFilledArrow />
+                  <div>{previousProgram.title}</div>
+                </FlexCenterA>
+              </Link>
+            ) : (
+              <FlexCenterA hide>
+                <UpFilledArrow />
+                <div>이전글이 없습니다.</div>
+              </FlexCenterA>
+            )}
+
+            <HorizontalBorder />
+          </>
+        ) : error ? (
+          <div>error</div>
+        ) : (
+          <div>loading</div>
+        )}
+
+        <Link href="/program" passHref>
+          <a>
+            <Button1>목록</Button1>
+          </a>
+        </Link>
       </MarginAuto>
     </PageHead>
   )

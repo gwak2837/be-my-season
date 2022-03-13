@@ -5,10 +5,32 @@ import { toast } from 'react-toastify'
 import useAuth from 'src/hooks/useAuth'
 import { FlexEndCenter, OrangeButton, WhiteButton } from 'src/pages/introduce'
 import { NumberInput } from 'src/pages/program/create'
+import FilledStar from 'src/svgs/filled-star.svg'
+import Star from 'src/svgs/star.svg'
 import { submitWhenShiftEnter } from 'src/utils'
+import styled from 'styled-components'
 import { useSWRConfig } from 'swr'
 
 import { CreationTextArea, FlexWrap, Input2 } from './ReviewCreationForm'
+
+const FlexBetweenCenter = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0 0.5rem;
+`
+
+const FlexCenterGap = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.5rem 0;
+
+  > svg {
+    width: 1.5rem;
+  }
+`
 
 function ReviewCard({ review }: any) {
   const router = useRouter()
@@ -150,9 +172,22 @@ function ReviewCard({ review }: any) {
             </>
           ) : (
             <>
+              <FlexBetweenCenter>
+                <FlexCenterGap>
+                  {Array.from(Array(review.point).keys()).map((key) => (
+                    <FilledStar key={key} />
+                  ))}
+                  {Array.from(Array(5 - review.point).keys()).map((key) => (
+                    <Star key={key} />
+                  ))}
+                </FlexCenterGap>
+                <FlexCenterGap>
+                  <h5>{review.user__nickname}</h5>
+                  <h5>{new Date(review.creation_time).toLocaleString()}</h5>
+                </FlexCenterGap>
+              </FlexBetweenCenter>
               <h4>{review.title}</h4>
               <p>{review.description}</p>
-              <div>{review.point}</div>
             </>
           )}
         </div>

@@ -126,7 +126,7 @@ function ReviewCreationForm() {
             })}
           />
           <OrangeButton disabled={isCreationLoading} onClick={checkLogin} type="submit">
-            생성
+            작성하기
           </OrangeButton>
         </FlexCenterGap>
       </FlexWrap>

@@ -42,10 +42,10 @@ export default async function handleProgramQnA(req: NextApiRequest, res: NextApi
     const verifiedJwt = await verifyJWT(jwt).catch(() => null)
     if (!verifiedJwt) return res.status(400).send('Invalid JWT')
 
-    const { qnaId, title, description } = req.body
-    if (!qnaId) return res.status(400).send('Please check your inputs of request')
+    const { id, title, description } = req.body
+    if (!id) return res.status(400).send('Please check your inputs of request')
 
-    await pool.query(updateProgramQnA, [title, description, qnaId, verifiedJwt.userId])
+    await pool.query(updateProgramQnA, [title, description, id, verifiedJwt.userId])
     return res.status(200).json({ message: 'Delete completed' })
   }
 

@@ -6,7 +6,7 @@ import useAuth from 'src/hooks/useAuth'
 import { FlexEndCenter, OrangeButton, WhiteButton } from 'src/pages/introduce'
 import { useSWRConfig } from 'swr'
 
-import { CreationTextArea, Input2 } from './ReviewCreationForm'
+import { CreationTextArea, FlexWrap, Input2 } from './ReviewCreationForm'
 
 function QnACard({ qna }: any) {
   const router = useRouter()
@@ -93,10 +93,10 @@ function QnACard({ qna }: any) {
       <form onSubmit={handleSubmit(updateQnA)}>
         <div>
           {isUpdateMode ? (
-            <>
+            <FlexWrap>
               <Input2 {...register('title')} />
               <CreationTextArea {...register('description')} />
-            </>
+            </FlexWrap>
           ) : (
             <>
               <h4>{qna.title}</h4>

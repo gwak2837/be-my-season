@@ -81,7 +81,7 @@ function QnACreationForm() {
           })}
         />
         <OrangeButton disabled={isCreationLoading} onClick={checkLogin} type="submit">
-          생성
+          문의하기
         </OrangeButton>
       </FlexWrap>
       <CreationTextArea
